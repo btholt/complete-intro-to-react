@@ -1,0 +1,146 @@
+---
+title:  "React"
+---
+
+Welcome to the wonderful world of React. We are going to start with the most absoulutely barebone version of React. No JSX. No ES6. No transpilation. Just pure component-oriented pleasure of coding.
+
+So let's talk about what React is. I imagine most of those who take this class will come from another framework or library, be it jQuery, Angular, Backbone, Ember, Knockout, or something else. I will draw comparisons and contrasts to these other frameworks (despite not being the same, I'll be using the word library and framework interchangeably for brevity's sake) to help illuminate some of the differences but you needn't have programmed in these other frameworks to understand this workshop.
+
+React is a library to build the views in your app. In truth, it shares more similar responsibilites to jQuery than it does to Angular or Ember: it is not a the framework but rather a component you'll use in constructing your own framework. If you've done Backbone, React is _just_ the view but not the model or component. While it can do a little data management (which is sufficient for small apps,) you really need some other construct to manage your data if you are doing some sort of app. We will get to that later using redux.
+
+It bears mentioning that we are slowly going to build a full stack app progressively over the course of this workshop, piece-by-piece. By the end of the workshop, you'll have built a real-time app that does streaming video.
+
+## My First Component!
+
+So let's start our first React code!
+
+{% highlight html %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vidflix</title>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="node_modules/react/dist/react.js"></script>
+    <script src="node_modules/react-dom/dist/react-dom.js"></script>
+    <script>
+        var div = React.DOM.div
+        var h1 = React.DOM.h1
+
+        var MyFirstComponent = (
+            div(null,
+                h1(null, 'This is my first component!')
+            )
+        )
+
+        ReactDOM.render(MyFirstComponent, document.getElementById('app'))
+    </script>
+</body>
+</html>
+{% endhighlight %}
+
+## My Second Component
+
+Good job! You should see the text "This is my first component!" on the screen. As you may see, we constructed a bit of DOM using functions. That's all components are in React: functions. This ends up being a useful and powerful abstraction which you hopefully will see as we go on. This is about as simple as it gets as far as a React component goes. Let's take it one step further by nesting some components.
+
+Before we start here, let's delete that bottom script tag in index.html and add <code><script src="js/ClientApp.js"></script></code> so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put
+
+```javascript
+{% highlight javascript %}
+/* global React ReactDOM */
+
+var div = React.DOM.div
+var h1 = React.DOM.h1
+
+var MyTitle = React.createClass({
+  render () {
+    return (
+      div(null,
+        h1(null, 'Check out this component!')
+      )
+    )
+  }
+})
+
+var MyFirstComponent = (
+  div(null,
+    React.createElement(MyTitle, null),
+    React.createElement(MyTitle, null),
+    React.createElement(MyTitle, null)
+  )
+)
+
+ReactDOM.render(MyFirstComponent, document.getElementById('app'))
+
+{% endhighlight %}
+
+Cool, right! My our own custom class, like a div or an h1. We can use it the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and re-use these components everywhere! Notice we're using the createClass to create the component and then we're using using createElement to create an _instance_ of that class. Good to get those straight right now: a class is a type of tag and an element is one single instance of that class.
+
+## Factories
+
+This is a bit verbose to write <code>React.createElement</code> so many damn times. Let's use a shortcut.
+
+{% highlight javascript %}
+// replace MyFirstComponent
+var MyTitleFact = React.createFactory(MyTitle)
+
+var MyFirstComponent = (
+  div(null,
+    MyTitleFact(null),
+    MyTitleFact(null),
+    MyTitleFact(null)
+  )
+)
+{% endhighlight %}
+
+We can use createFactory to side step this. Now we can use our class like we use div. In fact <code>React.createElement('div', null)</code> works the same as <code>React.DOM.div</code>. The one I showed you is just a convenience factory method that React provides for all of the HTML tags.
+
+## Props
+
+Our title component is cute but not super reuseable. Let's make it a bit more flexible by using some props. Props are variables that you pass from the parent to the child but the child cannot modify the props it gets. This simple restriction helps a lot in the future because when bugs arise, you know the child didn't modify the variable because it can't! Let's see how to do it.
+
+{% highlight javascript %}
+/* global React ReactDOM */
+
+var div = React.DOM.div
+var h1 = React.DOM.h1
+
+var MyTitle = React.createClass({
+  render () {
+    return (
+      div(null,
+        h1(null, this.props.title)
+      )
+    )
+  }
+})
+
+var MyTitleFact = React.createFactory(MyTitle)
+
+var MyFirstComponent = (
+  div(null,
+    MyTitleFact({title: 'Props are great!'}),
+    MyTitleFact({title: 'Use props everywhere!'}),
+    MyTitleFact({title: 'Props are the best!'})
+  )
+)
+
+ReactDOM.render(MyFirstComponent, document.getElementById('app'))
+{% endhighlight %}
+
+Now we can change the contents of the title. But since we can pass in lots of props, we can widely differing elements of the same class based on what props are passed into the element. Let's take it a step further (and show you how to do inline styles and attributes with React.)
+
+{% highlight javascript %}
+// change MyTitle's inside h1
+h1({ style: {color: this.props.color} }, this.props.title)
+
+// change MyFirstComponent inside div
+MyTitleFact({title: 'Props are great!', color: 'rebeccapurple'}),
+MyTitleFact({title: 'Use props everywhere!', color: 'mediumaquamarine'}),
+MyTitleFact({title: 'Props are the best!', color: 'peru'})
+{% endhighlight %}
+
+Let's stop there and switch our attention a bit to tooling. So far we've been writing React with no compile step which is pretty cool and not something enough do in the course of React. Certain things will just make sense because you know what it complies to. In any case, onward!
+

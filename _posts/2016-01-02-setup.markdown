@@ -1,0 +1,34 @@
+---
+title:  "Setup"
+---
+
+In order to be able to complete this entire workshop, we need to go ahead and get some tools downloaded. Even better if you can complete this before the workshop since conference Wi-Fi is notoriously spotty.
+
+## Clone the git repo
+
+<a href="https://github.com/btholt/complete-intro-to-react">Click here.</a>
+
+## node.js 4.2+
+
+You _probably_ complete this with something less than node 4.2 but that's what I'm using. Being the node.js LTS release, it's a safe bet to be using. If you need to use a different version of node for work, I strongly recommend using <a href="https://github.com/creationix/nvm">nvm</a>. I recommend getting the binary straight off the <a href="https://nodejs.org/en/">node website</a> and _not_ using homebrew for installation.
+
+## npm installs
+
+Run <code>npm install</code> from the directory where you downloaded the repo. If you have node and npm installed, you should see a list of dependencies being installed.
+
+## npm global installs
+
+Run the following global npm installs
+
+{% highlight bash %}
+npm install -g ava
+npm install -g nodemon
+npm install -g webpack
+npm install -g standard
+{% endhighlight %}
+
+We'll be using webpack v1.12, ava v0.11 and standard v6.0.
+
+## RethinkDB
+
+Easiest to install via homebrew if you're on OSX. Just run <code>homebrew install rethink</code>. For other platforms, read the docs on <a href="http://rethinkdb.com/docs/install/">RethinkDB.com</a>. You don't have to start it up right now but it'll be good to have it installed.

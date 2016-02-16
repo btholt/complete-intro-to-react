@@ -1,0 +1,33 @@
+---
+title:  "Intro"
+---
+
+Welcome to _A Complete Intro to React_. The goal of this workshop is to get you full up to speed on modern development and give you an idea what it is like to develop an app in the React ecosystem.
+
+When talking about React, you cannot simply _just_ React. It is an incomplete picture; it is a cog in the machine. React does well to introduce some useful primitives into your toolbox and allows you to build your app without introducing too many opinions. As such, we need to learn some other tools to round the whole story of our app. However, keep in mind that these are modules we are choosing to plug together; you are free to go home and swap in your own parts to suit your own needs. While React fits many/most needs, this complete stack won't; it has opinions and you need to make sure each piece contributes to your story and try not to shoehorn any piece in that you don't need.
+
+In addition to React, we are going to be using node.js, hapi, RethinkDB, redux, WebPack, ava, Enzyme, npm, and react-router. Don't worry if you're aren't familiar with any of these: that's the point of this workshop. Since this workshop is about React, we will not be deep diving into node.js or database schema. We will discuss these sattellite concepts just as they pertain to React.
+
+Questions? Feel free to <a href="https://twitter.com/holtbt">tweet at me.</a> Corrections or concerns about this page? Please file an issue or make a pull request on <a href="https://github.com/btholt/complete-intro-to-react">the repo</a>.
+
+<!--
+You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
+
+To add new posts, simply add a file in the `_posts` directory that follows the convention `YYYY-MM-DD-name-of-post.ext` and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.
+
+Jekyll also offers powerful support for code snippets:
+
+{% highlight ruby %}
+def print_hi(name)
+  puts "Hi, #{name}"
+end
+print_hi('Tom')
+#=> prints 'Hi, Tom' to STDOUT.
+{% endhighlight %}
+
+Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
+
+[jekyll-docs]: http://jekyllrb.com/docs/home
+[jekyll-gh]:   https://github.com/jekyll/jekyll
+[jekyll-talk]: https://talk.jekyllrb.com/
+-->
