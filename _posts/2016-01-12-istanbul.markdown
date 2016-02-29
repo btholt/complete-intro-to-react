@@ -1,0 +1,18 @@
+---
+title: "istanbul / nyc"
+---
+
+A good-but-not-great metric of how well you're testing your is code coverage. Basically it's how much of your code gets covered by your tests. There exist many tools to do this but we're going to use the most common in the JavaScript world: [istanbul][istanbul]. Well, sort of. We're going to be using [nyc][nyc] which is built on top of istanbul but I find it a bit easier to work with.
+
+What istanbul is going to do? Istanbul instruments your code to see what code gets run and then lets you when your tests are covering and/or not covering other parts. So let's implement that as an npm script. Add:
+
+{% highlight json %}
+"cover": "nyc --reporter=lcov --reporter=text --reporter=html --require babel-register --extension .jsx npm test"
+{% endhighlight %}
+
+Now if you run <code>npm run cover</code> you should see 100% coverage on both Search and ShowCard. That means all the exported code is getting covered in a test! Yay! But where are the rest of our files? Well, we're not testing them at all yet so istanbul doesn't know about them. Once you start testing those files they'll show up.
+
+Now try adding an extra method to Search. It can be some dumb method that returns 5. Now run your <code>npm run cover</code> again. Your code will not be totally covered now. This is what istanbul gets you. If you open coverage/index.html in your browser, you'll actually be able to visualize what the code coverage looks like. Pretty sweet.
+
+[istanbul]: https://github.com/gotwarlost/istanbul
+[nyc]: https://github.com/bcoe/nyc

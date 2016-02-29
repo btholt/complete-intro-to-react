@@ -8,9 +8,9 @@ In order to be able to complete this entire workshop, we need to go ahead and ge
 
 <a href="https://github.com/btholt/complete-intro-to-react">Click here.</a>
 
-## node.js 4.2+
+## node.js 4.3+
 
-You _probably_ complete this with something less than node 4.2 but that's what I'm using. Being the node.js LTS release, it's a safe bet to be using. If you need to use a different version of node for work, I strongly recommend using <a href="https://github.com/creationix/nvm">nvm</a>. I recommend getting the binary straight off the <a href="https://nodejs.org/en/">node website</a> and _not_ using homebrew for installation.
+You _probably_ can complete this with something less than node 4.3 but that's what I'm using. Being the node.js LTS release, it's a safe bet to be using. If you need to use a different version of node for work, I strongly recommend using <a href="https://github.com/creationix/nvm">nvm</a>. I recommend getting the binary straight off the <a href="https://nodejs.org/en/">node website</a> and _not_ using homebrew for installation.
 
 ## npm installs
 

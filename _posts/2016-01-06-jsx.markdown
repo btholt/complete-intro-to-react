@@ -2,4 +2,81 @@
 title: "JSX"
 ---
 
-LOL JSX is great.
+We have been writing our React with vanilla JavaScript up until now which frankly few people do. Most people take advantage of JSX which essentially adds HTNL/XML-like syntax as a "primitive" type to JavaScript. In reality, what it does it takes the HTML you write for your components and translate them into the same calls we writing just using vanilla JavaScript.
+
+So why JSX? People usually get pretty grossed out by the HTML in the JavaScript and say it looks like 1998 when we were still writing JavaScript in our HTML. However, I assert that markup in JS is a good thing while JS in markup is a bad thing! Here, we're keeping all the concerns of a component in one place: the markup structure, the event listeners, the state, the state mutators, everything. If the component breaks, we know it broke there. That's really valuable.
+
+So try it. While the plain JS way isn't too bad, once you start writing JSX I _almost_ guarantee you won't want to go back. Let's convert what we have to JSX.
+
+Side note: good idea to install a JSX syntax highlighter. If you're using Sublime, I highly recommend the "Babel" package off of Package Control. If you're using VIM, good luck. I've heard people struggle to get it right with VIM.
+
+
+Open MyTitle.js and rename it to MyTitle.jsx. It doesn't actually matter since both are getting run through Babel but it does signify to all who follow that this file __must__ be compiled before being shipped out.
+
+{% highlight javascript %}
+const React = require('react')
+
+const MyTitle = props => (
+  <div>
+    <h1 style={{color: props.color}}>
+      {props.title}
+    </h1>
+  </div>
+)
+
+module.exports = MyTitle
+{% endhighlight %}
+
+We're using JSX finally! Make sure you'ree inserting those opening and closing parens around the component. It's just letting JS know you're going to put your expression on the next line (which we want to do for readability.)
+
+Notice the curly braces surrounding <code>this.props.title</code>. They're there to let JSX know I want his to be a JS expression. If they weren't there, it would put the string 'this.props.title'. Notice the double curly braces surrounding the style value. The exterior set of curly braces are the same as the one as before: they're letting JSX know you want a JS expression. The interior set of curly braces represent a JavaScript object, meaning you're passing in a object to the style attribute. A little strange to get used to seeing that.
+
+Lastly, you may notice that I switched to an ES6 style here. This is synomous with the function syntax; just a bit more terse. Feel free to write it in any syntax that fits your fancy; this is very readable to me but may not be to you. Basically, since it's an arrow function and lacks curly braces, the resulting component is implicitly returned automatically.
+
+Let's rewrite ClientApp.js. Rename it to ClientName.jsx.
+
+{% highlight javascript %}
+const React = require('react')
+const ReactDOM = require('react-dom')
+const MyTitle = require('./MyTitle')
+
+const MyFirstComponent = () => (
+  <div>
+    <MyTitle title='Props are great!' color='rebeccapurple' />
+    <MyTitle title='Use props everywhere!' color='mediumaquamarine' />
+    <MyTitle title='Props are the best!' color='peru' />
+  </div>
+)
+
+ReactDOM.render(<MyFirstComponent/>, document.getElementById('app'))
+{% endhighlight %}
+
+Also make sure you update your webpack.config.js to point the JSX path of ClientApp.jsx on the entry line.
+
+Okay, so notice we changed to a function on MyFirstComponent and that's why we changed the ReactDOM.render MyFirstComponent to a function call (which is all making a tag in JSX is being changed to.) Also, notice how we use our own components as if they were normal HTML tags. Neat, right? We define our own components and then we can throw anywhere since they're self contained! We even pass them props as if they were normal attributes.
+
+Notice we're including React in both files but not directly manipulating it. This is okay since remember JSX is converting these tags to calls to React, so in reality it is using React (and thus we _do_ have to include it.)
+
+Cool, right! Also notice we dropped the factory business. No longer useful since JSX is totally fine to convert our JSX to the long-form function call. Overall, a simplification I think!
+
+Something to make note of: the top level component has to be singular, or in other words, your top level component cannot be sibling to something else. This makes sense if you thing about what JSX is transpiling to: function calls.
+
+{% highlight javascript %}
+
+// won't compile
+const InvalidComponent = () => (
+  <h1>My Title</h1>
+  <h2>My Title 2</h2>
+);
+
+// will compile
+const ValidComponent = () => (
+  <div>
+    <h1>My Title</h1>
+    <h2>My Title 2</h2>
+  </div>
+);
+
+{% endhighlight %}
+
+Hence why you'll see a lot of wrapping divs in JSX; it's so the whole thing will compile. This is fine if you need to do this; an extra wrapping div does nothing of harm unless you have structurally sensitive CSS. Also notice that if you have just raw text to put into JSX, you can enter it just as if was normal HTML. It's only when you have JS expressions when you need to use the curly braces.

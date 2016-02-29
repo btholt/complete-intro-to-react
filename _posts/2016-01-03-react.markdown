@@ -107,15 +107,13 @@ Our title component is cute but not super reuseable. Let's make it a bit more fl
 var div = React.DOM.div
 var h1 = React.DOM.h1
 
-var MyTitle = React.createClass({
-  render () {
-    return (
-      div(null,
-        h1(null, this.props.title)
-      )
+var MyTitle = function (props) {
+  return (
+    div(null,
+      h1(null, this.props.title)
     )
-  }
-})
+  )
+}
 
 var MyTitleFact = React.createFactory(MyTitle)
 

@@ -48,22 +48,33 @@ Babel has the concept of plugins. Each transformation comes in the form a plugin
 So, we could use the Babel CLI to compile our code but we are already using webpack and webpack and a good way to send your code through Babel via its loader mechanism. Loaders a black boxes that webpack and will pipe input into and accept output out of. You can use loaders to transpile things like CoffeeScript, TypeScript, or PureScript. webpack loaders can do some other powerful things like allowing you to _include_ CSS, inline images via encoding, and transform SVGs. We're just going to be using the JS transformation abilities for now. Run the command <code>webpack --module-bind 'js=babel' js/ClientApp.js public/bundle.js</code>. Should take a bit longer since it's doing more. Since we're going to be using webpack for a few other things, let's abstract that configuration from inline to a config file. Add a webpack.config.js with the following.
 
 {% highlight javascript %}
+const path = require('path')
+
 module.exports = {
   context: __dirname,
-  entry: 'js/ClientApp.js',
+  entry: './js/App.jsx',
   output: {
-    path: __dirname + "/public",
-    filename: "bundle.js"
+    path: path.join(__dirname, '/public'),
+    filename: 'bundle.js'
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx', '.json']
+  },
+  stats: {
+    colors: true,
+    reasons: true,
+    chunks: false
   },
   module: {
     loaders: [
       {
         test: /\.jsx?$/,
-        loader: "babel-loader"
+        loader: 'babel-loader'
       }
     ]
   }
 }
+
 {% endhighlight %}
 
 What you see is essentially a config version of what we were doing with CLI flags. Now it's a bit more resilient and guaranteed consistent. If you run just the command <code>webpack</code> from your project directory you should get the same output. Neat. Go change you npm script to just be "webpack" now. Go try it and make sure it still works. Great! Also make sure all the files you've written are still up to snuff with standard via <code>npm run test</code>. Good? Good. This should get us to a point now where we can talk about JSX.

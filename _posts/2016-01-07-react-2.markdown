@@ -1,0 +1,73 @@
+---
+title: "More React"
+---
+
+So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. The app will be in real-time (thanks to RethinkDB)because in our app it's important to be able to add new movies in real-time. Over the next few chapters we are going to be talking about redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.
+
+Rather our toys we've made so far to demonstrate how to make React components, let's actually start building our web app. We are going to make our home page. The home page is going to have a sweet background image, our logo, a text input to search for a specific show, and another button to just browse all videos.
+
+I have pre-done all the CSS for you (since this is not a workshop on CSS) so if you just follow my CSS naming you will get all the CSS for free. It does bear mentioning here that libraries like [Radium][radium] exist that allow you to do all of your styles in JS and let React and Radium handle all the styles for you. This is a pretty big departure from normal web development and not something _most_ developers do so we're not going to cover it. But I will say, should you feel so inclined, go out and give it a shot. I did for a little side project and had a blast with it; it's a fun way to approach CSS since you have all the tools of JS at your disposal and don't really have to care how it compiles down to CSS like you do with PostCSS/Sass/less. Anyway, follow my CSS and you'll be golden. If at any time your styles look broken as compared to mine, chances are you misnamed something.
+
+Let's start building our app. You can delete MyTitle.jsx if you desire; you can also leave it. We're not going to be using it any further. Go ahead and clear out most ClientApp.jsx and let's start putting our app in here.
+
+Oh, and you also have to name your video service. I named mine svideo but name your app whatever you want!
+
+Right now it's going to be pretty simple. Drop in this:
+
+{% highlight javascript %}
+
+const React = require('react')
+const ReactDOM = require('react-dom')
+
+const App = () => (
+  <div className='app-container'>
+    <div className='home-info'>
+      <h1 className='title'>svideo</h1>
+      <input className='search' type='text' placeholder='Search' />
+      <button className='browse-all'>or Browse All</button>
+    </div>
+  </div>
+)
+
+ReactDOM.render(<App/>, document.getElementById('app'))
+{% endhighlight %}
+
+Save and run <code>npm run build</code>. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to run <code>npm run test</code> to see if your code is still lint-compliant.
+
+So, another tooling detour here: I'm getting pretty sick of having to hit the terminal every single time to see run build. Furthermore, build for webpack is pretty slow despite how small our code is. So let's take advantage of webpack's watch feature. This will watch for every time you save rebuild automatically. Additionally it will keep the unchanged bits (like the React library) in memory so it doesn't have to rebuild it every time. Try running <code>webpack --watch</code> in your terminal. It will use the same config we already made. See how much faster it is after running? Let's add a new npm script.
+
+{% highlight json %}
+// in package.json in scripts
+"watch": "webpack --watch",
+{% endhighlight %}
+
+Great, right? So, another part that's been bothering me is that it's such a pain to have to re-run standard every time. Either that or you'll get a bunch of errors all at once when you run it before you commit. Luckily we can have webpack run standard each time it compiles. It will then notify you when you have errors.
+
+Just like we're using the babel-loader to transpile our code, we're going to use the eslint-loader to run standard for us. eslint is what standard uses under the hood, or in other words standard is just a specific configuration of eslint. We're going to lean on this fact and use a config file with the eslint-loader.
+
+Create a file called <code>.eslintrc.json</code>. That first period is significant. Inside the new file put:
+
+{% highlight json %}
+{
+  "extends": ["standard", "standard-react"]
+}
+{% endhighlight %}
+
+This will configure eslint to check for everything standard has been checking. In addition, since we're already adding a config file, we're adding a few checks specific to React and JSX. Again, these will spare you bugs in the future and they're super helpful. Let's change our webpack config to use our new eslint-loader. eslint will automatically use our .eslintrc.json, regardless is called via the CLI or programtically via webpack.
+
+{% highlight javascript %}
+// inside module, before loaders
+preLoaders: [
+  {
+    test: /\.jsx?$/,
+    loader: "eslint-loader",
+    exclude: /node_modules/
+  }
+],
+{% endhighlight %}
+
+Nice! Any time you save now using <code>npm run watch</code> it will both compile your code _and_ lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code relods _even faster_. But first let's keep going with our app.
+
+Our landing is pretty much done for now. We want to start working on the browse all page, but we need to move onto the router to do that real quick.
+
+[radium]: http://stack.formidable.com/radium/
