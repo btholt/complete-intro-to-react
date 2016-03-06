@@ -1,0 +1,6 @@
+public/bundle.js
+node_modules/
+.eslintcache
+coverage
+.nyc_output
+.DS_Store
