@@ -1,43 +1,45 @@
-require("babel-register")
+require('babel-register')
 
-var express = require('express')
-var React = require('react')
-var ReactDOMServer = require('react-dom/server')
-var ReactRouter = require('react-router')
-var match = ReactRouter.match
-var RouterContext = ReactRouter.RouterContext
-var _ = require('lodash')
-var fs = require('fs')
+const express = require('express')
+const React = require('react')
+const ReactDOMServer = require('react-dom/server')
+const ReactRouter = require('react-router')
+const match = ReactRouter.match
+const RouterContext = ReactRouter.RouterContext
+const ReactRedux = require('react-redux')
+const Provider = ReactRedux.Provider
+const Store = require('./js/Store.jsx')
+const store = Store.store
+const _ = require('lodash')
+const fs = require('fs')
+const port = 5050
+const baseTemplate = fs.readFileSync('./index.html')
+const template = _.template(baseTemplate)
+const ClientApp = require('./js/ClientApp.jsx')
+const routes = ClientApp.Routes
 
-var port = 5050
-
-var baseTemplate = fs.readFileSync('./index.html')
-var ClientApp = require('./js/ClientApp.jsx')
-var routes = ClientApp.Routes
-
-var app = express()
+const app = express()
 
 app.use('/public', express.static('./public'))
 
 app.use((req, res) => {
-  // Note that req.url here should be the full URL path from
-  // the original request, including the query string.
-  match({ routes: routes, location: req.url }, (error, redirectLocation, renderProps) => {
-    console.log(error, redirectLocation, renderProps)
+  match({ routes: routes(), location: req.url }, (error, redirectLocation, renderProps) => {
     if (error) {
       res.status(500).send(error.message)
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search)
     } else if (renderProps) {
-      // You can also check renderProps.components or renderProps.routes for
-      // your "not found" component or route respectively, and send a 404 as
-      // below, if you're using a catch-all route.
-      res.status(200).send(ReactDOMServer.renderToString(React.createElement(RouterContext,renderProps)))
+      const body = ReactDOMServer.renderToString(
+        React.createElement(Provider, {store},
+          React.createElement(RouterContext, renderProps)
+        )
+      )
+      res.status(200).send(template({body}))
     } else {
       res.status(404).send('Not found')
     }
   })
-});
+})
 
 console.log('listening on ' + port)
 app.listen(port)

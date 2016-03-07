@@ -1,7 +1,7 @@
 {
   "name": "complete-intro-to-react",
   "version": "1.0.0",
-  "description": "",
+  "description": "A two day workshop on a complete intro to React",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
@@ -10,9 +10,10 @@
     "lint": "eslint --ignore-path .gitignore --cache ./",
     "cover": "nyc --reporter=lcov --reporter=text --reporter=html --require babel-register --extension .jsx npm test"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Brian Holt <btholt@gmail.com>",
+  "license": "MIT",
   "dependencies": {
+    "axios": "0.9.1",
     "express": "4.13.4",
     "lodash": "4.6.1",
     "react": "^0.14.7",
@@ -44,5 +45,22 @@
     "react-addons-test-utils": "^0.14.7",
     "sinon": "^1.17.3",
     "webpack": "^1.12.13"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/btholt/complete-intro-to-react.git"
+  },
+  "keywords": [
+    "react",
+    "workshop",
+    "intro",
+    "redux"
+  ],
+  "bugs": {
+    "url": "https://github.com/btholt/complete-intro-to-react/issues"
+  },
+  "homepage": "https://github.com/btholt/complete-intro-to-react#readme"
 }

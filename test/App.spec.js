@@ -40,7 +40,7 @@ describe('<Search />', () => {
 describe('Store', () => {
   it('should bootstrap', () => {
     const state = reducer(undefined, { type: '@@redux/INIT' })
-    expect(state).to.deep.equal({ searchTerm: '' })
+    expect(state).to.deep.equal({ searchTerm: '', shows: data.shows })
   })
 
   it('should handle setSearchTerm actions', () => {
