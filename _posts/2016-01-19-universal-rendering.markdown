@@ -135,6 +135,16 @@ App.Routes = myRoutes
 
 Now we can pass these routes in to the server to be able to reuse them. This should wrap up all the things we need to refactor in our client code and now we spew out our server code.
 
+## Get your HTML ready
+
+Quickly in your index.html file go add the following:
+
+{% highlight html %}
+<div id="app"><%= body %></div>
+{% endhighlight %}
+
+Just adding that body template tage will allow to render our React string directly in there. Pretty cool.
+
 ## Writing the Server
 
 This is a lot to take in at once but we have to write the whole app at once. Reason being is that you need it _all_ to be able to run the server. So let's write it first and then deconstruct it.
