@@ -12,7 +12,7 @@ As you saw with our code, it is pretty to put one or two components in one file.
 
 For fun, split your MyTitle component from ClientApp.js into a new file, MyTitle.js. You will have to put the appropriate React.DOM helper methods in each file. At the bottom of MyTitle.js, add the line <code>module.exports = MyTitle</code>. At the top of ClientApp.js, put the line <code>var MyTitle = require('./MyTitle')</code>. Let's try to compile that.
 
-You should have webpack 1.12+ installed (this is untested on 2.0+.) Go to the directory of the project in the terminal and run <code>mkdir public</code>. After that, run <code>webpack js/ClientApp.js public/bundle.js</code>. In your index.html, change the line of <code><script src="js/ClientApp.js"></script></code> to <code><script src="public/bundle.js"></script></code>.
+You should have webpack 1.12+ installed (this is untested on 2.0+.) Go to the directory of the project in the terminal and run <code>mkdir public</code>. After that, run <code>webpack js/ClientApp.js public/bundle.js</code>. In your index.html, change the line of <code><&NegativeMediumSpace;script src="js/ClientApp.js"></script></code> to <code><&NegativeMediumSpace;script src="public/bundle.js"></script></code>.
 
 Try your browser again. bundle.js has all the stuff for both files now. Now we can keep components in their own files which is a huge win for organization. But wait, we can use webpack for even greater code by using it to bring in node modules. In index.html, remove the other script tags so _just_ bundle.js is left.
 

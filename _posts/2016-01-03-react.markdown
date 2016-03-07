@@ -45,7 +45,7 @@ So let's start our first React code!
 
 Good job! You should see the text "This is my first component!" on the screen. As you may see, we constructed a bit of DOM using functions. That's all components are in React: functions. This ends up being a useful and powerful abstraction which you hopefully will see as we go on. This is about as simple as it gets as far as a React component goes. Let's take it one step further by nesting some components.
 
-Before we start here, let's delete that bottom script tag in index.html and add <code><script src="js/ClientApp.js"></script></code> so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put
+Before we start here, let's delete that bottom script tag in index.html and add <code><&NegativeMediumSpace;script src="js/ClientApp.js"></script></code> so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put
 
 {% highlight javascript %}
 /* global React ReactDOM */
