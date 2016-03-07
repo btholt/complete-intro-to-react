@@ -2,7 +2,7 @@
 title: "More React"
 ---
 
-So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. The app will be in real-time (thanks to RethinkDB)because in our app it's important to be able to add new movies in real-time. Over the next few chapters we are going to be talking about redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.
+So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. Over the next few chapters we are going to be talking about redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.
 
 Rather our toys we've made so far to demonstrate how to make React components, let's actually start building our web app. We are going to make our home page. The home page is going to have a sweet background image, our logo, a text input to search for a specific show, and another button to just browse all videos.
 

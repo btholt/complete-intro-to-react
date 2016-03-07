@@ -38,7 +38,7 @@ const Search = () => (
     <div className='shows'>
       {data.shows.map((show) => (
         <div className='show'>
-          <img src={`public/img/posters/${show.poster}`} className='show-img' />
+          <img src={`/public/img/posters/${show.poster}`} className='show-img' />
           <div className='show-text'>
             <h3 className='show-title'>{show.title}</h3>
             <h4 className='show-year'>({show.year})</h4>
@@ -62,7 +62,7 @@ const React = require('react')
 
 const ShowCard = (props) => (
   <div className='show-card'>
-    <img src={`public/img/posters/${props.show.poster}`} className='show-card-img' />
+    <img src={`/public/img/posters/${props.show.poster}`} className='show-card-img' />
     <div className='show-card-text'>
       <h3 className='show-card-title'>{props.show.title}</h3>
       <h4 className='show-card-year'>({props.show.year})</h4>
@@ -94,8 +94,8 @@ const data = require('../public/data')
 const Search = () => (
   <div className='container'>
     <div className='shows'>
-      {data.shows.map((show) => (
-        <ShowCard show={show} />
+      {data.shows.map((show, index) => (
+        <ShowCard show={show} key={index} id={key} />
       ))}
     </div>
   </div>
@@ -105,6 +105,8 @@ module.exports = Search
 {% endhighlight %}
 
 Much like you give an HTML tag an attribute is how you give props to children componets in React. Here we're passing down an object to our child component to make it available to the ShowCard via props. Neat, right? Save it and reload the page. standard is going to give you a bunch of complaints but we're going to address that momentarily. You should see the same UI.
+
+We give it a key so React can internally keep track of which component is which. We give it an id to refer to later.
 
 So let's fix our standard errors now. standard-react dictates that all props have a propType. React has a features that allows you to set propTypes which it then validates at runtime. This ends up being great for debugging because React now knows what sort of props it should be getting so it can give you a meaningful error messages. So let's go fix the errors.
 
@@ -126,7 +128,7 @@ const React = require('react')
 
 const ShowCard = (props) => (
   <div className='show-card'>
-    <img src={`public/img/posters/${props.poster}`} className='show-card-img' />
+    <img src={`/public/img/posters/${props.poster}`} className='show-card-img' />
     <div className='show-card-text'>
       <h3 className='show-card-title'>{props.title}</h3>
       <h4 className='show-card-year'>({props.year})</h4>
@@ -139,11 +141,65 @@ ShowCard.propTypes = {
   year: React.PropTypes.string.isRequired,
   poster: React.PropTypes.string.isRequired,
   description: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired
+  title: React.PropTypes.string.isRequired,
+  id: React.PropTypes.number.isRequired
 }
 
 module.exports = ShowCard
 {% endhighlight %}
 
 We've now made our code a bit cleaner since we don't have to props.show... ad nauseam. We've also made it so React can check each individual property that we need; this will save us bugs in the future.
+
+## React Router Layout
+
+Now, we have a common layout that we want to maintain between all of our pages. This is a common problem: you make a nice looking nav bar and background that you intend to share amongst multiple pages. We could make a nav component and share that but we can take it a step further (right now we're just going to share the background div.) We're going to use nested routes and what's called an IndexRoute. A nested route allows you to share UI between routes and an IndexRoute is just the default, base route of a nested route. Let's see it.
+
+Make a new file called Layout.jsx. Put:
+
+{% highlight javascript %}
+const React = require('react')
+
+const Layout = (props) => (
+  <div className='app-container'>
+    {props.children}
+  </div>
+)
+
+module.exports = Layout
+{% endhighlight %}
+
+In ClientApp, pull in the IndexRoute component from react-router and make a nested route in your component.
+
+{% highlight javascript %}
+const React = require('react')
+const ReactDOM = require('react-dom')
+const Landing = require('./Landing')
+const Search = require('./Search')
+const Layout = require('./Layout')
+const ReactRouter = require('react-router')
+const { Router, Route, hashHistory, IndexRoute } = ReactRouter
+
+const App = () => (
+  <Router history={hashHistory}>
+    <Route path='/' component={Layout}>
+      <IndexRoute component={Landing} />
+      <Route path='/search' component={Search} />
+    </Route>
+  </Router>
+)
+
+ReactDOM.render(<App/>, document.getElementById('app'))
+{% endhighlight %}
+
+<code>children</code> is in particular an interesting beast. It allows you to make a tag and have access to whatever's inside. So:
+
+{% highlight html %}
+<MyComponent>
+  <div><h1>lol</h1></div>
+</MyComponent>
+{% endhighlight %}
+
+The children here would be the div and the h1. That's what children get you.
+
+Also you may be seeing PropType errors here. Those are React's friendly ways of reminding you to make sure you're getting the data you expect via props.
 

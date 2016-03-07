@@ -1,0 +1,177 @@
+---
+title: "redux"
+---
+
+The next thing we want to do with our app is make the front page's search work so that when you type in a search query and hit enter it will automatically have searched for that on the Search page. Right now you have all the necessary tools to do that via state. You could just push the query term up to the ClientApp level and then pass that down to the Search and you'd be done. And that's probably the way you _should_ do it given how small our app is.
+
+But when these demo apps all the fun is in overengineering it and that's precisely what we're going to do: we're going to add redux. redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture. If you're going to use a Flux-like architecture in your app, make it redux.
+
+So what is redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. redux is great because it will run both client and server side, it's easy to test, and easy to debug. While redux does not __not__ follow the Flux pattern, you can easily see the similarities and once you've done one the other isn't hard to adapt to.
+
+With redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie <code>tree.prop = 'foo'</code> doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
+
+So let's do the most basic addition of redux to our app and convert the Search to use redux. Again, this is using a sledgehammer to solve a tiny nail problem: huge overkill.
+
+Create Store.jsx. Because our use case is so small, I'm going to shove all our concerns in here. You should separate these out. But not today!
+
+{% highlight javascript %}
+const redux = require('redux')
+const reactRedux = require('react-redux')
+
+const SET_SEARCH_TERM = 'setSearchTerm'
+
+const reducer = (state = {searchTerm: ''}, action) => {
+  switch (action.type) {
+    case SET_SEARCH_TERM:
+      const newState = {}
+      Object.assign(newState, state, {searchTerm: action.value})
+      return newState
+    default:
+      return state
+  }
+}
+
+const store = redux.createStore(reducer)
+
+const mapStateToProps = (state) => ({ searchTerm: state.searchTerm })
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setSearchTerm: (term) => {
+      dispatch({type: SET_SEARCH_TERM, value: term})
+    }
+  }
+}
+
+const connector = reactRedux.connect(mapStateToProps, mapDispatchToProps)
+
+module.exports = { connector, store }
+{% endhighlight %}
+
+Here we're doing everything to bootstrap a redux store. You can see our root reducer function there. With the root reducer, you'll take in an action and then using a switch statement on the action type, you'll delegate that action to another reducer. If necessary, that reducer can delegate to yet another reducer and so on (I haven't had a compelling reason to do that yet.) Right now we don't have a reason to do so that we're just doing everything in the root reducer. You could change the body of the <code>case SET_SEARCH_TERM:</code> to be another reducer function.
+
+Then to create a new store you just give redux the root reducer and it's created! Cool!
+
+From there we're going to create a connector. react-redux is a library that provides some simple helpers to connect your redux store to your React app. Everything that react-redux does for you you can fairly easily do for yourself. For that matter, redux itself is a pretty simple library that would possible to write yourself (unlike React; good luck with that!) We're creating a mapStateToProps and a mapDispatchProps to props which are just helpers that will hand your pertinent components with the methods and state they'll need to be able to display it. Now whatever components your wrap with connector will have these bits of state and action creators available to them. We'll see how that works in a sec.
+
+Let's do some connecting with ClientApp.jsx
+
+{% highlight javascript %}
+// more requires
+const Store = require('./Store')
+const { store } = Store
+const reactRedux = require('react-redux')
+const { Provider } = reactRedux
+
+// change the ReactDOM render call
+ReactDOM.render(
+  (
+  <Provider store={store}>
+    <App/>
+  </Provider>
+  ),
+  document.getElementById('app')
+)
+{% endhighlight %}
+
+Wrapping our app in a <code>Provider</code> component makes our store and dispatches available where-ever we wrap components with connector calls, hence why it's necessary to wrap the whole app. Good news is once you do this it magically just works thought out your whole app. You'll only have to use <code><Provider/></code> once.
+
+Let's make it work with Header so it correctly displays and changes the redux store.
+
+{% highlight javascript %}
+// another require
+const Store = require('./Store')
+const { connector } = Store
+
+// wrap comonent
+module.exports = connector(Header)
+
+// two more methods for component
+constructor (props) {
+  super(props)
+
+  this.handleSearchTermChange = this.handleSearchTermChange.bind(this)
+}
+handleSearchTermChange (e) {
+  this.props.setSearchTerm(e.target.value)
+}
+
+// change input
+utilSpace = <input type='text' className='search-input' placeholder='Search' value={this.props.searchTerm} onChange={this.handleSearchTermChange} />
+
+// change propTypes
+Header.propTypes = {
+  setSearchTerm: React.PropTypes.func,
+  showSearch: React.PropTypes.bool,
+  searchTerm: React.PropTypes.string
+}
+{% endhighlight %}
+
+Now you should be able to type in the header and see it immediately reflected. The search part doesn't work yet so let's go over to Search and make it reflected in the UI.
+
+{% highlight javascript %}
+// more requires
+const Store = require('./Store')
+const { connector } = Store
+
+// delete constructor
+
+// delete handleSearchTermChange method
+
+// change Header
+<Header showSearch />
+
+// change filter method call
+.filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(searchTerm.toUpperCase()) >= 0)
+
+// add to PropTypes
+searchTerm: React.PropTypes.string
+
+// wrap componoent with react-redux wrapper
+module.exports = connector(Search)
+{% endhighlight %}
+
+Deleting code is always awesome. Since we've externalize a lot of this we don't need it here anymore. Then we change the filter to rely on the props instead of the state and make sure the component is wrapped. That's it! Now the whole system should work.
+
+Let's make the front page work. Go to Landing.jsx
+
+{% highlight javascript %}
+// add requires
+const Store = require('./Store')
+const { connector } = Store
+
+//add methods
+constructor (props) {
+  super(props)
+
+  this.handleTermEvent = this.handleTermEvent.bind(this)
+  this.goToSearch = this.goToSearch.bind(this)
+}
+handleTermEvent (e) {
+  console.log(e.target.value)
+  this.props.setSearchTerm(e.target.value)
+}
+goToSearch (e) {
+  hashHistory.push('search')
+  e.preventDefault()
+}
+
+// replace input
+<form onSubmit={this.goToSearch}>
+  <input onChange={this.handleTermEvent} className='search' type='text' value={this.props.searchTerm} placeholder='Search' />
+</form>
+
+// add PropTypes
+Landing.propTypes = {
+  setSearchTerm: React.PropTypes.func,
+  searchTerm: React.PropTypes.string
+}
+
+// connect component
+module.exports = connector(Landing)
+{% endhighlight %}
+
+There you have it! Now you should be able to search from the Landing page! If you hit enter on the form, it should search for you. As a cool side-effect, now that state will be perpetuated from screen to screen. If you type 'dare' into the search, click into the Daredevil show and then click back you should see 'dare' still in the search.
+
+[elm]: http://elm-lang.org/
+[flux]: https://facebook.github.io/flux/
+[redux]: http://redux.js.org/index.html

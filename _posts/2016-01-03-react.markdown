@@ -47,7 +47,6 @@ Good job! You should see the text "This is my first component!" on the screen. A
 
 Before we start here, let's delete that bottom script tag in index.html and add <code><script src="js/ClientApp.js"></script></code> so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put
 
-```javascript
 {% highlight javascript %}
 /* global React ReactDOM */
 

@@ -21,14 +21,10 @@ Run <code>npm install</code> from the directory where you downloaded the repo. I
 Run the following global npm installs
 
 {% highlight bash %}
-npm install -g ava
+npm install -g mocha
 npm install -g nodemon
 npm install -g webpack
 npm install -g standard
 {% endhighlight %}
 
-We'll be using webpack v1.12, ava v0.11 and standard v6.0.
-
-## RethinkDB
-
-Easiest to install via homebrew if you're on OSX. Just run <code>homebrew install rethink</code>. For other platforms, read the docs on <a href="http://rethinkdb.com/docs/install/">RethinkDB.com</a>. You don't have to start it up right now but it'll be good to have it installed.
+We'll be using webpack v1.12, Mocha v2.4 and standard v6.0.

@@ -101,50 +101,5 @@ const { Link } = ReactRouter
 
 Now you have another working route (which all it's doing is showing an h1) and a link to get there. When linking between routes with react-router, use the Link component. This allows you to refactor how routes work without having refactor all of your individual links (you could just make your a's href "#/search" and it would work for now but could break later.) Now your button should work to take you to the browser page and you should be able to use back and forward for free thanks to react-router.
 
-# TODO PUT THIS SECTION AFTER YOU TEACH STATE AND PROPS
-
-Now, we have a common layout that we want to maintain between all of our pages. This is a common problem: you make a nice looking nav bar and background that you intend to share amongst multiple pages. We could make a nav component and share that but we can take it a step further (right now we're just going to share the background div.) We're going to use nested routes and what's called an IndexRoute. A nested route allows you to share UI between routes and an IndexRoute is just the default, base route of a nested route. Let's see it.
-
-Make a new file called Layout.jsx. Put:
-
-{% highlight javascript %}
-const React = require('react')
-
-const Layout = (props) => (
-  <div className='app-container'>
-    {props.children}
-  </div>
-)
-
-module.exports = Layout
-{% endhighlight %}
-
-In ClientApp, pull in the IndexRoute component from react-router and make a nested route in your component.
-
-{% highlight javascript %}
-const React = require('react')
-const ReactDOM = require('react-dom')
-const Landing = require('./Landing')
-const Search = require('./Search')
-const Layout = require('./Layout')
-const ReactRouter = require('react-router')
-const { Router, Route, hashHistory, IndexRoute } = ReactRouter
-
-const App = () => (
-  <Router history={hashHistory}>
-    <Route path='/' component={Layout}>
-      <IndexRoute component={Landing} />
-      <Route path='/search' component={Search} />
-    </Route>
-  </Router>
-)
-
-ReactDOM.render(<App/>, document.getElementById('app'))
-{% endhighlight %}
-
-# TODO Discuss prop types error if haven't already.
-
-# END TODO
-
 [react-router]: https://github.com/reactjs/react-router
 [destructuring]: http://www.2ality.com/2015/01/es6-destructuring.html#destructuring

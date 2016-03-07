@@ -29,7 +29,7 @@ Now that we have our environment set up, let's get our tests set up as an npm sc
 
 You can add <code>-R nyan</code> to the end for fun too. This changes the reporter to be the [Nyan Cat][nyan] and I just can't help my self. There are other [reporters][reporters]. The <code>--require</code> part just makes sure that our setup gets run first before our specs too. I tend to leave it off since it doesn't report the tests that do pass and that's so satisfying for me
 
-Great! Let's start writing some tests. We're going test Search.jsx so write a new file called Search.spec.js. The .spec.js convention is just to let your future self / other coders know that this file corresponds to the Search.jsx. In this case it's not significant what it's called (the naming is significant in other testing frameworks.)
+Great! Let's start writing some tests. For this workshop we're just going to shove all our tests into one spec but I encourage you to do split them up into different files as appropriately split-up files. Create a new file called App.spec.js. The .spec.js convention is just to let your future self / other coders know that this file corresponds to the whole app. In this case it's not significant what it's called (the naming is significant in other testing frameworks.)
 
 In your new file, put:
 
