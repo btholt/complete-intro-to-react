@@ -1,5 +1,6 @@
 const React = require('react')
 const ShowCard = require('./ShowCard')
+const Header = require('./Header')
 
 class Search extends React.Component {
   constructor (props) {
@@ -19,10 +20,8 @@ class Search extends React.Component {
   render () {
     return (
       <div className='container'>
-        <header className='header'>
-          <h1 className='brand'>svideo</h1>
-          <input onChange={this.handleSearchTermChange} type='text' className='search-input' placeholder='Search' value={this.state.searchTerm} />
-        </header>
+        <Header
+          handleSearchTermChange={this.handleSearchTermChange} searchTerm={this.state.searchTerm} showSearch />
         <div className='shows'>
           {this.props.route.shows
             .filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(this.state.searchTerm.toUpperCase()) >= 0)

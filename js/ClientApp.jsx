@@ -10,11 +10,11 @@ const data = require('../public/data')
 
 class App extends React.Component {
   assignShow (nextState, replace) {
-    const show = data.shows[nextState.params.id]
-    if (!show) {
+    let show = data.shows.filter((show) => show.imdbID === nextState.params.id)
+    if (show.length < 1) {
       return replace('/')
     }
-    Object.assign(nextState.params, show)
+    Object.assign(nextState.params, show[0])
     return nextState
   }
   render () {
