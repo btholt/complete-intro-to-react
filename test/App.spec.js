@@ -20,7 +20,6 @@ describe('<Header />', () => {
 })
 
 describe('<Search />', () => {
-
   const mockRoute = {
     shows: data.shows
   }
@@ -31,8 +30,8 @@ describe('<Search />', () => {
   })
 
   it('should filter correctly given new state', () => {
-    store.dispatch({ type: 'setSearchTerm', value: 'house'})
-    const wrapper = render(<Provider store={store}><Search route={mockRoute} /></Provider>)
+    store.dispatch({type: 'setSearchTerm', value: 'house'})
+    const wrapper = render(<Provider store={store} ><Search route={mockRoute} /></Provider>)
     expect(wrapper.find('div.show-card').length).to.equal(2)
   })
 })
@@ -44,7 +43,7 @@ describe('Store', () => {
   })
 
   it('should handle setSearchTerm actions', () => {
-    const state = reducer({ searchTerm: 'some random string' }, { type: 'setSearchTerm', value: 'correct string'})
-    expect(state).to.deep.equal({ searchTerm: 'correct string' })
+    const state = reducer({searchTerm: 'some random string'}, {type: 'setSearchTerm', value: 'correct string'})
+    expect(state).to.deep.equal({searchTerm: 'correct string'})
   })
 })
