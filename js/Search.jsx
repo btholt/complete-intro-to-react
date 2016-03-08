@@ -1,5 +1,4 @@
 const React = require('react')
-const data = require('../public/data')
 const ShowCard = require('./ShowCard')
 
 class Search extends React.Component {
@@ -17,9 +16,6 @@ class Search extends React.Component {
       searchTerm: event.target.value
     })
   }
-  randomMethod() {
-    console.log('here')
-  }
   render () {
     return (
       <div className='container'>
@@ -28,15 +24,19 @@ class Search extends React.Component {
           <input onChange={this.handleSearchTermChange} type='text' className='search-input' placeholder='Search' value={this.state.searchTerm} />
         </header>
         <div className='shows'>
-          {data.shows
+          {this.props.route.shows
             .filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(this.state.searchTerm.toUpperCase()) >= 0)
             .map((show) => (
-            <ShowCard {...show} key={show.imdbID} />
+              <ShowCard {...show} key={show.imdbID} />
           ))}
         </div>
       </div>
     )
   }
+}
+
+Search.propTypes = {
+  route: React.PropTypes.object.isRequired
 }
 
 module.exports = Search
