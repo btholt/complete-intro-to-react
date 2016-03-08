@@ -39,11 +39,11 @@ describe('<Search />', () => {
 describe('Store', () => {
   it('should bootstrap', () => {
     const state = rootReducer(undefined, { type: '@@redux/INIT' })
-    expect(state).to.deep.equal({searchTerm: ''})
+    expect(state).to.deep.equal({searchTerm: '', shows: data.shows})
   })
 
   it('should handle setSearchTerm actions', () => {
-    const state = rootReducer({searchTerm: 'some random string'}, {type: 'setSearchTerm', value: 'correct string'})
-    expect(state).to.deep.equal({searchTerm: 'correct string'})
+    const state = rootReducer({searchTerm: 'some random string', shows: data.shows}, {type: 'setSearchTerm', value: 'correct string'})
+    expect(state).to.deep.equal({searchTerm: 'correct string', shows: data.shows})
   })
 })
