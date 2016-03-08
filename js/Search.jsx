@@ -1,30 +1,16 @@
 const React = require('react')
 const ShowCard = require('./ShowCard')
 const Header = require('./Header')
+const { connector } = require('./Store')
 
 class Search extends React.Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      searchTerm: ''
-    }
-
-    this.handleSearchTermChange = this.handleSearchTermChange.bind(this)
-  }
-  handleSearchTermChange (event) {
-    this.setState({
-      searchTerm: event.target.value
-    })
-  }
   render () {
     return (
       <div className='container'>
-        <Header
-          handleSearchTermChange={this.handleSearchTermChange} searchTerm={this.state.searchTerm} showSearch />
+        <Header showSearch />
         <div className='shows'>
           {this.props.route.shows
-            .filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(this.state.searchTerm.toUpperCase()) >= 0)
+            .filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(this.props.searchTerm.toUpperCase()) >= 0)
             .map((show) => (
               <ShowCard {...show} key={show.imdbID} />
           ))}
@@ -35,7 +21,8 @@ class Search extends React.Component {
 }
 
 Search.propTypes = {
-  route: React.PropTypes.object.isRequired
+  route: React.PropTypes.object.isRequired,
+  searchTerm: React.PropTypes.string
 }
 
-module.exports = Search
+module.exports = connector(Search)

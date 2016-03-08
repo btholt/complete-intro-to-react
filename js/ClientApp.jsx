@@ -7,6 +7,8 @@ const Details = require('./Details')
 const ReactRouter = require('react-router')
 const { Router, Route, hashHistory, IndexRoute } = ReactRouter
 const data = require('../public/data')
+const { Provider } = require('react-redux')
+const { store } = require('./Store')
 
 class App extends React.Component {
   assignShow (nextState, replace) {
@@ -30,4 +32,4 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'))
+ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('app'))
