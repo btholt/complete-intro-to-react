@@ -1,15 +1,14 @@
-var React = require('react')
-var ReactDOM = require('react-dom')
-var MyTitle = require('./MyTitle')
+const React = require('react')
+const ReactDOM = require('react-dom')
 
-var MyFirstComponent = function () {
-  return (
-    <div>
-      <MyTitle title='Whatevs' color='rebeccapurple' />
-      <MyTitle title='LOL' color='papayawhip' />
-      <MyTitle title='OMGLOLWTFBBQ' color='#f06d06' />
+const App = () => (
+  <div className='app-container'>
+    <div className='home-info'>
+      <h1 className='title'>svideo</h1>
+      <input className='search' type='text' placeholder='Search' />
+      <button className='browse-all'> or Browse All</button>
     </div>
-  )
-}
+  </div>
+)
 
-ReactDOM.render(<MyFirstComponent />, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'))
