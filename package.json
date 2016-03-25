@@ -7,7 +7,8 @@
     "test": "mocha --require test/helpers/setup.js",
     "lint": "standard",
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "cover": "nyc --reporter=lcov --reporter=text --reporter=html --require babel-register --extension .jsx npm test"
   },
   "author": "Brian Holt <btholt@gmail.com>",
   "license": "MIT",
