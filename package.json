@@ -4,7 +4,8 @@
   "description": "A two day workshop on a complete intro to React",
   "main": "index.js",
   "scripts": {
-    "test": "standard",
+    "test": "mocha --require test/helpers/setup.js",
+    "lint": "standard",
     "build": "webpack",
     "watch": "webpack --watch"
   },
