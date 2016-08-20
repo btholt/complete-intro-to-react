@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "standard",
-    "build": "webpack js/ClientApp.js public/bundle.js"
+    "build": "webpack",
+    "watch": "webpack --watch"
   },
   "author": "Brian Holt <btholt@gmail.com>",
   "license": "MIT",
