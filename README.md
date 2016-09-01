@@ -11,3 +11,12 @@ Please contribute, file issues, and make PRs. More than anything I'm sure there 
 MIT
 
 [gh-page]: http://btholt.github.io/complete-intro-to-react/
+
+## Start with the beginning branch
+
+```
+git clone git@github.com:btholt/complete-intro-to-react.git
+cd complete-intro-to-react
+git fetch
+git checkout start
+```
