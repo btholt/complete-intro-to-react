@@ -18,13 +18,15 @@ MIT
 git clone git@github.com:btholt/complete-intro-to-react.git
 cd complete-intro-to-react
 git fetch
-git checkout start
+git checkout -b start origin/start
+npm install
 ```
 
 ## Sync to a Branch Later in the Course
 
-Checkout a remote branch (name local branch the same as origin branch)
-
 ```
 git checkout -b fem-10 origin/fem-10
+npm install
 ```
+
+^ Name local branch the same as origin branch.
