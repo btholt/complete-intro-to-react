@@ -18,10 +18,7 @@ const rootRoute = {
   path: '/',
   indexRoute: {
     getComponent (location, cb) {
-      require.ensure([], (error) => {
-        if (error) {
-          return console.error('ClientApp Landing require.ensure error', error)
-        }
+      require.ensure([], () => {
         cb(null, require('./Landing'))
       })
     }
@@ -30,10 +27,7 @@ const rootRoute = {
     {
       path: 'search',
       getComponent (location, cb) {
-        require.ensure([], (error) => {
-          if (error) {
-            return console.error('ClientApp Search require.ensure error', error)
-          }
+        require.ensure([], () => {
           cb(null, require('./Search'))
         })
       }
@@ -41,10 +35,7 @@ const rootRoute = {
     {
       path: 'details/:id',
       getComponent (location, cb) {
-        require.ensure([], (error) => {
-          if (error) {
-            return console.error('ClientApp Details require.ensure error', error)
-          }
+        require.ensure([], () => {
           cb(null, require('./Details'))
         })
       }
