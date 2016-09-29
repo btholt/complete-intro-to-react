@@ -8,6 +8,8 @@ var MyTitle = React.createClass({
       // can only return one component, hence why you would wrap them all in a div
       div(null,
         h1({style: { color: this.props.color }}, this.props.title)
+      div(null,
+        h1({style: {color: this.props.color}}, this.props.title)
       )
     )
   }
