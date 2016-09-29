@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A two day workshop on a complete intro to React",
   "main": "index.js",
+  "scripts": {
+    "test": "standard"
+  },
   "author": "Brian Holt <btholt@gmail.com>",
   "license": "MIT",
   "dependencies": {
