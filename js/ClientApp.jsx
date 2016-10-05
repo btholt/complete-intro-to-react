@@ -59,37 +59,35 @@
 
 // module.exports = App
 
-// Above is the previous code written for lesson 
-// Below is my code for the lesson 
+// Above is the previous code written for lesson
+// Below is my code for the lesson
 
+/* global React ReactDOM */
+// Info for standard
 
-var div = React.DOM.div 
+var div = React.DOM.div
 var h1 = React.DOM.h1
 
-var MyTitle = React.createClass({ 
-  render() { 
-    return ( 
-      div(null, 
+var MyTitle = React.createClass({
+  render () {
+    return (
+      div(null,
         h1({style: {color: this.props.color}}, this.props.title)
       )
     )
   }
 })
-//Creating factory 
+// Creating factory
 var MyTitleFact = React.createFactory(MyTitle)
-var ce = React.createElement 
+var ce = React.createElement
 
-      var MyFirstComponent = ( 
-        div({style: {color: 'red'}}, 
+var MyFirstComponent = (
+        div({style: {color: 'red'}},
           MyTitleFact({title: 'Props are great', color: 'rebeccapurple'}),
           React.createElement(MyTitle, {title: 'Use props everywhere', color: 'mediumaquamarine'}),
           ce(MyTitle, {title: 'Props are the best', color: 'papayawhip'})
           )
         )
 
-      ReactDOM.render(MyFirstComponent, document.getElementById('app'))
-
-
-
-
+ReactDOM.render(MyFirstComponent, document.getElementById('app'))
 

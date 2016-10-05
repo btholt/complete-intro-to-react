@@ -7,7 +7,8 @@
     "start": "node app.js",
     "build": "webpack",
     "watch": "webpack --watch",
-    "test": "mocha --require test/helpers/setup.js",
+    "test": "standard",
+    "fix": "standard --fix",
     "lint": "eslint --ignore-path .gitignore --cache ./",
     "cover": "nyc --reporter=lcov --reporter=text --reporter=html --require babel-register --extension .jsx npm test"
   },
