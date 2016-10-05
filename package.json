@@ -5,9 +5,10 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "build": "webpack",
+    "build": "webpack js/ClientApp.jsx public/bundle.js",
     "watch": "webpack --watch",
-    "test": "mocha --require test/helpers/setup.js",
+    "test": "standard",
+    "fix": "standard --fix",
     "lint": "eslint --ignore-path .gitignore --cache ./",
     "cover": "nyc --reporter=lcov --reporter=text --reporter=html --require babel-register --extension .jsx npm test"
   },
@@ -17,12 +18,16 @@
     "axios": "0.9.1",
     "express": "4.13.4",
     "lodash": "4.6.1",
+    "mocha": "^2.4.5",
     "node-ensure": "0.0.0",
+    "nodemon": "^1.10.2",
     "react": "0.14.7",
     "react-dom": "0.14.7",
     "react-redux": "4.4.0",
     "react-router": "2.0.0",
-    "redux": "3.3.1"
+    "redux": "3.3.1",
+    "standard": "^8.3.0",
+    "webpack": "^1.13.2"
   },
   "devDependencies": {
     "babel-core": "6.5.2",
