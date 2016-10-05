@@ -64,19 +64,12 @@
 
 /* global React ReactDOM */
 // Info for standard
+var React = require('react')
+var ReactDOM = require('react-dom')
+var MyTitle = require('./MyTitle')
 
 var div = React.DOM.div
-var h1 = React.DOM.h1
-
-var MyTitle = React.createClass({
-  render () {
-    return (
-      div(null,
-        h1({style: {color: this.props.color}}, this.props.title)
-      )
-    )
-  }
-})
+var MyTitle = require('./MyTitle')
 // Creating factory
 var MyTitleFact = React.createFactory(MyTitle)
 var ce = React.createElement
