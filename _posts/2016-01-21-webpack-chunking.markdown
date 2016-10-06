@@ -113,6 +113,6 @@ Go to app.js
 match({ routes: routes, location: req.url }, (error, redirectLocation, renderProps) => {
 {% endhighlight %}
 
-Only difference is that routes is no longer a function invokation but rather just an object of configs so all we do is remove the parens. And that's it! The rest should be handled by webpack and react-router.
+Only difference is that routes is no longer a function invocation but rather just an object of configs so all we do is remove the parens. And that's it! The rest should be handled by webpack and react-router.
 
 So now browse around your site and watch the files being loaded in via the dev tools network tab. You should see the chunks being loaded as they are needed. This again doesn't split out too much since this is such a small app but you know how to do it! It's not as hard as one may expect!

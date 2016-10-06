@@ -2,7 +2,7 @@
 title: "Fixing Our Tests and Testing redux"
 ---
 
-So we broke all of our tests. They all fail now. High five! This is a big reason why I'm hesitant to test UI code: I find my tests break all the time just because I'm rewriting markup or other code. None the less, let's refix our tests and add two for redux. As opposed to testing React which I don't do much of, I test the hell out of my redux code. redux code is very testable and you should cover all or nearly-all of your reducers with tests.
+So we broke all of our tests. They all fail now. High five! This is a big reason why I'm hesitant to test UI code: I find my tests break all the time just because I'm rewriting markup or other code. Nonetheless, let's refix our tests and add two for redux. As opposed to testing React which I don't do much of, I test the hell out of my redux code. redux code is very testable and you should cover all or nearly-all of your reducers with tests.
 
 Cool, open our spec doc. Let's fix these tests one-at-a-time. For the last two tests, change their method calls from <code>it( ... )</code> to <code>xit( ... )</code>. This will prevent Mocha from running them so we can work on them one-at-a-time.
 
@@ -52,7 +52,7 @@ it('should render as many shows as there are data for', () => {
 
 We have to mock what react-router would give to the Search route. Other than than that, this look pretty familiar. We have to move from the friendly enzyme wrapper to the less-friendly [Cheerio][cheerio] wrapper.
 
-Let's rewrite out last test.
+Let's rewrite our last test.
 
 {% highlight javascript %}
 it('should filter correctly given new state', () => {
