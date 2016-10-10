@@ -53,7 +53,7 @@ Create a file called <code>.eslintrc.json</code>. That first period is significa
 }
 {% endhighlight %}
 
-This will configure eslint to check for everything standard has been checking. In addition, since we're already adding a config file, we're adding a few checks specific to React and JSX. Again, these will spare you bugs in the future and they're super helpful. Let's change our webpack config to use our new eslint-loader. eslint will automatically use our .eslintrc.json, regardless is called via the CLI or programtically via webpack.
+This will configure eslint to check for everything standard has been checking. In addition, since we're already adding a config file, we're adding a few checks specific to React and JSX. Again, these will spare you bugs in the future and they're super helpful. Let's change our webpack config to use our new eslint-loader. eslint will automatically use our .eslintrc.json, regardless is called via the CLI or programmatically via webpack.
 
 {% highlight javascript %}
 // inside module, before loaders
@@ -66,7 +66,7 @@ preLoaders: [
 ],
 {% endhighlight %}
 
-Nice! Any time you save now using <code>npm run watch</code> it will both compile your code _and_ lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code relods _even faster_. But first let's keep going with our app.
+Nice! Any time you save now using <code>npm run watch</code> it will both compile your code _and_ lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code reloads _even faster_. But first let's keep going with our app.
 
 Our landing is pretty much done for now. We want to start working on the browse all page, but we need to move onto the router to do that real quick.
 

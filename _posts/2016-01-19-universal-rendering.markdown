@@ -6,11 +6,11 @@ Universal rendering, or the artist formerly known as isomorphic rendering. The i
 
 With just vanilla React, universal rendering is a cinch. Check out the [whole node file from another one of my workshops][es6-react]. It does server-side rendering in just a few lines.
 
-It's not quite so simple now that we have routing involved. We don't want to have to duplicate all of our routing info that we wrote for react-router. Rather, if possible, we just want to re-use the routes we already built for react-router. So let's do that (with some refactoring.)
+It's not quite so simple now that we have routing involved. We don't want to have to duplicate all of our routing info that we wrote for react-router. Rather, if possible, we just want to reuse the routes we already built for react-router. So let's do that (with some refactoring.)
 
 ## Move shows to redux
 
-We're passing shows everywhere. In order to simplifiy our app a lot by not having to worry about passing it in, let's make all the shows-based data just come from redux.
+We're passing shows everywhere. In order to simplify our app a lot by not having to worry about passing it in, let's make all the shows-based data just come from redux.
 
 Go to Store.jsx
 
@@ -67,7 +67,7 @@ Just needed pull shows from a different part of the params. Not much else to cha
 // remove assignShow method and constructor from App
 {% endhighlight %}
 
-Feels good to delete code. We successfully simplified our app a lot by moving that to redux. And now it will simplifiy us moving to render universally. Let's fix our test too.
+Feels good to delete code. We successfully simplified our app a lot by moving that to redux. And now it will simplify us moving to render universally. Let's fix our test too.
 
 {% highlight javascript %}
 // change the Store init test's expect statement
@@ -78,7 +78,7 @@ All tests should pass now. Now we have a few more things to refactor before we c
 
 ## Split out BrowserEntry.jsx
 
-The big key with universal rendering is being careful about referencing <code>window</code> and <code>document</code> as those aren't available in node environments. That isn't to say you can't interact with them: you just have to do <code>if (window) { /* do stuff with window*/ }</code>. Part of that means we need to split our the rendering of ClientApp from the declaration of the component. Remove the ReactDOM stuff from ClientApp, create a new called BrowserLanding.jsx and put this in there:
+The big key with universal rendering is being careful about referencing <code>window</code> and <code>document</code> as those aren't available in node environments. That isn't to say you can't interact with them: you just have to do <code>if (window) { /* do stuff with window*/ }</code>. Part of that means we need to split out the rendering of ClientApp from the declaration of the component. Remove the ReactDOM stuff from ClientApp, create a new called BrowserLanding.jsx and put this in there:
 
 {% highlight javascript %}
 const React = require('react')
@@ -133,7 +133,7 @@ const myRoutes = (props) => (
 App.Routes = myRoutes
 {% endhighlight %}
 
-Now we can pass these routes in to the server to be able to reuse them. This should wrap up all the things we need to refactor in our client code and now we spew out our server code.
+Now we can pass these routes into the server to be able to reuse them. This should wrap up all the things we need to refactor in our client code and now we spew out our server code.
 
 ## Get your HTML ready
 
@@ -143,7 +143,7 @@ Quickly in your index.html file go add the following:
 <div id="app"><%= body %></div>
 {% endhighlight %}
 
-Just adding that body template tage will allow to render our React string directly in there. Pretty cool.
+Just adding that body template tag will allow to render our React string directly in there. Pretty cool.
 
 ## Writing the Server
 

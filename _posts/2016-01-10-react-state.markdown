@@ -114,7 +114,7 @@ I replaced the brand momentarily so you can see the see the searchTerm change. Y
 <input type='text' className='search-input' placeholder='Search' value={this.state.searchTerm} />
 {% endhighlight %}
 
-Cool! Now your input should have the inital state of your searchTerm. Now try and type and/or delete anything. You can't! You broke the Internet! Just kidding. But to understand why this weird bug is happening you have to understand how React handles keypresses. Your state object on your component states that the value of searchTerm is <code>'this is the default searchTerm'</code>. When a keypress happens, React kicks off a re-render. Since nothing modified the value of searchTerm, it's still the same string and thus it re-renders the same string there. Your state object is the source of truth. So let's make the value of searchTerm bound to the value of the input.
+Cool! Now your input should have the initial state of your searchTerm. Now try and type and/or delete anything. You can't! You broke the Internet! Just kidding. But to understand why this weird bug is happening you have to understand how React handles keypresses. Your state object on your component states that the value of searchTerm is <code>'this is the default searchTerm'</code>. When a keypress happens, React kicks off a re-render. Since nothing modified the value of searchTerm, it's still the same string and thus it re-renders the same string there. Your state object is the source of truth. So let's make the value of searchTerm bound to the value of the input.
 
 {% highlight javascript %}
 class Search extends React.Component {
@@ -164,5 +164,5 @@ Let's make the search actually _do_ something now. Since now we have our state b
 </div>
 {% endhighlight %}
 
-This is a little clever but let's dissect the new filter line we added. We're looking at both the title and description lines to search on and using the indexOf method from strings to see if the searchTerm exists within the description or title. We use toUpperCase on both to make it case agnostic. And the filter method on arrays just filters out items in an array that the method returns false on. Now try typing in your searchBox. You should see it filter as you type. We could make this more effecient but I'll leave that to you in your own time.
+This is a little clever but let's dissect the new filter line we added. We're looking at both the title and description lines to search on and using the indexOf method from strings to see if the searchTerm exists within the description or title. We use toUpperCase on both to make it case agnostic. And the filter method on arrays just filters out items in an array that the method returns false on. Now try typing in your searchBox. You should see it filter as you type. We could make this more efficient but I'll leave that to you in your own time.
 

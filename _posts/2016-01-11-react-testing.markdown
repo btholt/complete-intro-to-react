@@ -6,7 +6,7 @@ So now we have a component worth testing so let's do that. We're going to be usi
 
 We're also going to be using a testing helper from our friends at Airbnb called [Enzyme][enzyme]. Enzyme is just some helpers to make testing React components easier. You don't have to use it; the React testing utils are great too (and you can use both of them at the same time too.)
 
-So, first things first. Create a directoy called test. In our test environment, we need a few things to happen. We need JSX/ES6 transpilation to happen or our tests will crash on the unfamiliar syntax. We also need a fake DOM for React to interact with which we'll get from a library called [jsdom][jsdom].
+So, first things first. Create a directory called test. In our test environment, we need a few things to happen. We need JSX/ES6 transpilation to happen or our tests will crash on the unfamiliar syntax. We also need a fake DOM for React to interact with which we'll get from a library called [jsdom][jsdom].
 
 So in your test directory, create another directory called helpers (these files are automatically excluded from being run as tests by Mocha) and create a file called setup.js. In setup.js, put
 
@@ -97,7 +97,7 @@ it('should filter correctly given new state', () => {
 })
 {% endhighlight %}
 
-Since we're now interacting with the App programatically, we have to use the much slower and expensive mount which will use jsdom to simulate a real DOM. We're going to change the input and make sure the state changes and that the search works the way we expect by narrowing it down to the two pertinent results.
+Since we're now interacting with the App programmatically, we have to use the much slower and expensive mount which will use jsdom to simulate a real DOM. We're going to change the input and make sure the state changes and that the search works the way we expect by narrowing it down to the two pertinent results.
 
 Cool! Now we have some unit tests in place. Now let's talk about my theory around unit testing and React: I never write tests like this. I don't test my UI code ever. My UI is ever shifting and in reality, I don't much care if my markup changes. I expect to as we design and iterate on the website. However I do test the hell out of my business logic which I'll separate into small modules. In any case, I've shown you how to test your React and I'll let you decide.
 

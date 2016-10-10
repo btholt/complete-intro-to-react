@@ -4,7 +4,7 @@ title: "redux"
 
 The next thing we want to do with our app is make the front page's search work so that when you type in a search query and hit enter it will automatically have searched for that on the Search page. Right now you have all the necessary tools to do that via state. You could just push the query term up to the ClientApp level and then pass that down to the Search and you'd be done. And that's probably the way you _should_ do it given how small our app is.
 
-But when these demo apps all the fun is in overengineering it and that's precisely what we're going to do: we're going to add redux. redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture. If you're going to use a Flux-like architecture in your app, make it redux.
+But when these demo apps all the fun is in over engineering it and that's precisely what we're going to do: we're going to add redux. redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture. If you're going to use a Flux-like architecture in your app, make it redux.
 
 So what is redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. redux is great because it will run both client and server side, it's easy to test, and easy to debug. While redux does not __not__ follow the Flux pattern, you can easily see the similarities and once you've done one the other isn't hard to adapt to.
 
@@ -82,7 +82,7 @@ Let's make it work with Header so it correctly displays and changes the redux st
 const Store = require('./Store')
 const { connector } = Store
 
-// wrap comonent
+// wrap component
 module.exports = connector(Header)
 
 // two more methods for component
@@ -126,7 +126,7 @@ const { connector } = Store
 // add to PropTypes
 searchTerm: React.PropTypes.string
 
-// wrap componoent with react-redux wrapper
+// wrap component with react-redux wrapper
 module.exports = connector(Search)
 {% endhighlight %}
 

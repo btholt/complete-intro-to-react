@@ -2,11 +2,11 @@
 title:  "React"
 ---
 
-Welcome to the wonderful world of React. We are going to start with the most absoulutely barebone version of React. No JSX. No ES6. No transpilation. Just pure component-oriented pleasure of coding.
+Welcome to the wonderful world of React. We are going to start with the most absolutely barebone version of React. No JSX. No ES6. No transpilation. Just pure component-oriented pleasure of coding.
 
 So let's talk about what React is. I imagine most of those who take this class will come from another framework or library, be it jQuery, Angular, Backbone, Ember, Knockout, or something else. I will draw comparisons and contrasts to these other frameworks (despite not being the same, I'll be using the word library and framework interchangeably for brevity's sake) to help illuminate some of the differences but you needn't have programmed in these other frameworks to understand this workshop.
 
-React is a library to build the views in your app. In truth, it shares more similar responsibilites to jQuery than it does to Angular or Ember: it is not a the framework but rather a component you'll use in constructing your own framework. If you've done Backbone, React is _just_ the view but not the model or component. While it can do a little data management (which is sufficient for small apps,) you really need some other construct to manage your data if you are doing some sort of app. We will get to that later using redux.
+React is a library to build the views in your app. In truth, it shares more similar responsibilities to jQuery than it does to Angular or Ember: it is not a the framework but rather a component you'll use in constructing your own framework. If you've done Backbone, React is _just_ the view but not the model or component. While it can do a little data management (which is sufficient for small apps,) you really need some other construct to manage your data if you are doing some sort of app. We will get to that later using redux.
 
 It bears mentioning that we are slowly going to build a full stack app progressively over the course of this workshop, piece-by-piece. By the end of the workshop, you'll have built a real-time app that does streaming video.
 
@@ -75,7 +75,7 @@ ReactDOM.render(MyFirstComponent, document.getElementById('app'))
 
 {% endhighlight %}
 
-Cool, right! My our own custom class, like a div or an h1. We can use it the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and re-use these components everywhere! Notice we're using the createClass to create the component and then we're using using createElement to create an _instance_ of that class. Good to get those straight right now: a class is a type of tag and an element is one single instance of that class.
+Cool, right! My our own custom class, like a div or an h1. We can use it the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and reuse these components everywhere! Notice we're using the createClass to create the component and then we're using using createElement to create an _instance_ of that class. Good to get those straight right now: a class is a type of tag and an element is one single instance of that class.
 
 ## Factories
 
