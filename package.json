@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "standard",
-    "build": "webpack --module-bind 'js=babel' js/ClientApp.js public/bundle.js"
+    "build": "webpack"
   },
   "author": "Brian Holt <btholt@gmail.com>",
   "license": "MIT",
