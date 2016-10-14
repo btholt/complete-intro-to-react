@@ -40,7 +40,7 @@ Notice the curly braces surrounding <code>this.props.title</code>. They're there
 
 Lastly, you may notice that I switched to an ES6 style here. This is synonymous with the function syntax; just a bit more terse. Feel free to write it in any syntax that fits your fancy; this is very readable to me but may not be to you. Basically, since it's an arrow function and lacks curly braces, the resulting component is implicitly returned automatically.
 
-Let's rewrite ClientApp.js. Rename it to ClientName.jsx.
+Let's rewrite ClientApp.js. Rename it to ClientApp.jsx.
 
 {% highlight javascript %}
 const React = require('react')
