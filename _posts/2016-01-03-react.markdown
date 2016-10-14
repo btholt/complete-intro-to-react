@@ -75,7 +75,16 @@ ReactDOM.render(MyFirstComponent, document.getElementById('app'))
 
 {% endhighlight %}
 
-Cool, right! My our own custom class, like a div or an h1. We can use it the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and reuse these components everywhere! Notice we're using the createClass to create the component and then we're using using createElement to create an _instance_ of that class. Good to get those straight right now: a class is a type of tag and an element is one single instance of that class.
+Cool, right! 
+
+`MyTitle` is a `ReactComponent` class. This is a constructor function that, once invoked, is expected to return a JavaScript object with at least a `render` method on it.
+
+To invoke this constructor and create a new instance of the `MyTitle` component, you have to use the `React.createElement` method. The resulting instance is a `ReactElement`.
+
+We can use this element the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and reuse these components everywhere!
+
+To sum-up, we're using `createClass` to create the component and then we're using using `createElement` to create an _instance_ of that class, resulting in an element that can be used in others components.
+
 
 ## Factories
 
