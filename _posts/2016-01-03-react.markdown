@@ -115,13 +115,15 @@ Our title component is cute but not super reuseable. Let's make it a bit more fl
 var div = React.DOM.div
 var h1 = React.DOM.h1
 
-var MyTitle = function (props) {
-  return (
-    div(null,
-      h1(null, props.title)
+var MyTitle = React.createClass({
+  render () {
+    return (
+      div(null,
+         h1(null, this.props.title)
+      )
     )
-  )
-}
+  }
+})
 
 var MyTitleFact = React.createFactory(MyTitle)
 
@@ -140,7 +142,7 @@ Now we can change the contents of the title. But since we can pass in lots of pr
 
 {% highlight javascript %}
 // change MyTitle's inside h1
-h1({ style: {color: props.color} }, props.title)
+h1({ style: {color: this.props.color} }, this.props.title)
 
 // change MyFirstComponent inside div
 MyTitleFact({title: 'Props are great!', color: 'rebeccapurple'}),
