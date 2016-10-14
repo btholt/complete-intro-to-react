@@ -83,7 +83,7 @@ To invoke this constructor and create a new instance of the `MyTitle` component,
 
 We can use this element the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and reuse these components everywhere!
 
-To sum-up, we're using `createClass` to create the component and then we're using using `createElement` to create an _instance_ of that class, resulting in an element that can be used in others components.
+To sum-up, we're using `createClass` to create the component and then we're using `createElement` to create an _instance_ of that class, resulting in an element that can be used in others components.
 
 
 ## Factories
