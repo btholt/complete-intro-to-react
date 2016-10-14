@@ -15,14 +15,21 @@ Open MyTitle.js and rename it to MyTitle.jsx. It doesn't actually matter since b
 
 {% highlight javascript %}
 const React = require('react')
+const div = React.DOM.div
+const h1 = React.DOM.h1
 
-const MyTitle = props => (
-  <div>
-    <h1 style={ {color: props.color} }>
-      {props.title}
-    </h1>
-  </div>
-)
+const MyTitle = React.createClass({
+  render () {
+    const style = {color: this.props.color}
+    return (
+      <div>
+        <h1 style={ style }>
+          {this.props.title}
+        </h1>
+      </div>
+    )
+  }
+})
 
 module.exports = MyTitle
 {% endhighlight %}
