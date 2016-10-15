@@ -188,7 +188,7 @@ const App = () => (
   </Router>
 )
 
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'))
 {% endhighlight %}
 
 <code>children</code> is in particular an interesting beast. It allows you to make a tag and have access to whatever's inside. So:
