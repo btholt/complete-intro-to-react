@@ -37,7 +37,7 @@ const App = () => (
   </Router>
 )
 
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'))
 {% endhighlight %}
 
 Cool. Make sure standard isn't yelling at you and that your app still works. It should appear pretty much the same to you. Now we have a router so we're free to introduce a second page! If the <code>const { Router, Route, hashHistory } = ReactRouter</code> code looks foreign to you, check out [2ality's post on it][destructuring].

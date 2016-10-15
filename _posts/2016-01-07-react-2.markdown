@@ -29,7 +29,7 @@ const App = () => (
   </div>
 )
 
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'))
 {% endhighlight %}
 
 Save and run <code>npm run build</code>. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to run <code>npm run test</code> to see if your code is still lint-compliant.
