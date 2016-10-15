@@ -85,7 +85,7 @@ const App = () => (
   </Router>
 )
 
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'))
 {% endhighlight %}
 
 In Landing, change the <code><a href='#'>or Browse All</a></code> to
