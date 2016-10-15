@@ -59,7 +59,7 @@ Create a new file called Search.jsx. In Search.jsx put:
 
 {% highlight javascript %}
 const React = require('react')
-const shows = require('../public/data')
+const data = require('../public/data')
 
 const Search = () => (
   <h1>Search!!</h1>
