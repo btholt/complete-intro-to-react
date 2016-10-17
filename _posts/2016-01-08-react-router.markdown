@@ -37,7 +37,7 @@ const App = () => (
   </Router>
 )
 
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'))
 {% endhighlight %}
 
 Cool. Make sure standard isn't yelling at you and that your app still works. It should appear pretty much the same to you. Now we have a router so we're free to introduce a second page! If the <code>const { Router, Route, hashHistory } = ReactRouter</code> code looks foreign to you, check out [2ality's post on it][destructuring].
@@ -59,7 +59,7 @@ Create a new file called Search.jsx. In Search.jsx put:
 
 {% highlight javascript %}
 const React = require('react')
-const shows = require('../public/data')
+const data = require('../public/data')
 
 const Search = () => (
   <h1>Search!!</h1>
@@ -85,7 +85,7 @@ const App = () => (
   </Router>
 )
 
-ReactDOM.render(<App/>, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'))
 {% endhighlight %}
 
 In Landing, change the <code><a href='#'>or Browse All</a></code> to
