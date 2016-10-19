@@ -44,7 +44,7 @@ Let's show you a neat debugging tip I totally stole from [Ryan Florence][ryflo].
 
 // at the bottom to shut up lint
 Details.propTypes = {
-  params: React.propType.object
+  params: React.PropTypes.object
 }
 {% endhighlight %}
 
@@ -70,7 +70,7 @@ Now make Search use it
 
 // add propTypes
 Search.propTypes = {
-  shows: React.propTypes.arrayOf(React.propTypes.object)
+  shows: React.PropTypes.arrayOf(React.PropTypes.object)
 }
 {% endhighlight %}
 
