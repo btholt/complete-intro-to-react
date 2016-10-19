@@ -54,10 +54,10 @@ We're going to show all the details of a show on this page and be able to play t
 
 {% highlight javascript %}
 // another require
-const data = require('../public/data')
+const { shows } = require('../public/data')
 
 // modify the existing route
-<Route path='/search' component={Search} shows={data.shows} />
+<Route path='/search' component={Search} shows={shows} />
 {% endhighlight %}
 
 Now make Search use it
@@ -80,33 +80,40 @@ Now we're going to pass the correct show to the Details page. There's a bunch of
 
 - We could pass all the shows and let Details select the correct show. This isn't great because Details is given an additional concern it doesn't need to have.
 - We could create a callback in ClientApp that it passes to Details that Details calls with the correct ID and ClientApp hands back the correct show. This is slightly better but it's an odd API for getting data. Ideally we just hand down props and not a callback, especially since this isn't async.
-- Or we could hook into react-router's onEnter callback for the route, grab the ID, and then pass that down in addition to the ID to Details. This is my preferred approach. So let's do that.
+- Or we could hook into react-router's onEnter callback for the route, grab the ID, and then pass that down in addition to the show to Details. This is my preferred approach. So let's do that.
 
-Add the following to ClientApp:
+First, the react-router's onEnter callback provides the next router state as its first argument, but our App component has been defined using a stateless functional component syntax. Let's change the way it's defined to properly support this react-router's callback.
+
+{% highlight javascript %}
+const App = React.createClass({
+  render () {
+    return (
+      // Router content
+    )
+  }
+})
+{% endhighlight %}
+
+Then add the following:
 
 {% highlight javascript %}
 // method before render
 assignShow (nextState, replace) {
-  const show = data.shows[nextState.params.id]
-  if (!show) {
+  const showArray = shows.filter((show) => show.imdbID === nextState.params.id)
+
+  if (showArray.length < 1) {
     return replace('/')
   }
-  Object.assign(nextState.params, show)
+
+  Object.assign(nextState.params, showArray[0])
   return nextState
-}
-
-// method before assignShow
-constructor (props) {
-  super(props)
-
-  this.assignShow = this.assignShow.bind(this)
-}
+},
 
 // replace /details route
 <Route path='/details/:id' component={Details} onEnter={this.assignShow} />
 {% endhighlight %}
 
-This should put the correct show as one of the props.params that ClientApp passes down to Details. If you refresh the page, you should see it now.
+This should put the correct show as one of the props.params that ClientApp passes down to Details. Change your URL "id" param to one of the imdbID that can be found in data.json to test.
 
 As an aside, I've found the _best_ way to organize React method component is the following
 
@@ -255,7 +262,7 @@ const { Link } = ReactRouter
 
 // replace ShowCard
 const ShowCard = (props) => (
-  <Link to={`/details/${props.id}`}>
+  <Link to={`/details/${props.imdbID}`}>
     <div className='show-card'>
       <img src={`/public/img/posters/${props.poster}`} className='show-card-img' />
       <div className='show-card-text'>
