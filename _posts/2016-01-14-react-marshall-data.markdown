@@ -113,7 +113,7 @@ assignShow (nextState, replace) {
 <Route path='/details/:id' component={Details} onEnter={this.assignShow} />
 {% endhighlight %}
 
-This should put the correct show as one of the props.params that ClientApp passes down to Details. If you refresh the page, you should see it now.
+This should put the correct show as one of the props.params that ClientApp passes down to Details. Change your URL "id" param to one of the imdbID that can be found in data.json to test.
 
 As an aside, I've found the _best_ way to organize React method component is the following
 
