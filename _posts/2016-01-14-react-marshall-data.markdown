@@ -262,7 +262,7 @@ const { Link } = ReactRouter
 
 // replace ShowCard
 const ShowCard = (props) => (
-  <Link to={`/details/${props.id}`}>
+  <Link to={`/details/${props.imdbID}`}>
     <div className='show-card'>
       <img src={`/public/img/posters/${props.poster}`} className='show-card-img' />
       <div className='show-card-text'>
