@@ -37,8 +37,8 @@ class Search extends React.Component {
           <input type='text' className='search-input' placeholder='Search' />
         </header>
         <div className='shows'>
-          {data.shows.map((show) => (
-            <ShowCard {...show} />
+          {data.shows.map((show, index) => (
+            <ShowCard {...show} key={index} id={index} />
           ))}
         </div>
       </div>
@@ -63,8 +63,8 @@ const Search = React.createClass({
           <input type='text' className='search-input' placeholder='Search' />
         </header>
         <div className='shows'>
-          {data.shows.map((show) => (
-            <ShowCard {...show} />
+          {data.shows.map((show, index) => (
+            <ShowCard {...show} key={index} id={index}/>
           ))}
         </div>
       </div>
@@ -96,8 +96,8 @@ class Search extends React.Component {
           <input type='text' className='search-input' placeholder='Search' />
         </header>
         <div className='shows'>
-          {data.shows.map((show) => (
-            <ShowCard {...show} />
+          {data.shows.map((show, index) => (
+            <ShowCard {...show} key={index} id={index}/>
           ))}
         </div>
       </div>
@@ -138,8 +138,8 @@ class Search extends React.Component {
           <input type='text' className='search-input' placeholder='Search' value={this.state.searchTerm} onChange={this.handleSearchTermChange} />
         </header>
         <div className='shows'>
-          {data.shows.map((show) => (
-            <ShowCard {...show} />
+          {data.shows.map((show, index) => (
+            <ShowCard {...show} key={index} id={index}/>
           ))}
         </div>
       </div>
@@ -158,11 +158,10 @@ Let's make the search actually _do_ something now. Since now we have our state b
 <div className='shows'>
   {data.shows
     .filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(this.state.searchTerm.toUpperCase()) >= 0)
-    .map((show) => (
-      <ShowCard {...show} />
+    .map((show, index) => (
+      <ShowCard {...show} key={index} id={index} />
   ))}
 </div>
 {% endhighlight %}
 
 This is a little clever but let's dissect the new filter line we added. We're looking at both the title and description lines to search on and using the indexOf method from strings to see if the searchTerm exists within the description or title. We use toUpperCase on both to make it case agnostic. And the filter method on arrays just filters out items in an array that the method returns false on. Now try typing in your searchBox. You should see it filter as you type. We could make this more efficient but I'll leave that to you in your own time.
-
