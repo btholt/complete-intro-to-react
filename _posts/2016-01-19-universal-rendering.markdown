@@ -55,7 +55,7 @@ This should fix Details. Let's fix Search.
 shows: React.PropTypes.arrayOf(React.PropTypes.object),
 {% endhighlight %}
 
-Just needed pull shows from a different part of the params. Not much else to change here. Now (while your tests and lint are failing at the moment) the app should still work but the shows are coming from redux. Let's go clean up ClientApp.jsx
+Just needed to pull shows from a different part of the params. Not much else to change here. Now (while your tests and lint are failing at the moment) the app should still work but the shows are coming from redux. Let's go clean up ClientApp.jsx
 
 {% highlight javascript %}
 // remove data.json require

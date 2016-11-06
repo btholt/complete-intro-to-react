@@ -31,7 +31,7 @@ Let's add build to our npm scripts. Add to scripts in package.json <code>"build"
 
 Babel is an amazing, amazing tool that has fundamentally altered the landscape of JavaScript as we know. Though they didn't invent the idea of transpiling future syntax of JavaScript into current syntax (thanks Traceur,) they did make it so damn _easy_. Couple that with the fact it worked with React's JSX (which we'll talk about in a sec) out of the box and it was a perfect storm the be massively successful. Babel, in short, is amazing and should be something you consider for every project.
 
-Babel 6 (the latest revision of Babel) took away a tiny bit of that ease of use but in return it became much easier to develop which is important when you're important when you're maintaining a massive project that's very important. In return it requires a bit of config now.
+Babel 6 (the latest revision of Babel) took away a tiny bit of that ease of use but in return it became much easier to develop which is important when you're maintaining such a massive project. In return it requires a bit of config now.
 
 Create a new file called .babelrc. Inside .babelrc, put:
 

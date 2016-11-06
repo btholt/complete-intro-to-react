@@ -4,7 +4,7 @@ title: "istanbul / nyc"
 
 A good-but-not-great metric of how well you're testing your is code coverage. Basically it's how much of your code gets covered by your tests. There exist many tools to do this but we're going to use the most common in the JavaScript world: [istanbul][istanbul]. Well, sort of. We're going to be using [nyc][nyc] which is built on top of istanbul but I find it a bit easier to work with.
 
-What istanbul is going to do? Istanbul instruments your code to see what code gets run and then lets you when your tests are covering and/or not covering other parts. So let's implement that as an npm script. Add:
+What istanbul is going to do? Istanbul instruments your code to see what code gets run and then lets you know when your tests are covering and/or not covering other parts. So let's implement that as an npm script. Add:
 
 {% highlight json %}
 "cover": "nyc --reporter=lcov --reporter=text --reporter=html --require babel-register --extension .jsx npm test"

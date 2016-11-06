@@ -2,7 +2,7 @@
 title: "React: State"
 ---
 
-We've discussed props which all you to have immutable state passed from parents to children. However, as any seasoned UI developer will point out, interfaces are inherently stateful. You app at some level must contain some level of mutability. React gives you a very controlled window to introduce this mutability to be able to reason easily about this mutability aptly called state.
+We've discussed props which are all you need to have immutable state passed from parents to children. However, as any seasoned UI developer will point out, interfaces are inherently stateful. Your app at some level must contain some level of mutability. React gives you a very controlled window to introduce this mutability to be able to reason easily about this mutability aptly called state.
 
 While props are passed down from parents and are immutable, state is created, read, and mutated all _inside of_ a component. In other words, if a component has state, that state cannot be mutated by a parent, child, or any other external influence; only that same component has access to the setState method which is the only way to mutate state. That component has the ability to expose methods to children that the child can call to let the parent know it should mutate its state, but again, it is totally up to the parent to respect that call and mutate the state; the child can only call methods exposed to it via passed-down props.
 
@@ -20,7 +20,7 @@ In Search.jsx, add the following:
 
 Now the UI is in place. Let's start tracking what's actually in the input. But in order to do that, we need to change a bit about our component.
 
-So far we've exclusively been using what are called "stateless function components." This are awesome because they are the simplest form of a component. Also keep in mind these are relatively new to React (v0.14+). Now we're going to convert this to what's called the ES6 class syntax. Underneath I'll throw the older "createClass" syntax so you can compare; either works and some people prefer one over the other. I'll let you be the judge.
+So far we've exclusively been using what are called "stateless function components." These are awesome because they are the simplest form of a component. Also keep in mind these are relatively new to React (v0.14+). Now we're going to convert this to what's called the ES6 class syntax. Underneath I'll throw in the older "createClass" syntax so you can compare; either works and some people prefer one over the other. I'll let you be the judge.
 
 {% highlight javascript %}
 // ES6 class syntax
@@ -148,11 +148,11 @@ class Search extends React.Component {
 }
 {% endhighlight %}
 
-Now try typing in the input. As you see, the title is now reflective of whatever you type in the search input. So let's chat about what we did here. We made an event listener that handles the change events that the input throws off when it has a keypress. That event listener accepts an event that's technically a React synthetic event but its API looks just like a normal DOM event. In the event listener, we call <code>this.setState</code>, a method that allows you to mutate the state and then lets React re-render. If you don't call setState and instead mutate <code>this.state</code> yourself, React isn't privy to the fact the fact that you're changing stuff and thus doesn't know to re-render. In other words, never modify <code>this.state</code> directly and always just use setState. setState works like <code>Object.assign</code> in that it will do a merge of your objects (it's a shallow merge and not a deep merge) so you're free to just modify the keys you need to. Finally, in the constructor we added a line to bind the correct context of the event listener since we need to ensure that handleSearchTermChange is always called with the correct context.
+Now try typing in the input. As you see, the title is now reflective of whatever you type in the search input. So let's chat about what we did here. We made an event listener that handles the change events that the input throws off when it has a keypress. That event listener accepts an event that's technically a React synthetic event but its API looks just like a normal DOM event. In the event listener, we call <code>this.setState</code>, a method that allows you to mutate the state and then lets React re-render. If you don't call setState and instead mutate <code>this.state</code> yourself, React isn't privy to the fact that you're changing stuff and thus doesn't know to re-render. In other words, never modify <code>this.state</code> directly and always just use setState. setState works like <code>Object.assign</code> in that it will do a merge of your objects (it's a shallow merge and not a deep merge) so you're free to just modify the keys you need to. Finally, in the constructor we added a line to bind the correct context of the event listener since we need to ensure that handleSearchTermChange is always called with the correct context.
 
 So go back now and change the brand to the correct title.
 
-Let's make the search actually _do_ something now. Since now we have our state being tracked, let's use it do a real time search on our titles.
+Let's make the search actually _do_ something now. Since now we have our state being tracked, let's use it to do a real time search on our titles.
 
 {% highlight javascript %}
 <div className='shows'>

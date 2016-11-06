@@ -28,7 +28,7 @@ describe('<Header />', () => {
 
 So because of all the misdirection and wrapping components that accompany the react-redux bindings, we lost our ability to shallow render. As such, we have to fallback to our jsdom, render version. This is much slower. You can take the time to unwrap all the pieces to make the shallow version work; we're just not going to do it here.
 
-Here we don't need to wrap <Header /> in a <Provider /> because while consuming the store, we're not actually going to test the interaction with redux, just the markup.
+Here we don't need to wrap <Header /> in a <&#8203;Provider /> because while consuming the store, we're not actually going to test the interaction with redux, just the markup.
 
 Let's move on to our first <Search /> test.
 
@@ -96,6 +96,6 @@ it('should handle setSearchTerm actions', () => {
 })
 {% endhighlight %}
 
-That's it! Reducers are easy to test due to their functional nature. Something key with reducers is that they are __pure__ functions. Means that they don't modify any state around them (including the params you pass in.) They only perform a transformation and return a new items.
+That's it! Reducers are easy to test due to their functional nature. Something key with reducers is that they are __pure__ functions. Means that they don't modify any state around them (including the params you pass in.) They only perform a transformation and return a new item.
 
 [cheerio]: http://cheeriojs.github.io/cheerio/
