@@ -6,9 +6,9 @@ The next thing we want to do with our app is make the front page's search work s
 
 But when these demo apps all the fun is in over engineering it and that's precisely what we're going to do: we're going to add redux. redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture. If you're going to use a Flux-like architecture in your app, make it redux.
 
-So what is redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. redux is great because it will run both client and server side, it's easy to test, and easy to debug. While redux does not __not__ follow the Flux pattern, you can easily see the similarities and once you've done one the other isn't hard to adapt to.
+So what is redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. redux is great because it will run both client and server side, it's easy to test, and easy to debug. While redux does __not__ follow the Flux pattern, you can easily see their similarities, and once you've used one of them the other isn't hard to adapt to.
 
-With redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie <code>tree.prop = 'foo'</code> doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
+With redux you create a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie <code>tree.prop = 'foo'</code> doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
 
 So let's do the most basic addition of redux to our app and convert the Search to use redux. Again, this is using a sledgehammer to solve a tiny nail problem: huge overkill.
 
@@ -51,7 +51,7 @@ Here we're doing everything to bootstrap a redux store. You can see our root red
 
 Then to create a new store you just give redux the root reducer and it's created! Cool!
 
-From there we're going to create a connector. react-redux is a library that provides some simple helpers to connect your redux store to your React app. Everything that react-redux does for you you can fairly easily do for yourself. For that matter, redux itself is a pretty simple library that would possible to write yourself (unlike React; good luck with that!) We're creating a mapStateToProps and a mapDispatchProps to props which are just helpers that will hand your pertinent components with the methods and state they'll need to be able to display it. Now whatever components your wrap with connector will have these bits of state and action creators available to them. We'll see how that works in a sec.
+From there we're going to create a connector. react-redux is a library that provides some simple helpers to connect your redux store to your React app. Everything that react-redux does for you you can fairly easily do for yourself. For that matter, redux itself is a pretty simple library that would be possible to write yourself (unlike React; good luck with that!) We're creating a mapStateToProps and a mapDispatchProps to props which are just helpers that will hand your pertinent components with the methods and state they'll need to be able to display it. Now whatever components your wrap with connector will have these bits of state and action creators available to them. We'll see how that works in a sec.
 
 Let's do some connecting with ClientApp.jsx
 
@@ -73,7 +73,7 @@ ReactDOM.render(
 )
 {% endhighlight %}
 
-Wrapping our app in a <code>Provider</code> component makes our store and dispatches available where-ever we wrap components with connector calls, hence why it's necessary to wrap the whole app. Good news is once you do this it magically just works thought out your whole app. You'll only have to use <code><Provider/></code> once.
+Wrapping our app in a <code>Provider</code> component makes our store and dispatches available where-ever we wrap components with connector calls, hence why it's necessary to wrap the whole app. Good news is once you do this it magically just works throughout your whole app. You'll only have to use <code><&#8203;Provider /></code> once.
 
 Let's make it work with Header so it correctly displays and changes the redux store.
 

@@ -4,7 +4,7 @@ title: "React Router"
 
 So now we have a basic landing page and we want to be able to transition to another page. Because we making this as a single page app, we are going to use the marvelous [react-router][react-router]. react-router is a robust piece of technology and we are just going to be scratching the surface of it now. If you intend on making a single page app, I suggest you deep dive into it to uncover all of its potential.
 
-We are just use the top level router at the moment. First, let's move our landing page into its own component so we can use ClientApp as the router. Move all the code (except the ReactDOM last line; leave that there) to Landing.jsx.
+We will just use the top level router at the moment. First, let's move our landing page into its own component so we can use ClientApp as the router. Move all the code (except the ReactDOM last line; leave that there) to Landing.jsx.
 
 {% highlight javascript %}
 // Landing.jsx

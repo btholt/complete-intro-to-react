@@ -99,7 +99,7 @@ it('should filter correctly given new state', () => {
 
 Since we're now interacting with the App programmatically, we have to use the much slower and expensive mount which will use jsdom to simulate a real DOM. We're going to change the input and make sure the state changes and that the search works the way we expect by narrowing it down to the two pertinent results.
 
-Cool! Now we have some unit tests in place. Now let's talk about my theory around unit testing and React: I never write tests like this. I don't test my UI code ever. My UI is ever shifting and in reality, I don't much care if my markup changes. I expect to as we design and iterate on the website. However I do test the hell out of my business logic which I'll separate into small modules. In any case, I've shown you how to test your React and I'll let you decide.
+Cool! Now we have some unit tests in place. Now let's talk about my theory around unit testing and React: I never write tests like this. I don't test my UI code ever. My UI is ever shifting and in reality, I don't much care if my markup changes. I expect it to, as we design and iterate on the website. However I do test the hell out of my business logic which I'll separate into small modules. In any case, I've shown you how to test your React and I'll let you decide.
 
 [jsdom]: https://github.com/tmpvar/jsdom
 [enzyme]: http://airbnb.io/enzyme/index.html
