@@ -2,17 +2,19 @@
 title: "redux"
 ---
 
-The next thing we want to do with our app is make the front page's search work so that when you type in a search query and hit enter it will automatically have searched for that on the Search page. Right now you have all the necessary tools to do that via state. You could just push the query term up to the ClientApp level and then pass that down to the Search and you'd be done. And that's probably the way you _should_ do it given how small our app is.
+The next thing we want to do with our app is make the front page's search work so that when you type in a search query and hit enter it will automatically have searched for that on the Search page. Right now you have all the necessary tools to do that via state. You could just push the query term up to the ClientApp level and then pass that down to the Search and you'd be done. And that's the way you _should_ do it given how small our app is.
 
-But when these demo apps all the fun is in over engineering it and that's precisely what we're going to do: we're going to add redux. redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture. If you're going to use a Flux-like architecture in your app, make it redux.
+But when these demo apps all the fun is in over engineering it and that's precisely what we're going to do: we're going to add redux. redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture.
 
-So what is redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. redux is great because it will run both client and server side, it's easy to test, and easy to debug. While redux does not __not__ follow the Flux pattern, you can easily see the similarities and once you've done one the other isn't hard to adapt to.
+As a side-note, there are some super rad new tools out there like [Mobx][mobx] that you can check out, but we're sticking to Redux. Mobx is incredible but with more power comes more complexity. If you learn Redux then learn Mobx (and reactive programming) you'll really appreciate and/or fear the power that comes from Mobx.
 
-With redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie <code>tree.prop = 'foo'</code> doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
+So what is Redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. Redux is great because it will run both client and server side, it's easy to test, and easy to debug. While Redux does not __not__ follow the Flux pattern, you can easily see the similarities and once you've done one the other isn't hard to adapt to.
 
-So let's do the most basic addition of redux to our app and convert the Search to use redux. Again, this is using a sledgehammer to solve a tiny nail problem: huge overkill.
+With Redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie <code>tree.prop = 'foo'</code> doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
 
-Create Store.jsx. Because our use case is so small, I'm going to shove all our concerns in here. You should separate these out. But not today!
+So let's do the most basic addition of Redux to our app and convert the Search to use Redux. Again, this is using a sledgehammer to solve a tiny nail problem: huge overkill.
+
+Create Store.js. Because our use case is so small, I'm going to shove all our concerns in here. You should separate these out. But not today!
 
 {% highlight javascript %}
 const redux = require('redux')

@@ -1,110 +1,108 @@
 ---
-title: "Testing React with Mocha, Chai, and Enzyme"
+title: "Testing React with Jest, Snapshots, and Enzyme"
 ---
 
-So now we have a component worth testing so let's do that. We're going to be using the old standbys [Mocha][mocha] and [Chai][chai]. These principles will generally apply to AVA or Jasmine too but I rolled with Mocha due to the fact that I've used it for so long that it's easy for me teach.
+**Note**: This is using Jest. If you want to see how to test React components using [Mocha][mocha], Chai, Sinon, and Enzyme, see the [previous version][v1] of this workshop.
 
-We're also going to be using a testing helper from our friends at Airbnb called [Enzyme][enzyme]. Enzyme is just some helpers to make testing React components easier. You don't have to use it; the React testing utils are great too (and you can use both of them at the same time too.)
+Now that we have something worth testing, let's test it. We're going to be using Facebook's Jest (v15.1.1) to do it since it has some neat features. Go ahead and add the following to your npm scripts: <code>"test": "jest"</code>. Then go to your JS directory and create a file called Search.spec.js. I like to make my tests live right along side the files they test but I'm okay putting them in another directory: up to you. In either case Jest is smart enough to autodiscover them if you make the extension *.spec.js.
 
-So, first things first. Create a directory called test. In our test environment, we need a few things to happen. We need JSX/ES6 transpilation to happen or our tests will crash on the unfamiliar syntax. We also need a fake DOM for React to interact with which we'll get from a library called [jsdom][jsdom].
-
-So in your test directory, create another directory called helpers (these files are automatically excluded from being run as tests by Mocha) and create a file called setup.js. In setup.js, put
+In Search.spec.js, put:
 
 {% highlight javascript %}
-require('babel-register')
-require('babel-polyfill')
+import React from 'react'
+import Search from './Search'
+import renderer from 'react-test-renderer'
 
-global.document = require('jsdom').jsdom('<body><div id="app"></div></body>')
-global.window = document.defaultView
-global.navigator = window.navigator
+test('Search should search titles', () => {
+  const component = renderer.create(<Search />)
+  let tree = component.toJSON()
+  expect(tree).toMatchSnapshot()
+})
 {% endhighlight %}
 
-This little setup is totally lifted from [Kent C. Dodds][kcd]. Thanks Kent.
+This is a snapshot test and it's a super cool new feature of Jest. Jest is going to render out the component you tell it to and dump the state of that to a file. It's basically a free unit test that the computer generates for you. If the markup changes in the future unexpectedly, your unit test will fail and you'll see why it failed.
 
-Now that we have our environment set up, let's get our tests set up as an npm script. Add the following to your scripts object in your package.json
+ So then you may ask, "What happens if I update the component on purpose?" Easy! You run the test again with the -u flag and it will write out new snapshots. Awesome! Also note you're supposed to commit snapshots to git.
+
+ Okay, so go the CLI and run <code>npm t</code> (which is just short for npm run test or npm test, they all work the same.) You're going to get some error about import being a bad token; this is true since as of Node.js 7, V8 (the JS engine that power Node.js) still doesn't understand ES6 modules, but we still want to use them in dev so we need to do some special Babel transformations just for testing. Go to your .babelrc file and put this:
 
 {% highlight json %}
-"test": "mocha --require test/helpers/setup.js",
+{
+  "presets": [
+    "react",
+    ["es2015", {modules: false}]
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}
 {% endhighlight %}
 
-You can add <code>-R nyan</code> to the end for fun too. This changes the reporter to be the [Nyan Cat][nyan] and I just can't help my self. There are other [reporters][reporters]. The <code>--require</code> part just makes sure that our setup gets run first before our specs too. I tend to leave it off since it doesn't report the tests that do pass and that's so satisfying for me
+This will add the correct Babel transformation when you are the test environment. Now let's make it so the jest command is run in the test environment (since by default it won't). Go back and change your line in your npm scripts to be <code>"test": "NODE_ENV=test jest"</code>. Now it will apply that extra transformation for you. Now try running npm t again and see what happens. If it still fails on the import token, run <code>npm t -- --no-cache</code>. The double dash means you want to pass parameters to whatever npm is running, in this case jest, so the command you're actually running is <code>jest --no-cache</code>. That's a useful trick to know. Then Jest likes to cache Babel transformations for ones it's already done so that you don't have to do it every time; this greatly speeds up running tests but it also doesn't check to see if you updated your .babelrc. So here we need to tell it to do so.
 
-Great! Let's start writing some tests. For this workshop we're just going to shove all our tests into one spec but I encourage you to do split them up into different files as appropriately split-up files. Create a new file called App.spec.js. The .spec.js convention is just to let your future self / other coders know that this file corresponds to the whole app. In this case it's not significant what it's called (the naming is significant in other testing frameworks.)
+So now that you have a passing test, try modifiying Search and running it again. It'll give you a git diff type output and you can see what changed. If it's what you expect, you just re-run the command with -u at the end, <code>npm t -- -u</code>. Let's actually put that as an npm script so we don't have to remember that. Add <code>"update-test": "npm run test -- -u"</code> to your npm scripts in package.json.
 
-In your new file, put:
+Okay, so now we have a few problems with this test. First, if we modify ShowCard, it's going to fail this test, and I think that's a problem. As much as possible, we want a Search test to only fail if something in Search breaks, and we want ShowCard to fail if ShowCard breaks. Luckily we can do that with a tool called [Enzyme][enzyme] from Airbnb and a helper tool called enzyme-to-json meant to connect Enzyme and Jest's snapshot testing. I show you both so you can see the easiest, more standard of doing snapshot testing (with react-test-renderer) and the less standard but I suggest superior way of using enzyme-to-json. Also, react-test-renderer and Enzyme can't be imported into the same file and we need to use Enzyme for other tests later.
+
+So modifiy your test to read:
 
 {% highlight javascript %}
-/* eslint-env mocha */
-const chai = require('chai')
-const { expect } = chai
+import React from 'react'
+import Search from './Search'
+import { shallow } from 'enzyme'
+import { shallowToJson } from 'enzyme-to-json'
 
-describe('<Search />', () => {
-  it('should pass', () => {
-    expect(1 + 1 === 2).to.be.true
-  })
+test('Search render correctly', () => {
+  const component = shallow(<Search />)
+  const tree = shallowToJson(component)
+  expect(tree).toMatchSnapshot()
 })
 {% endhighlight %}
 
-The first line is to let eslint know that this file is run through Mocha and thus a certain of globals made available by Mocha are okay to use (like describe and it.) You'll have to put this pragma at the beginning of all your tests so it won't fail lint. Next we're requiring Chai which is our assertions library. I like the expect way of doing tests but you're okay to use assert or should. And then we're just setting up a stupid test to make sure it's all working. Run your test and you should see one test passing.
-
-Now that our test is passing, let's make some real tests. Let's test to make sure that our branding is always showing up. Because branding is important, right? Delete our bogus test and put:
+Run npm t and you can see the difference. Instead of rendering out all the individual shows, we're rendering stubs of ShowCard with the props going into each of them. This ends up being preferable since if ShowCard breaks, it won't break _this_ test. Run <code>npm run update-test</code>. You should see it updated your snapshot and now you're good to keep going. Let's test that if we search on the Search component, it displays the correct amount of shows.
 
 {% highlight javascript %}
-/* eslint-env mocha */
-const React = require('react')
-const chai = require('chai')
-const { expect } = chai
-const Search = require('../js/Search')
-const enzyme = require('enzyme')
-const { shallow } = enzyme
+// add two imports
+import ShowCard from './ShowCard'
+import preload from '../public/data.json'
 
-describe('<Search />', () => {
-  it('should render the brand', () => {
-    const wrapper = shallow(<Search />)
-    expect(wrapper.contains(<h1 className='brand'>svideo</h1>)).to.be.true
-  })
+// add new test at the bottom
+test('Search should render correct amount of shows', () => {
+  const component = shallow(<Search />)
+  expect(preload.shows.length).toEqual(component.find(ShowCard).length)
 })
 {% endhighlight %}
 
-So now we're pulling in Enzyme and using its shallow-rendering ability. This means it will render everything except its child composite component. In this case, the only composite components are the ShowCards so it won't reach down into the ShowCards to render them; just stubs. This is sufficient to test if the branding is there. A neat trick is to put <code>console.log(wrapper.debug())</code>. That will show you what it's dealing with. Let's add another more useful test.
+Enzyme gives us lots of useful features. In this case, we can use it to do jQuery-like selections from our app. We can actually ask it, "How times does it use this React component". Logically, based on how our app works, it should have a ShowCard for each item in the preload data, so that's what we've checked here. Let's take it a step further and see if it searches correctly.
 
 {% highlight javascript %}
-// add two more requires at the top
-const ShowCard = require('../js/ShowCard')
-const data = require('../public/data')
-
-// add another test inside the describe
-  it('should render as many shows as there are data for', () => {
-    const wrapper = shallow(<Search />)
-    expect(wrapper.find(ShowCard).length).to.equal(data.shows.length)
-  })
-{% endhighlight %}
-
-Here we're testing to see if all the initial ShowCards are getting rendered. There should be a ShowCard for every show in the preload. Let's add one more to test the search functionality.
-
-{% highlight javascript %}
-// also pull out mount
-const { shallow, mount } = enzyme
-
-// add another test inside of describe
-it('should filter correctly given new state', () => {
-  const wrapper = mount(<Search />)
-  const input = wrapper.find('.search-input')
-  input.node.value = 'house'
-  input.simulate('change')
-  expect(wrapper.state('searchTerm')).to.equal('house')
-  expect(wrapper.find('.show-card').length).to.equal(2)
+// underneath the last test
+test('Search should render correct amount of shows based on search', () => {
+  const searchWord = 'house'
+  const component = shallow(<Search />)
+  component.find('input').simulate('change',{target:{value: searchWord}})
+  const showCount = preload.shows.filter((show) => `${show.title.toUpperCase()} ${show.description.toUpperCase()}`.includes(searchWord.toUpperCase())).length
+  expect(showCount).toEqual(component.find(ShowCard).length)
 })
 {% endhighlight %}
 
-Since we're now interacting with the App programmatically, we have to use the much slower and expensive mount which will use jsdom to simulate a real DOM. We're going to change the input and make sure the state changes and that the search works the way we expect by narrowing it down to the two pertinent results.
+Here we're making sure that the UI displays the correct amount of ShowCards for how many shows it should match. If I were to take this a bit further, I would extract that filter function to a module, test that, and then import that same function into the production environment and the test environment. Here we're duplicating logic which isn't the best idea.
 
-Cool! Now we have some unit tests in place. Now let's talk about my theory around unit testing and React: I never write tests like this. I don't test my UI code ever. My UI is ever shifting and in reality, I don't much care if my markup changes. I expect to as we design and iterate on the website. However I do test the hell out of my business logic which I'll separate into small modules. In any case, I've shown you how to test your React and I'll let you decide.
+We're using Enzyme's simulate function which simulate's an event on the UI. Do note that as of present, this does _not_ simulate event bubbling: you need to trigger the event on the same element that has the listener. We're making sure that if we type into the search that it filters properly.
+
+Enzyme has two other "depths" of rendering besides shallow: full DOM rendering and static page rendering. Full DOM uses [jsdom][jsdom] to put the React app into a DOM-like environment if you need to interact with the DOM APIs. Unless you really need this, avoid it. It's _much_ slower than shallow rendering because jsdom takes a long time to bootstrap and run. You can also do static rendering which uses [Cheerio][cheerio] to parse and interact with the resulting to HTML with a jQuery like environment. Again, I'd avoid this as it is much slower but if you need to do static analysis on the HTML, static rendering is the best way.
+
+And now you get to hear my, Brian Holt's, opinion on unit testing in React: I don't. This is an unpopular opinion so please evaluate your own decision here. Because my markup changes so frequently as I seek to make the best user experience I can, tests are outdated as soon as they're finished. Thus testing markup is counterproductive because they're constantly failing and out-of-date. Rather, what I do is I extract important pieces of generally-useful pieces of logic and unit test the hell out of those. That way as my markup thrashes and changes, I can still re-use battle-tested pieces of logic to power the UI.
+
+That being said, snapshot testing is _so_ easy and _so_ fast to update, it seems to be worth it to me. It's such a new technology that it still remains to be proved out but as of present it's something I recommend evaluating if it's a good for you.
+
+At this point you can go create tests for the other components but you've been taught how and you can go do so yourself. We'll move on.
 
 [jsdom]: https://github.com/tmpvar/jsdom
 [enzyme]: http://airbnb.io/enzyme/index.html
 [chai]: http://chaijs.com/
 [mocha]: https://mochajs.org/
-[kcd]: https://github.com/kentcdodds/react-ava-workshop/blob/master/other/setup-ava-tests.js
-[nyan]: http://www.nyan.cat/
-[reporters]: https://mochajs.org/#reporters
+[cheerio]: https://cheerio.js.org/
+[v1]: TODO
