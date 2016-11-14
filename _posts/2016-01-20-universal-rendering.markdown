@@ -8,146 +8,91 @@ With just vanilla React, universal rendering is a cinch. Check out the [whole no
 
 It's not quite so simple now that we have routing involved. We don't want to have to duplicate all of our routing info that we wrote for react-router. Rather, if possible, we just want to reuse the routes we already built for react-router. So let's do that (with some refactoring.)
 
-## Move shows to redux
-
-We're passing shows everywhere. In order to simplify our app a lot by not having to worry about passing it in, let's make all the shows-based data just come from redux.
-
-Go to Store.jsx
+First thing is we need to split browser concerns away from our app. Right now ClientApp.js worries about the creating the base app _and_ rendering it to the DOM. We need to do a few things to satisfy those requirements. First let's split the app into browser and app concerns. Create a new file called App.js and put this in there:
 
 {% highlight javascript %}
-// another require
-const data = require('../public/data')
+import React from 'react'
+import { Match } from 'react-router'
+import { Provider } from 'react-redux'
+import store from './store'
+import Landing from './Landing'
+import Search from './Search'
+import Details from './Details'
+import preload from '../public/data.json'
 
-// change initial state
-const initialState = {
-  searchTerm: '',
-  shows: data.shows
+const App = () => {
+  return (
+    <Provider store={store}>
+      <div className='app'>
+        <Match exactly pattern='/' component={Landing} />
+        <Match pattern='/search' component={(props) => <Search shows={preload.shows} {...props} />} />
+        <Match pattern='/details/:id' component={(props) => {
+          const show = preload.shows.filter((show) => props.params.id === show.imdbID)
+          return <Details show={show[0]} {...props} />
+        }} />
+      </div>
+    </Provider>
+  )
 }
 
-// add to mapStateToProps
-const mapStateToProps = (state) => ({ searchTerm: state.searchTerm, shows: data.shows })
+export default App
 {% endhighlight %}
 
-Cool. Now these shows will available to any connected components. Let's go fix Details first.
+Now all ClientApp.js should be is:
 
 {% highlight javascript %}
-// bring in connector
-const Store = require('./Store')
-const { connector } = Store
+import React from 'react'
+import { render } from 'react-dom'
+import { BrowserRouter } from 'react-router'
+import App from './App'
 
-// pull show from redux
-const { title, description, year, poster, trailer } = this.props.shows[this.props.params.id]
-
-// add proptype
-shows: React.PropTypes.arrayOf(React.PropTypes.object)
-
-// connect component
-module.exports = connector(Details)
+render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('app'))
 {% endhighlight %}
 
-This should fix Details. Let's fix Search.
+Now all browser concerns lie in ClientApp and the general app has been split out and is ready to be server renderered. We'll use a special ServerRouter for server rendering so that's why we put the BrowserRouter inside of ClientApp.
+
+Also, since App itself carries no state, we put it inside of a stateless functional component. I typically default to this kind of component and only migrate to React.createClass when I need lifecycle methods or need to keep track of state. They're great because they're simpler.
+
+Okay, copout here: doing CSS modules in server-side rendering is going to add a bunch of complexity that with how little we're using CSS modules. It's possible, you need to pull in [isomorphic-style-loader][isl] instead of css-loader, but we're skip it for now. Remove/comment-out the css imports inside of Landing.js and add them to the head in index.html. Change index.html to look like:
 
 {% highlight javascript %}
-// change the statement to map and filter
-{this.props.shows
-
-// overwrite the route proptype
-shows: React.PropTypes.arrayOf(React.PropTypes.object),
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vidflix</title>
+  <link rel="stylesheet" href="/public/normalize.css" />
+  <link rel="stylesheet" href="/public/style.css" />
+</head>
+<body>
+  <div id="app"><%= body %></div>
+  <&NegativeMediumSpace;script src="/public/bundle.js"></script>
+</body>
+</html>
 {% endhighlight %}
 
-Just needed pull shows from a different part of the params. Not much else to change here. Now (while your tests and lint are failing at the moment) the app should still work but the shows are coming from redux. Let's go clean up ClientApp.jsx
+We also added a [lodash template][lodash] tag in it. We'll use it as we server-side render.
 
-{% highlight javascript %}
-// remove data.json require
+Go to .babelrc and add env, for server. For now it'll be the same as test (since we need Babel to make the modules to CommonJS here too) but we don't want to tie those together.
 
-// remove shows attribute from Search
-
-// remove assignShow onEnter from Details
-
-// remove assignShow method and constructor from App
+{% highlight json %}
+{
+  "presets": [
+    "react",
+    ["es2015", {modules: false, loose: true}]
+  ],
+  "env": {
+    "server": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    },
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}
 {% endhighlight %}
 
-Feels good to delete code. We successfully simplified our app a lot by moving that to redux. And now it will simplify us moving to render universally. Let's fix our test too.
-
-{% highlight javascript %}
-// change the Store init test's expect statement
-expect(state).to.deep.equal({ searchTerm: '', shows: data.shows })
-{% endhighlight %}
-
-All tests should pass now. Now we have a few more things to refactor before we can universally render successfully.
-
-## Split out BrowserEntry.jsx
-
-The big key with universal rendering is being careful about referencing <code>window</code> and <code>document</code> as those aren't available in node environments. That isn't to say you can't interact with them: you just have to do <code>if (window) { /* do stuff with window*/ }</code>. Part of that means we need to split out the rendering of ClientApp from the declaration of the component. Remove the ReactDOM stuff from ClientApp, create a new called BrowserLanding.jsx and put this in there:
-
-{% highlight javascript %}
-const React = require('react')
-const ReactDOM = require('react-dom')
-const App = require('./ClientApp')
-
-ReactDOM.render(<App />, document.getElementById('app'))
-{% endhighlight %}
-
-We're also going to be doing a couple of things with history here. First, we're switching from hashHistory to browserHistory. Instead of <code>localhost:5050/#/search</code> it's just going to be <code>localhost:5050/search</code> which we can do since we're doing server-side rendering and can control the routes.
-
-Go back to ClientApp.jsx
-
-{% highlight javascript %}
-// delete hashHistory from ReactRouter destructuring, add browserHistory
-const { Router, Route, IndexRoute, browserHistory } = ReactRouter
-
-// delete data.json require
-
-// change attribute of <Router>
-<Router history={browserHistory}>
-
-// at the bottom
-module.exports = App
-{% endhighlight %}
-
-And now the webpack config
-
-{% highlight javascript %}
-// just need to change the entry
-entry: './js/BrowserEntry.jsx',
-{% endhighlight %}
-
-Cool. That should cover our refactor to split out BrowserEntry. Now we've done that, let's refactor a bit more: split out routes.
-
-Back in ClientApp
-
-{% highlight javascript %}
-// above App
-const myRoutes = (props) => (
-  <Route path='/' component={Layout}>
-    <IndexRoute component={Landing} />
-    <Route path='/search' component={Search} />
-    <Route path='/details/:id' component={Details} />
-  </Route>
-)
-
-// replace Route and children
-{myRoutes()}
-
-// below App
-App.Routes = myRoutes
-{% endhighlight %}
-
-Now we can pass these routes into the server to be able to reuse them. This should wrap up all the things we need to refactor in our client code and now we spew out our server code.
-
-## Get your HTML ready
-
-Quickly in your index.html file go add the following:
-
-{% highlight html %}
-<div id="app"><%= body %></div>
-{% endhighlight %}
-
-Just adding that body template tag will allow to render our React string directly in there. Pretty cool.
-
-## Writing the Server
-
-This is a lot to take in at once but we have to write the whole app at once. Reason being is that you need it _all_ to be able to run the server. So let's write it first and then deconstruct it.
+Okay, let's create a server now! Create a server.js *outside* the js folder and put it just in the root directory of your project. Put:
 
 {% highlight javascript %}
 require('babel-register')
@@ -156,50 +101,44 @@ const express = require('express')
 const React = require('react')
 const ReactDOMServer = require('react-dom/server')
 const ReactRouter = require('react-router')
-const match = ReactRouter.match
-const RouterContext = ReactRouter.RouterContext
-const ReactRedux = require('react-redux')
-const Provider = ReactRedux.Provider
-const Store = require('./js/Store.jsx')
-const store = Store.store
+const ServerRouter = ReactRouter.ServerRouter
 const _ = require('lodash')
 const fs = require('fs')
 const port = 5050
 const baseTemplate = fs.readFileSync('./index.html')
 const template = _.template(baseTemplate)
-const ClientApp = require('./js/ClientApp.jsx')
-const routes = ClientApp.Routes
+const App = require('./js/App').default
 
-const app = express()
+const server = express()
 
-app.use('/public', express.static('./public'))
+server.use('/public', express.static('./public'))
 
-app.use((req, res) => {
-  match({ routes: routes(), location: req.url }, (error, redirectLocation, renderProps) => {
-    if (error) {
-      res.status(500).send(error.message)
-    } else if (redirectLocation) {
-      res.redirect(302, redirectLocation.pathname + redirectLocation.search)
-    } else if (renderProps) {
-      const body = ReactDOMServer.renderToString(
-        React.createElement(Provider, {store},
-          React.createElement(RouterContext, renderProps)
-        )
-      )
-      res.status(200).send(template({body}))
-    } else {
-      res.status(404).send('Not found')
-    }
-  })
+server.use((req, res) => {
+  const context = ReactRouter.createServerRenderContext()
+  let body = ReactDOMServer.renderToString(
+    React.createElement(ServerRouter, {location: req.url, context: context},
+      React.createElement(App)
+    )
+  )
+
+  res.write(template({body: body}))
+  res.end()
 })
 
 console.log('listening on ' + port)
-app.listen(port)
+server.listen(port)
 {% endhighlight %}
 
-So we require a bunch of stuff and build a basic Express server. From there we're going to use react-router's match function which is what react-router uses internally to match routes. We pass that route to match as well as the URL. From there, we first check for 500s, then for 300s, and then if there was a matched route. If none of those are matched, then we throw off a 404.
+We're switching back to CommonJS here to work with Node; Node doesn't natively understand ES6 modules so we need to use CommonJS. We require in a bunch of stuff. We're using Lodash templates but that's a detail; I just did it since it's an easy way to template. There's ten billion other ways to do it. We do some static serving for our CSS. And then we do the magic of server side rendering.
 
-Once a route is matched, we use ReactDOMServer to render our app out to a string (instead of to the DOM.) Once we have that string, we use [lodash][lodash] to template our rendered string into the index.html markup. And that's it! You're universally rendering!
+Notably here we are _not_ handling the 404 or redirect case. react-router is able to handle these without a ton of effort, both server and client-side, but we'll get to that later. With the createElement stuff is just like we were at the beginning of the workshop; it's just here we're doing out of necessity since Node can't read JSX either.
+
+babel-register at the top lets us require modules that need transpilation. This isn't ideal; in production you'll probably want to pre-transpile them so you don't continually pay that cost.
+
+Okay. Let's run the app. Run in your CLI <code>npm run build</code> then run <code>NODE_ENV=server node server.js</code>. Make sure you re-run build because the webpack-dev-server doesn't necessarily re-write out the bundle.js. Okay, so now try going to localhost:5050. While you won't necessarily notice it loading quicker since you were developing locally, check out view source. You should see it ships with a bunch of markup which means your page will load _much_ quicker on a slower connection since markup will start rendering before the JS is done downloading.
+
+Congrats! You've done server-side rendering!
 
 [es6-react]: https://github.com/btholt/es6-react-pres/blob/master/completed/app.js
 [lodash]: https://lodash.com/docs#template
+[isl]: https://github.com/kriasoft/isomorphic-style-loader

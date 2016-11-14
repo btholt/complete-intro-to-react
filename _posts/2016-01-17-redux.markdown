@@ -14,165 +14,240 @@ With Redux you a single store which stores your entire app state in a single tre
 
 So let's do the most basic addition of Redux to our app and convert the Search to use Redux. Again, this is using a sledgehammer to solve a tiny nail problem: huge overkill.
 
-Create Store.js. Because our use case is so small, I'm going to shove all our concerns in here. You should separate these out. But not today!
+Create a reducers.js, put this in there:
 
 {% highlight javascript %}
-const redux = require('redux')
-const reactRedux = require('react-redux')
+const DEFAULT_STATE = {
+  searchTerm: ''
+}
 
-const SET_SEARCH_TERM = 'setSearchTerm'
-
-const reducer = (state = {searchTerm: ''}, action) => {
+const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
-    case SET_SEARCH_TERM:
-      const newState = {}
-      Object.assign(newState, state, {searchTerm: action.value})
-      return newState
     default:
       return state
   }
 }
 
-const store = redux.createStore(reducer)
+export default rootReducer
+{% endhighlight %}
 
-const mapStateToProps = (state) => ({ searchTerm: state.searchTerm })
-const mapDispatchToProps = (dispatch) => {
+Create a store.js and put this:
+
+{% highlight javascript %}
+import { createStore } from 'redux'
+import rootReducer from './reducers'
+
+const store = createStore(rootReducer)
+
+export default store
+{% endhighlight %}
+
+This is about as bare bones as Redux gets: we boot strapped a Redux store with a single top-level reducer and exported that. One thing you're going to find with Redux is there's a long path to follow to follow how your state changes. A very predicatble and consistent path, but it's still way longer than it used to be when we were just dealing with React state. This will often not be worth it. Evaluate this yourself on a per-project basis.
+
+So like we said, each store starts with one reducer: the root reducer. This root reducer in turn will dispatch to other reducers. A few keys to notice here:
+
+1. You must return the finished state each time.
+1. You must handle action types you've never seen before (which why we have the default clause.)
+1. You take in state, you copy it, and you return a new state. That's what any reducer does. If you return the same state, Redux thinks nothing happened and won't inform React of any changes.
+1. You must have a default state.
+1. Redux by itself has no way of dealing with async actions. You need to pull in another library like redux-thunk. We'll use that later.
+
+Okay make a new file called actions.js and put in there:
+
+{% highlight javascript %}
+export const SET_SEARCH_TERM = 'SET_SEARCH_TERM'
+{% endhighlight %}
+
+Create a file called actionCreators.js:
+
+{% highlight javascript %}
+import { SET_SEARCH_TERM } from './actions'
+
+export function setSearchTerm (searchTerm) {
+  return { type: SET_SEARCH_TERM, searchTerm }
+}
+{% endhighlight %}
+
+Now back to reducers.js:
+
+{% highlight javascript %}
+// import at top
+import { SET_SEARCH_TERM } from './actions'
+
+// new reducer above rootReducer
+const setSearchTerm = (state, action) => {
+  const newState = {}
+  Object.assign(newState, state, {searchTerm: action.searchTerm})
+  return newState
+}
+
+// add new case before default inside rootReducer
+case SET_SEARCH_TERM:
+  return setSearchTerm(state, action)
+{% endhighlight %}
+
+More files! This should be it for our simple project. Actions is just going to a bunch of exporting of constants. Why do we do this? The way Redux's root reducer decides to dispatch it to one of various reducers is by the action type. Thus it needs to match in both the action creator and the reducer. Rather than having magic strings, we have one central source of truth both file read from. Makes refactoring easy too.
+
+The actionCreator is what the UI is actually going to interact with to make changes to the Redux store. In other words, your UI never directly interacts with the store nor the reducers. It _only_ interacts with action creators which then are handled in the reducers which then change the store which then inform the UI of the changes. One way data flow!
+
+If you haven't seen the syntax <code>const x = { searchTerm }</code> it just means <code>const x = { searchTerm: searchTerm }</code>. It's just a shortcut.
+
+The rootReducer uses the same SET_SEARCH_TERM constant to hinge in the rootReducer. Also note we return a new object every time when we make a new object. This lets Redux know to inform any subscribers (in this case your React app) that changes happened.
+
+Okay, so let's go make landing interact with the store. But first we need to connect Redux to React via the react-redux package. Go to ClientApp.js.
+
+{% highlight javascript %}
+// import react-redux and your new store
+import { Provider } from 'react-redux'
+import store from './store'
+
+// wrap everything in router in provider
+render () {
+  return (
+    <HashRouter>
+      <Provider store={store}>
+        […]
+      </Provider>
+    </HashRouter>
+  )
+}
+{% endhighlight %}
+
+Provider connects React to Redux for you. Now you can magically use a connect function (also provided from react-redux) that allows you to pull in the pieces of state you need in each component. Let's got make Landing.js read and write to Redux.
+
+{% highlight javascript %}
+// imports at the top
+import { connect } from 'react-redux'
+const { string } = React.PropTypes
+
+// add propType
+propTypes: {
+  searchTerm: string
+},
+
+// replace input
+<input value={this.props.searchTerm} type='text' placeholder='Search' />
+
+// at the bottom
+const mapStateToProps = (state) => {
   return {
-    setSearchTerm: (term) => {
-      dispatch({type: SET_SEARCH_TERM, value: term})
-    }
+    searchTerm: state.searchTerm
   }
 }
 
-const connector = reactRedux.connect(mapStateToProps, mapDispatchToProps)
-
-module.exports = { connector, store }
+export default connect(mapStateToProps)(Landing)
 {% endhighlight %}
 
-Here we're doing everything to bootstrap a redux store. You can see our root reducer function there. With the root reducer, you'll take in an action and then using a switch statement on the action type, you'll delegate that action to another reducer. If necessary, that reducer can delegate to yet another reducer and so on (I haven't had a compelling reason to do that yet.) Right now we don't have a reason to do so that we're just doing everything in the root reducer. You could change the body of the <code>case SET_SEARCH_TERM:</code> to be another reducer function.
-
-Then to create a new store you just give redux the root reducer and it's created! Cool!
-
-From there we're going to create a connector. react-redux is a library that provides some simple helpers to connect your redux store to your React app. Everything that react-redux does for you you can fairly easily do for yourself. For that matter, redux itself is a pretty simple library that would possible to write yourself (unlike React; good luck with that!) We're creating a mapStateToProps and a mapDispatchProps to props which are just helpers that will hand your pertinent components with the methods and state they'll need to be able to display it. Now whatever components your wrap with connector will have these bits of state and action creators available to them. We'll see how that works in a sec.
-
-Let's do some connecting with ClientApp.jsx
+Connect is a function that allows your component to tap into the Redux store's state. The mapStateToProps allows you to select which pieces of state are passed into your component which helps keep thing clean. At the bottom we export a connected version of the component. Now if you reload the page the input doesn't work for the same reason it didn't with React previously: we are never sending the typed text to Redux to update its state. Let's do that now.
 
 {% highlight javascript %}
-// more requires
-const Store = require('./Store')
-const { store } = Store
-const reactRedux = require('react-redux')
-const { Provider } = reactRedux
+// at top
+import { connect } from 'react-redux'
+import { setSearchTerm } from './actionCreators'
 
-// change the ReactDOM render call
-ReactDOM.render(
-  (
-  <Provider store={store}>
-    <App/>
-  </Provider>
-  ),
-  document.getElementById('app')
-)
-{% endhighlight %}
-
-Wrapping our app in a <code>Provider</code> component makes our store and dispatches available where-ever we wrap components with connector calls, hence why it's necessary to wrap the whole app. Good news is once you do this it magically just works thought out your whole app. You'll only have to use <code><Provider/></code> once.
-
-Let's make it work with Header so it correctly displays and changes the redux store.
-
-{% highlight javascript %}
-// another require
-const Store = require('./Store')
-const { connector } = Store
-
-// wrap component
-module.exports = connector(Header)
-
-// two more methods for component
-constructor (props) {
-  super(props)
-
-  this.handleSearchTermChange = this.handleSearchTermChange.bind(this)
-}
-handleSearchTermChange (e) {
-  this.props.setSearchTerm(e.target.value)
-}
+// inside React.createClass
+propTypes: {
+  searchTerm: string,
+  dispatch: func
+},
+handleSearchTermChange (event) {
+  this.props.dispatch(setSearchTerm(event.target.value))
+},
 
 // change input
-utilSpace = <input type='text' className='search-input' placeholder='Search' value={this.props.searchTerm} onChange={this.handleSearchTermChange} />
+<input onChange={this.handleSearchTermChange} value={this.props.searchTerm} type='text' placeholder='Search' />
 
-// change propTypes
-Header.propTypes = {
-  setSearchTerm: React.PropTypes.func,
-  showSearch: React.PropTypes.bool,
-  searchTerm: React.PropTypes.string
+// at the bottom
+const mapStateToProps = (state) => {
+  return {
+    searchTerm: state.searchTerm
+  }
 }
+
+export default connect(mapStateToProps)(Landing)
 {% endhighlight %}
 
-Now you should be able to type in the header and see it immediately reflected. The search part doesn't work yet so let's go over to Search and make it reflected in the UI.
+We're importing the actionCreator we created to be able to dispatch the correct action. We're then tying the input to a change handler and the prop that's going to be passed in. At the bottom we're connecting this component to Redux via connect. mapStateToProps takes in the whole state tree via the state param and returns which props you want passed into the component. Connect makes that magic happen and also passes in a dispatch function which allows to dispatch actions to Redux via our actionCreators. Inside the change handler we do just that: call this.props.dispatch and call the actionCreator here. While this seems like a weird contract to deal with, it's worth it. The contract is that you can _always_ pass dispatch the result of a actionCreator. For normal, synchronous actions like this it's a little convuluted but once we start dealing with async actions this contract helps a lot to simplify your UI code and contain the chaos to your actionCreators. Let's make it actually transition to Search.js once you hit enter.
 
 {% highlight javascript %}
-// more requires
-const Store = require('./Store')
-const { connector } = Store
+// add contextTypes
+contextTypes: {
+  router: object
+},
 
-// delete constructor
+// add method to Landing
+goToSearch (event) {
+  event.preventDefault()
+  this.context.router.transitionTo('/search')
+},
 
-// delete handleSearchTermChange method
+// surround input with form
+<form onSubmit={this.goToSearch}>
+  <input onChange={this.handleSearchTermChange} value={this.props.searchTerm} type='text' placeholder='Search' />
+</form>
+{% endhighlight %}
 
-// change Header
+So we're introducing a new concept here from React: context. This is a dangerous tool and I will tell you I personally have never _put_ anything on context. I've only consumed things from context that libraries like react-router and react-redux (which both do use context) put on there. Use at your own peril.
+
+Context is basically global state: anywhere inside a React app can read and write to state. If this sounds nightmarish to you then you have good sense: it defeats a lot of the benefits to React. However, with something like react-router it's very useful because the whole app does care about routing, as it does about Redux.
+
+Notice the contextTypes are like propTypes. However, contextTypes are even more important to React than propTypes: if you don't have them the object you're looking for won't be there. In other words, you must identify in contextTypes the properties the component cares about or they will not be available on context.
+
+Okay, so we're using a form to take care of when hits enter: this is good for accessibility and a good way to take care of submitting. Once a user hits enter, it calls goToSearch where we imperatively call the router to take us to search. This will preserve our Redux state; however Search.js is not yet reading from Redux. Let's go fix that.
+
+{% highlight javascript %}
+// import at top
+import { connect } from 'react-redux'
+
+// add propType not inside shows
+searchTerm: string
+
+// change header
 <Header showSearch />
 
-// change filter method call
-.filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(searchTerm.toUpperCase()) >= 0)
+// change state to props inside of filter
+.filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(this.props.searchTerm.toUpperCase()) >= 0)
 
-// add to PropTypes
-searchTerm: React.PropTypes.string
+// add at bottom, replace export
+const mapStateToProps = (state) => {
+  return {
+    searchTerm: state.searchTerm
+  }
+}
 
-// wrap component with react-redux wrapper
-module.exports = connector(Search)
+export default connect(mapStateToProps)(Search)
 {% endhighlight %}
 
-Deleting code is always awesome. Since we've externalize a lot of this we don't need it here anymore. Then we change the filter to rely on the props instead of the state and make sure the component is wrapped. That's it! Now the whole system should work.
-
-Let's make the front page work. Go to Landing.jsx
+Notice we got to delete a lot of code. Always feels good! We're externalizing our state management so that'll happen more as well. Also notice that Search no longer cares about modifying searchTerm since it itself doesn't need to. This is cool; having concerns live where they happen is a really positive thing. Otherwise not much new here. This will work now if you go to Landing and submit a search term from there. However we've broke the header. Let's go fix that.
 
 {% highlight javascript %}
-// add requires
-const Store = require('./Store')
-const { connector } = Store
+// import at top
+import { connect } from 'react-redux'
+import { setSearchTerm } from './actionCreators'
 
-//add methods
-constructor (props) {
-  super(props)
+// delete handleSearchTerm propType
+// add to propTypes
+dispatch: func
 
-  this.handleTermEvent = this.handleTermEvent.bind(this)
-  this.goToSearch = this.goToSearch.bind(this)
-}
-handleTermEvent (e) {
-  console.log(e.target.value)
-  this.props.setSearchTerm(e.target.value)
-}
-goToSearch (e) {
-  hashHistory.push('search')
-  e.preventDefault()
-}
+// add method to Header
+handleSearchTermChange (event) {
+  this.props.dispatch(setSearchTerm(event.target.value))
+},
 
-// replace input
-<form onSubmit={this.goToSearch}>
-  <input onChange={this.handleTermEvent} className='search' type='text' value={this.props.searchTerm} placeholder='Search' />
-</form>
+// change input to not call this.props.handleSearchTermChange but this.handleSearchTermChange (not on the state object)
+utilSpace = <input type='text' placeholder='Search' value={this.props.searchTerm} onChange={this.handleSearchTermChange} />
 
-// add PropTypes
-Landing.propTypes = {
-  setSearchTerm: React.PropTypes.func,
-  searchTerm: React.PropTypes.string
+// at the bottom
+const mapStateToProps = (state) => {
+  return {
+    searchTerm: state.searchTerm
+  }
 }
 
-// connect component
-module.exports = connector(Landing)
+export default connect(mapStateToProps)(Header)
 {% endhighlight %}
 
-There you have it! Now you should be able to search from the Landing page! If you hit enter on the form, it should search for you. As a cool side-effect, now that state will be perpetuated from screen to screen. If you type 'dare' into the search, click into the Daredevil show and then click back you should see 'dare' still in the search.
+Since Header does care about modifying searchTerm we bring in that logic here. Otherwise not much changes!
 
 [elm]: http://elm-lang.org/
 [flux]: https://facebook.github.io/flux/

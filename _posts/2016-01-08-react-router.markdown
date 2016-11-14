@@ -106,5 +106,9 @@ import { Link } from 'react-router'
 
 Now you have another working route (which all it's doing is showing an h1) and a link to get there. When linking between routes with react-router, use the Link component. This allows you to refactor how routes work without having refactor all of your individual links (you could just make your a's href "#/search" and it would work for now but could break later.) Now your button should work to take you to the browser page and you should be able to use back and forward for free thanks to react-router.
 
+The HashRouter sort of sucks though so let's migrate to BrowserRouter. First, we have to make webpack-dev-server aware that it should pass unfound routes back to index.html anyway. Add the following line your webpack.config.js inside of the devServer object: <code>historyApiFallback: true</code>.
+
+Then go to ClientApp.js and change all references (the import and the use of the component) of HashRouter to BrowserRouter. Now instead of #/search, it should go to just /search. Yay!
+
 [react-router]: https://react-router.now.sh
 [destructuring]: http://www.2ality.com/2015/01/es6-destructuring.html#destructuring

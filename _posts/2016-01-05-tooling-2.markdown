@@ -12,7 +12,7 @@ As you saw with our code, it is pretty easy to put one or two components in one 
 
 For fun, split your MyTitle component from ClientApp.js into a new file, MyTitle.js. You will have to put the appropriate React.DOM helper methods in each file. At the bottom of MyTitle.js, add the line <code>module.exports = MyTitle</code>. At the top of ClientApp.js, put the line <code>var MyTitle = require('./MyTitle')</code>. Let's try to compile that.
 
-You should have Webpack 2.1+ installed. Go to the directory of the project in the terminal and run <code>mkdir public</code>. After that, run <code>webpack js/ClientApp.js public/bundle.js</code>. In your index.html, change the line of <code><&NegativeMediumSpace;script src="js/ClientApp.js"></script></code> to <code><&NegativeMediumSpace;script src="public/bundle.js"></script></code>.
+You should have Webpack 2.1+ installed. Go to the directory of the project in the terminal and run <code>mkdir public</code>. After that, run <code>webpack js/ClientApp.js public/bundle.js</code>. In your index.html, change the line of <code><&NegativeMediumSpace;script src="js/ClientApp.js"></script></code> to <code><&NegativeMediumSpace;script src="/public/bundle.js"></script></code>.
 
 Try your browser again. bundle.js has all the stuff for both files now. Now we can keep components in their own files which is a huge win for organization. But wait, we can use Webpack for even greater code by using it to bring in node modules. In index.html, remove the other script tags so _just_ bundle.js is left.
 
@@ -99,6 +99,6 @@ module.exports = {
 
 {% endhighlight %}
 
-What you see is essentially a config version of what we were doing with CLI flags. Now it's a bit more resilient and guaranteed consistent. If you run just the command <code>webpack</code> from your project directory you should get the same output. Neat. Go change you npm script to just be "Webpack" now. Go try it and make sure it still works. Great! Also make sure all the files you've written are still up to snuff with standard via <code>npm run lint</code>. Good? Good. This should get us to a point now where we can talk about JSX.
+What you see is essentially a config version of what we were doing with CLI flags. Now it's a bit more resilient and guaranteed consistent. If you run just the command <code>webpack</code> from your project directory you should get the same output. Neat. Go change you npm script to just be "webpack" now. Go try it and make sure it still works. Great! Also make sure all the files you've written are still up to snuff with standard via <code>npm run lint</code>. Good? Good. This should get us to a point now where we can talk about JSX.
 
 [es6-modules]: http://www.2ality.com/2014/09/es6-modules-final.html

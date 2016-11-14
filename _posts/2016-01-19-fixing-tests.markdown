@@ -1,101 +1,80 @@
 ---
-title: "Fixing Our Tests and Testing redux"
+title: "Fixing Our Tests and Testing Redux"
 ---
 
-So we broke all of our tests. They all fail now. High five! This is a big reason why I'm hesitant to test UI code: I find my tests break all the time just because I'm rewriting markup or other code. Nonetheless, let's refix our tests and add two for redux. As opposed to testing React which I don't do much of, I test the hell out of my redux code. redux code is very testable and you should cover all or nearly-all of your reducers with tests.
+So we broke all of our tests. They all fail now. High five! This is a big reason why I'm hesitant to test UI code: I find my tests break all the time just because I'm rewriting markup or other code. Nonetheless, let's refix our tests and add two for Redux. As opposed to testing React which I don't do much of, I test the hell out of my Redux code. Redux code is very testable by design and you should cover all or nearly-all of your reducers with tests.
 
-Cool, open our spec doc. Let's fix these tests one-at-a-time. For the last two tests, change their method calls from <code>it( ... )</code> to <code>xit( ... )</code>. This will prevent Mocha from running them so we can work on them one-at-a-time.
-
-The first test is actually testing Header so let's move it to its own describe too.
+At the end of Search.js add:
 
 {% highlight javascript %}
-// change what's pulled in from enzyme
-const { render } = enzyme
+export const Unwrapped = Search
+{% endhighlight %}
 
-// more requires
-const Header = require('../js/Header')
-const Store = require('../js/Store')
-const { store } = Store
+We need an "unconnected" version of Search to test. We're decoupling this from Redux so we can just test the React portion. It will still work without Redux as long as we pass in proper parameters. Go to Search.spec.js.
 
-// new describe
-describe('<Header />', () => {
-  it('should render the brand', () => {
-    const wrapper = render(<Header store={store} />)
-    expect(wrapper.find('h1.brand').text()).to.equal('svideo')
-  })
+{% highlight javascript %}
+// import the new Unwrapped Search as just Search
+import { Unwrapped as UnwrappedSearch} from './Search'
+
+// in the first test, change the shallow call
+const component = shallow(<UnwrappedSearch shows={preload.shows} searchTerm='' />)
+
+// in the second test, change the shallow call
+const component = shallow(<UnwrappedSearch shows={preload.shows} searchTerm='' />)
+
+// go ahead and comment out the last test so we can test these first two first
+{% endhighlight %}
+
+Once we provide the proper params, these tests will be able to pass again. The snapshot is going to fail because we wrapped Header with a connect but go ahead and run <code>npm run update-test</code> to take care of that.
+
+Since the last test tests the integration of Header and Search which were previously married together, we're going to need to do two things: switch our render to be able to render Header inside of Search instead of just stubbing it out and we're going to have to bring in Redux and integrate that.
+
+{% highlight javascript %}
+// imports at top
+import { Provider } from 'react-redux'
+import store from './store'
+import { setSearchTerm } from './actionCreators'
+import { shallow, render } from 'enzyme' // add render import
+
+// replace last test
+test('Search should render correct amount of shows based on search', () => {
+  const searchWord = 'house'
+  store.dispatch(setSearchTerm(searchWord))
+  const component = render(<Provider store={store}><Search shows={preload.shows} /></Provider>)
+  const showCount = preload.shows.filter((show) => `${show.title.toUpperCase()} ${show.description.toUpperCase()}`.includes(searchWord.toUpperCase())).length
+  expect(showCount).toEqual(component.find('.show-card').length)
 })
 {% endhighlight %}
 
-So because of all the misdirection and wrapping components that accompany the react-redux bindings, we lost our ability to shallow render. As such, we have to fallback to our jsdom, render version. This is much slower. You can take the time to unwrap all the pieces to make the shallow version work; we're just not going to do it here.
+We need to simulate events to Redux instead of to the DOM. Ultimately this isn't a big deal since you should be testing that action creator individually anyway. We also need to use Provider to make Redux work for Header since that's how Header and Search communicate now. Also, we can't do the ShowCard component trick anymore with render since it's not stubbing out ShowCard so we're just checking for the CSS class instead.
 
-Here we don't need to wrap <Header /> in a <Provider /> because while consuming the store, we're not actually going to test the interaction with redux, just the markup.
+There's a layer deeper that you can go with Enzyme: static rendering with [Cheerio][cheerio]. If you need to do serious manipulation, this is the tool you need to go with. Be forewarned this slows down startup a lot since it brings in jsdom and it is slow as 💩 to start up.
 
-Let's move on to our first <Search /> test.
+Cool! Let's go test Redux now.
+
+One of the primary reasons to use Redux is how testable it is. It was a big part of its design. Redux makes you create [pure functions][pure]. These functions are then able to pulled out and thoroughly tested. And, lucky for us, Redux dev tools now lets you generate test automatically! Open Search and paste the word "orange" in there. We paste it so it's one atomic operation. Open the Redux dev tools and select the last action. Click on the test tab. You'll see an automatically generated test! Copy that and paste it into reducers.spec.js. You may have to mess with the paths to get it correct. And get rid of the semi-colons!
 
 {% highlight javascript %}
-// more requires
-const ReactRedux = require('react-redux')
-const { Provider } = ReactRedux
+import reducers from './reducers'
 
-// delete ShowCard require
-
-// inside it('search' ... )
-const mockRoute = {
-  shows: data.shows
-}
-
-it('should render as many shows as there are data for', () => {
-  const wrapper = render(<Provider store={store}><Search route={mockRoute} /></Provider>)
-  expect(wrapper.find('div.show-card').length).to.equal(data.shows.length)
+test('SET_SEARCH_STATE', () => {
+  let state
+  state = reducers({searchTerm:''}, {type:'SET_SEARCH_TERM',searchTerm:'orange'})
+  expect(state).toEqual({searchTerm:'orange'})
 })
 {% endhighlight %}
 
-We have to mock what react-router would give to the Search route. Other than than that, this look pretty familiar. We have to move from the friendly enzyme wrapper to the less-friendly [Cheerio][cheerio] wrapper.
-
-Let's rewrite our last test.
+Free tests. All we have to do is recreate what we want to test, copy, paste, and commit! Pretty slick. In this particular case, it's not terribly interesting. But you can't beat how low effort it is to get a test out the door. And if you have to later throw this test away you won't care because it was a minute to create start-to-finish. And if you get more complex Redux actions you can save _a lot_ of time doing this. Let's also grab the @@INIT action to make sure we bootstrap the way we think.
 
 {% highlight javascript %}
-it('should filter correctly given new state', () => {
-  store.dispatch({ type: 'setSearchTerm', value: 'house'})
-  const wrapper = render(<Provider store={store}><Search route={mockRoute} /></Provider>)
-  expect(wrapper.find('div.show-card').length).to.equal(2)
+test('@@INIT', () => {
+  let state
+  state = reducers(undefined, {})
+  expect(state).toEqual({searchTerm:''})
 })
 {% endhighlight %}
 
-Here we're passing the state already into the component. Make sure the dispatch comes before the render so that the component will have the correct state when it goes to render.
-
-## Testing redux
-
-Let's add two more tests to show how to test redux. First we need to add a new line to Store because we really want to test our reducers.
-
-{% highlight javascript %}
-module.exports = { connector, store, reducer }
-{% endhighlight %}
-
-Now go back to App.spec
-
-{% highlight javascript %}
-// import reducer too
-const { store, reducer } = Store
-
-// add new suite
-describe('Store', () => {
-  it('should bootstrap', () => {
-    const state = reducer(undefined, { type: '@@redux/INIT' })
-    expect(state).to.deep.equal({ searchTerm: '' })
-  })
-})
-{% endhighlight %}
-
-Great, so now we know our reducer creates our app the way we want to. Let's make sure that the setSearchTerm action works too.
-
-{% highlight javascript%}
-it('should handle setSearchTerm actions', () => {
-  const state = reducer({ searchTerm: 'some random string' }, { type: 'setSearchTerm', value: 'correct string'})
-  expect(state).to.deep.equal({ searchTerm: 'correct string' })
-})
-{% endhighlight %}
-
-That's it! Reducers are easy to test due to their functional nature. Something key with reducers is that they are __pure__ functions. Means that they don't modify any state around them (including the params you pass in.) They only perform a transformation and return a new items.
+You can also test your actionCreators by making sure they craft their action objects correctly but I'll leave that to you. For now this is enough!
 
 [cheerio]: http://cheeriojs.github.io/cheerio/
+[pure]: http://www.nicoespeon.com/en/2015/01/pure-functions-javascript/
