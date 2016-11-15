@@ -2,79 +2,108 @@
 title: "React: Props"
 ---
 
-Let's start making our search page. Replace JSX HTML in Search with
+Let's start making our search page. We're going to start with some dummy data and work our way from there. Again, follow the same HTML structure and CSS naming as me and you'll get all the styling for free. Feel free to take a glance at public/data.json to see what's there. As you may have guessed, it's a bunch of Netflix shows. This whole workshop is actually just an elaborate advertisement for Netflix (just kidding; I promise.)
+
+Webpack allows you to require in json files just like you would another JavaScript file so we'll take advantage of that when we start coding our new search page. However we do have add another loader to do that. Add the following object to your <code>loaders</code> array in your webpack.config.js.
 
 {% highlight javascript %}
-<div className='container'>
-  {data}
-</div>
+  {
+    test: /\.json$/,
+    loader: 'json-loader'
+  }
 {% endhighlight %}
 
-You should see it say "House of Cards" at the top of the page. When you use curly braces in JSX, you're telling JSX you want it run a JavaScript expression and then display whatever it returns. If you take away those curly braces (try it) you'll see it literally displays "data.shows[0].title" as a string. So that's a neat tool to have; let's take it a step further and display all of the titles as their own components.
+{% highlight javascript %}
+// in replace Search.js
+import React from 'react'
+import preload from '../public/data.json'
+
+const Search = React.createClass({
+  render () {
+    return (
+      <div className='search'>
+        <pre><code>{JSON.stringify(preload, null, 4)}</code></pre>
+      </div>
+    )
+  }
+})
+
+export default Search
+{% endhighlight %}
+
+You should see it say dump a lot of JSON to the page at the top of the page. When you use curly braces in JSX, you're telling JSX you want it run a JavaScript expression and then display whatever it returns. If you take away those curly braces (try it) you'll see it literally displays "JSON.stringify(preload, null, 4)" as a string. So that's a neat tool to have; let's take it a step further and display all of the titles as their own components.
 
 As you may remember, JSX is transpiling your JSX-HTML to function calls. As such, you may be able to imagine that a bunch of sibling components are just an array of components. Since they're just normal ol' JavaScript arrays, we can use some functional-programming-fu to transform data into components.
 
 {% highlight javascript %}
-const React = require('react')
-const data = require('../public/data')
-const Search = () => (
-  <div className='container'>
-    {data.shows.map((show) => (
+// replace render's return
+<div className='search'>
+  {preload.shows.map((show) => {
+    return (
       <h3>{show.title}</h3>
-    ))}
-  </div>
-)
-
-module.exports = Search
+    )
+  })}
+</div>
 {% endhighlight %}
 
-You should now see all of the titles in a nice scrollable list. This is the ng-repeat/#each of React: plain ol' JavaScript map. This is one of the reasons I _love_ React: for the most part best practices of React are just JavaScript best practices. There's very little DSL to learn. Cool! Let's flesh out how our search results are going to look.
+You should now see all of the titles in a nice scrollable list. This is the ng-repeat/#each of React: plain ol' JavaScript map. If you are not familiar with map, [read this][map]. This is one of the reasons I _love_ React: for the most part best practices of React are just JavaScript best practices. There's very little DSL to learn. Cool! Let's flesh out how our search results are going to look.
 
 {% highlight javascript %}
-const React = require('react')
-const data = require('../public/data')
-const Search = () => (
-  <div className='container'>
-    <div className='shows'>
-      {data.shows.map((show) => (
-        <div className='show'>
-          <img src={`/public/img/posters/${show.poster}`} className='show-img' />
-          <div className='show-text'>
-            <h3 className='show-title'>{show.title}</h3>
-            <h4 className='show-year'>({show.year})</h4>
-            <p className='show-description'>{show.description}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-)
+import React from 'react'
+import preload from '../public/data.json'
 
-module.exports = Search
+const Search = React.createClass({
+  render () {
+    return (
+      <div className='search'>
+        <div>
+          {preload.shows.map((show) => {
+            return (
+              <div className='show-card'>
+                <img src={`/public/img/posters/${show.poster}`} />
+                <div>
+                  <h3>{show.title}</h3>
+                  <h4>({show.year})</h4>
+                  <p>{show.description}</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+})
+
+export default Search
 {% endhighlight %}
 
 Try saving and re-rendering. You should see some nice cards for the shows. Notice that we can use those fancy curly braces to insert JavaScript expressions into HTML attribute too. Neat.
 
-However we can reorganize this a bit better: the Show component can be broken out into its own component. Let's do that. Make a file called ShowCard.jsx and put this in there:
+However we can reorganize this a bit better: the ShowCard component can be broken out into its own component. Let's do that. Make a file called ShowCard.js and put this in there:
 
 {% highlight javascript %}
-const React = require('react')
+import React from 'react'
 
-const ShowCard = (props) => (
-  <div className='show-card'>
-    <img src={`/public/img/posters/${props.show.poster}`} className='show-card-img' />
-    <div className='show-card-text'>
-      <h3 className='show-card-title'>{props.show.title}</h3>
-      <h4 className='show-card-year'>({props.show.year})</h4>
-      <p className='show-card-description'>{props.show.description}</p>
-    </div>
-  </div>
-)
+const ShowCard = React.createClass({
+  render () {
+    return (
+      <div className='show-card'>
+        <img src={`/public/img/posters/${this.props.show.poster}`} />
+        <div>
+          <h3>{this.props.show.title}</h3>
+          <h4>({this.props.show.year})</h4>
+          <p>{this.props.show.description}</p>
+        </div>
+      </div>
+    )
+  }
+})
 
-module.exports = ShowCard
+export default ShowCard
 {% endhighlight %}
 
-Notice we're using this strange props object being passed in as a parameter to the ShowCard component. This is what we are going to be receiving from our parents. In this case, an individual ShowCard needs to receive all the necessary data from its parent to be able to display it.
+Notice we're using this strange props object that's coming from <code>this</code> context. This is what we are going to be receiving from our parents. In this case, an individual ShowCard needs to receive all the necessary data from its parent to be able to display it.
 
 This is a good time to discuss the philosophy that's sort of tough to get used to with React coding. We typically think of user interfaces as entities that change over a span of actions and events. Think of a jQuery UI you have made. Imagine making a drop down. You would have to write the code for a user clicking it to opening the drop down to the user clicking an item in the drop down. It's a progression of time, events, and interactions. Imagine if there was a bug with that final interaction. You now have to work out in your head the sequence of events to get it to that same state that the bug occurs in to able to fix it. This is second nature to many of us since we have done it so many times.
 
@@ -87,119 +116,85 @@ And these principles? Not invented by React. These are battle-tested ideas that 
 Okay, great, let's go to Search and drop in our new component.
 
 {% highlight javascript %}
-const React = require('react')
-const ShowCard = require('./ShowCard')
-const data = require('../public/data')
+import React from 'react'
+import ShowCard from './ShowCard'
+import preload from '../public/data.json'
 
-const Search = () => (
-  <div className='container'>
-    <div className='shows'>
-      {data.shows.map((show, index) => (
-        <ShowCard show={show} key={index} id={key} />
-      ))}
-    </div>
-  </div>
-)
+const Search = React.createClass({
+  render () {
+    return (
+      <div className='search'>
+        <div>
+          {preload.shows.map((show) => {
+            return (
+              <ShowCard show={show} />
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+})
 
-module.exports = Search
+export default Search
 {% endhighlight %}
 
 Much like you give an HTML tag an attribute is how you give props to children components in React. Here we're passing down an object to our child component to make it available to the ShowCard via props. Neat, right? Save it and reload the page. standard is going to give you a bunch of complaints but we're going to address that momentarily. You should see the same UI.
 
-We give it a key so React can internally keep track of which component is which. We give it an id to refer to later.
+One of the errors you'll notice in the browser console is something like: "Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `Search`." You see this because we have multiple, similiar sibling components next to each other and React doesn't have a quick way to tell them apart. If you start reordering them (like if we added a sort feature) then React would just destroy and re-create them each time since it doesn't know you're just reordering them. This is unnecessarily expensive, as you may imagine. You can give React a shortcut to be able to tell them quickly apart: give each a component a unique identifier as a key attribute. So go add it to the ShowCard component like so: <code><ShowCard show={show} key={show.imdbID} /></code>.
 
-So let's fix our standard errors now. standard-react dictates that all props have a propType. React has a features that allows you to set propTypes which it then validates at runtime. This ends up being great for debugging because React now knows what sort of props it should be getting so it can give you a meaningful error messages. So let's go fix the errors.
+So let's fix our standard errors now. standard-react dictates that all props have a propType. React has a features that allows you to set propTypes which it then validates at runtime. This ends up being great for debugging because React now knows what type of props it should be getting so it can give you a meaningful error messages if there's a type mismatch or omission. So let's go fix the errors.
 
 In ShowCard, go add this just below the declaration of the ShowCard function:
 
 {% highlight javascript %}
-// below ShowCard
-ShowCard.propTypes = {
-  show: React.PropTypes.object.isRequired
-}
+// add below import React
+
+// top level property in ShowCard's React.createClass object
+propTypes: {
+  show: shape({
+    poster: string,
+    title: string,
+    year: string,
+    description: string
+  })
+},
 {% endhighlight %}
 
-Now React knows to expect that show is both an object _and_ required for the ShowCard to work. If the prop is optional (which is fine if it is indeed optional) then leave off the isRequired part.
+Now React knows to expect that show is both an object full of strings _and_ those strings are required for the ShowCard to work. If a prop is optional (which is fine if it is indeed optional) then leave off the isRequired part.
 
-We can make this a little neater via the ES6/JSX spread operator. Let's try that. Change Search's ShowCard from <code><ShowCard show={show} /></code> to <code><ShowCard {...show} /></code>. This will take all the properties from show and spread them out as individual properties on ShowCard. You _could_ write <code><ShowCard title={show.title} poster={show.poster} description={show.description} year={show.year} /></code> but that's a lot of writing and this cuts an easy corner. Let's go modify ShowCard to match.
+We can make this a little neater via the ES6/JSX spread operator. Let's try that. Change Search's ShowCard from <code><ShowCard show={show} /></code> to <code><ShowCard {...show} key={show.imdbID} /></code>. This will take all the properties from show and spread them out as individual properties on ShowCard. You _could_ write <code><ShowCard title={show.title} poster={show.poster} description={show.description} year={show.year} /></code> but that's a lot of writing and this cuts an easy corner. Let's go modify ShowCard to match.
 
 {% highlight javascript %}
-const React = require('react')
+import React from 'react'
+const {string} = React.PropTypes
 
-const ShowCard = (props) => (
-  <div className='show-card'>
-    <img src={`/public/img/posters/${props.poster}`} className='show-card-img' />
-    <div className='show-card-text'>
-      <h3 className='show-card-title'>{props.title}</h3>
-      <h4 className='show-card-year'>({props.year})</h4>
-      <p className='show-card-description'>{props.description}</p>
-    </div>
-  </div>
-)
+const ShowCard = React.createClass({
+  propTypes: {
+    poster: string.isRequired,
+    title: string.isRequired,
+    year: string.isRequired,
+    description: string.isRequired
+  },
+  render () {
+    return (
+      <div className='show-card'>
+        <img src={`/public/img/posters/${this.props.poster}`} />
+        <div>
+          <h3>{this.props.title}</h3>
+          <h4>({this.props.year})</h4>
+          <p>{this.props.description}</p>
+        </div>
+      </div>
+    )
+  }
+})
 
-ShowCard.propTypes = {
-  year: React.PropTypes.string.isRequired,
-  poster: React.PropTypes.string.isRequired,
-  description: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  id: React.PropTypes.number.isRequired
-}
-
-module.exports = ShowCard
+export default ShowCard
 {% endhighlight %}
 
-We've now made our code a bit cleaner since we don't have to props.show... ad nauseam. We've also made it so React can check each individual property that we need; this will save us bugs in the future.
+We've now made our code a bit cleaner since we don't have to props.show... ad nauseam. I should mention that if you go down the path of [Flow][flow] or TypeScript[ts] you don't really need propTypes as much since the static checkers accomplish that and more for you.
 
-## React Router Layout
-
-Now, we have a common layout that we want to maintain between all of our pages. This is a common problem: you make a nice looking nav bar and background that you intend to share amongst multiple pages. We could make a nav component and share that but we can take it a step further (right now we're just going to share the background div.) We're going to use nested routes and what's called an IndexRoute. A nested route allows you to share UI between routes and an IndexRoute is just the default, base route of a nested route. Let's see it.
-
-Make a new file called Layout.jsx. Put:
-
-{% highlight javascript %}
-const React = require('react')
-
-const Layout = (props) => (
-  <div className='app-container'>
-    {props.children}
-  </div>
-)
-
-module.exports = Layout
-{% endhighlight %}
-
-In ClientApp, pull in the IndexRoute component from react-router and make a nested route in your component.
-
-{% highlight javascript %}
-const React = require('react')
-const ReactDOM = require('react-dom')
-const Landing = require('./Landing')
-const Search = require('./Search')
-const Layout = require('./Layout')
-const ReactRouter = require('react-router')
-const { Router, Route, hashHistory, IndexRoute } = ReactRouter
-
-const App = () => (
-  <Router history={hashHistory}>
-    <Route path='/' component={Layout}>
-      <IndexRoute component={Landing} />
-      <Route path='/search' component={Search} />
-    </Route>
-  </Router>
-)
-
-ReactDOM.render(<App />, document.getElementById('app'))
-{% endhighlight %}
-
-<code>children</code> is in particular an interesting beast. It allows you to make a tag and have access to whatever's inside. So:
-
-{% highlight html %}
-<MyComponent>
-  <div><h1>lol</h1></div>
-</MyComponent>
-{% endhighlight %}
-
-The children here would be the div and the h1. That's what children get you.
-
-Also you may be seeing PropType errors here. Those are React's friendly ways of reminding you to make sure you're getting the data you expect via props.
-
+[map]: https://www.discovermeteor.com/blog/understanding-javascript-map/
+[flow]: https://flowtype.org
+[ts]: https://www.typescriptlang.org
