@@ -6,7 +6,7 @@ In order to be able to complete this entire workshop, we need to go ahead and ge
 
 ## Clone the git repo
 
-<a href="https://github.com/btholt/complete-intro-to-react">Click here.</a>
+<a href="https://github.com/btholt/complete-intro-to-react/tree/start">Click here.</a>
 
 ## node.js 6+
 
