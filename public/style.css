@@ -1,3 +1,7 @@
+/*
+   Hi, this is bad CSS, you shouldn't structure your CSS this way. Structurally based CSS is a bad idea because it's inherently brittle; if you change the way your nest something you break it. I'm doing it this way because it's less typing for everyone involved to not have to type long class names
+*/
+
 * {
   box-sizing: border-box;;
 }
@@ -6,11 +10,11 @@ html {
   font-family: Helvetica Neue, Helvetica, sans-serif;
 }
 
-.app-container {
+.app {
   position: relative;
   width: 100%;
   height: 100vh;
-  background-image: url(img/3.jpg);
+  background-image: url(/public/img/3.jpg);
   background-size: cover;
   background-position: center;
   display: flex;
@@ -20,30 +24,34 @@ html {
   color: #333;
 }
 
-.home-info {
+.app > h1 {
+  color: white;
+}
+
+.landing {
   background-color: rgba(220, 220, 220, .7);
   padding: 15px 30px;
   border-radius: 5px;
 }
 
-.title {
+.landing > h1 {
   color: #B10DC9;
   font-family: Skia;
   font-weight: normal;
 }
 
-.search {
+.landing > input, .landing > form > input {
   width: 100%;
   padding: 10px;
   border-radius: 4px;
 }
 
-.home-info > form {
+.landing > form {
   width: 100%;
   min-width: 300px;
 }
 
-.browse-all {
+.landing > a {
   margin-top: 15px;
   padding: 10px 40px;
   background-color: #333;
@@ -54,17 +62,17 @@ html {
   border-radius: 4px;
 }
 
-.browse-all:hover, .browse-all:focus {
+.landing > a:hover, .landing > a:focus {
   background-color: #666;
 }
 
-.browse-all:active {
+.landing > a:active {
   background-color: #fafafa;
   color: #333;
   border-color: #333;
 }
 
-.container {
+.details, .search {
   position: absolute;
   top: 15px;
   left: 15px;
@@ -76,14 +84,11 @@ html {
   border-radius: 5px;
 }
 
-.shows {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  width: 100%;
+pre {
+  text-align: left;
 }
 
-.shows > a {
+.search > div > a {
   width: 30%;
   height: 0;
   padding-bottom: 19.8%;
@@ -95,7 +100,7 @@ html {
   text-decoration: none;
 }
 
-a > .show-card {
+.search > div > a {
   width: 100%;
   padding-bottom: 70%;
   height: 0;
@@ -103,54 +108,59 @@ a > .show-card {
   margin-bottom: inherit;;
   border: none;
   border-radius: inherit;
-
 }
 
 .show-card {
+  float: left;
+  margin-right: 2%;
   border: 2px solid #333;
   border-radius: 4px;
   text-align: left;
-  width: 30%;
+  width: 32%;
   height: 0;
   padding-bottom: 19.8%;
   overflow: hidden;
-  margin-bottom: 3%;
+  margin-bottom: 2%;
 }
 
-.show-card-img {
+.show-card:nth-child(3n), .search > div > a:nth-child(3n) > .show-card {
+  margin-right: 0;
+}
+
+.show-card > img {
   width: 46%;
   float: left;
 }
 
-.show-card-text {
+.show-card > div{
   display: block;
   float: right;
   width: 52%;
   overflow-y: scroll;
 }
 
-.show-card-title {
+.show-card > div > h3 {
   margin-top: 0;
   margin-bottom: 5px;
 }
 
-.show-card-year {
+.show-card > div > h4 {
   margin-top: 0;
   margin-bottom: 5px;
   color: #666;
   font-size: 13px;
 }
 
-.show-card-description {
+.show-card > div > p {
   margin: 0;
   font-size: 13px;
 }
 
-.header + .shows {
+.search > header + div {
   margin-top: 25px;
 }
 
-.header {
+header {
   z-index: 10;
   position: fixed;
   display: flex;
@@ -165,36 +175,36 @@ a > .show-card {
   padding: 8px 30px;
 }
 
-.brand {
+header > h1 {
   font-family: Skia;
   font-weight: normal;
   color: #B10DC9;
   margin: 0;
 }
 
-.brand > a {
+header > h1 > a {
   color: #B10DC9;
   text-decoration: none;
 }
 
-.header-back {
+header > h2 {
   font-weight: normal;
   margin: 0;
 }
 
-.header-back > a {
+header > h2 > a {
   color: #aaa;
   text-decoration: none;
 }
 
-.video-container {
+.details > div {
   width: 100%;
   height: 0;
   padding-bottom: 56.25%;
   position: relative;
 }
 
-.video-container > iframe {
+.details > div > iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -202,7 +212,7 @@ a > .show-card {
   height: 100%;
 }
 
-.search-input {
+header > input {
   min-width: 250px;
   max-width: 350px;
   width: 33%;
@@ -211,21 +221,40 @@ a > .show-card {
   border-radius: 4px;
 }
 
-.video-poster {
+.details > section > img, .details > section > h3 {
   width: 8%;
 }
 
-.video-info > * {
+.details > section > img[alt] {
+  -webkit-animation: spin 4s infinite linear;
+  -moz-animation: spin 4s infinite linear;
+  animation: spin 4s infinite linear;
+}
+
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
+.details > section > * {
   margin: 0 1%;
 }
 
-.video-info {
+.details > section {
   display: flex;
   justify-content: space-around;
   align-items: center;
   margin-bottom: 25px;
 }
 
-.header + .video-info {
+.details > header + section {
   margin-top: 25px;
 }
