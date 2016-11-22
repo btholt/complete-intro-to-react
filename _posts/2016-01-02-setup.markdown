@@ -14,7 +14,7 @@ You _probably_ can complete this with something less than node 4 but I'm using v
 
 ## Yarn
 
-We're going to use [Yarn](https://yarnpkg.com/) for this workshop. In practice this will little difference to you but what's happening under the hood is good for your app. Yarn will essentially replace with you use the npm CLI client for in your app. Install of <code>npm install --save react</code> you'll run <code>yarn add react</code>. This installs the same package from the same npm registry (it runs through their own proxy but as of writing the <code>registry.yarnpkg.com</code> address is just a dumb passthrough.)
+We're going to use [Yarn](https://yarnpkg.com/) for this workshop. In practice this will little difference to you but what's happening under the hood is good for your app. Yarn will essentially replace with you use the npm CLI client for in your app. Instead of <code>npm install --save react</code> you'll run <code>yarn add react</code>. This installs the same package from the same npm registry (it runs through their own proxy but as of writing the <code>registry.yarnpkg.com</code> address is just a dumb passthrough.)
 
 If you haven't installed it, install it via <code>npm install --global yarn</code>. You can also do it via homebrew: <code>brew update && brew install yarn</code>. [Relevant tweet](https://twitter.com/iamdevloper/status/787992202643374080).
 
