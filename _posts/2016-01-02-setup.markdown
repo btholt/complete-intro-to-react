@@ -14,15 +14,15 @@ You _probably_ can complete this with something less than node 4 but I'm using v
 
 ## Yarn
 
-We're going to use [Yarn](https://yarnpkg.com/) for this workshop. In practice this will little difference to you but what's happening under the hood is good for your app. Yarn will essentially replace with you use the npm CLI client for in your app. Install of <code>npm install --save react</code> you'll run <code>yarn add react</code>. This installs the same package from the same npm registry (it runs through their own proxy but as of writing the <code>registry.yarnpkg.com</code> address is just a dumb passthrough.)
+We're going to use [Yarn](https://yarnpkg.com/) for this workshop. In practice this will be a little differences to you, but what's happening under the hood will be good for your app. Yarn will essentially replace your usage of the npm CLI client in your app. Instead of <code>npm install --save react</code> you'll run <code>yarn add react</code>. This installs the same package from the same npm registry (it runs through their own proxy but as of writing the <code>registry.yarnpkg.com</code> address is just a dumb passthrough.)
 
-If you haven't installed it, install it via <code>npm install --global yarn</code>. You can also do it via homebrew: <code>brew update && brew install yarn</code>. [Relevant tweet](https://twitter.com/iamdevloper/status/787992202643374080).
+If you haven't installed yarn, install it via <code>npm install --global yarn</code>. You can also install it via homebrew: <code>brew update && brew install yarn</code>. [Relevant tweet](https://twitter.com/iamdevloper/status/787992202643374080).
 
 Yarn does a couple of things different from npm. One, it's 100% deterministic. Deterministic is just a fancy way of saying that if you run yarn from any state, any time, 1000x times, it will still work the same way the 1001st time. npm's installs are nondeterministic. If you run it from various states, it will install different ways.
 
 Yarn does some better caching too. In fact, it does it so well you'll see a _significant_ reduction in your install times. Big code bases have seen a 10x reduction in install times.
 
-Yarn also locks down your dependencies by default. It's possible to do this with an npm shrinkwrap command but if you've ever had to maintain one of those, it can be messy. This locking down of dependencies means you don't have to rely npm authors doing [semver](http://semver.org/) correctly, a notoriously controversial subject
+Yarn also locks down your dependencies by default. It's possible to do this with an npm shrinkwrap command but if you've ever had to maintain one of those, it can be messy. This locking down of dependencies means you don't have to rely on npm authors doing [semver](http://semver.org/) correctly, a notoriously controversial subject
 
 ## yarn installs
 
@@ -33,10 +33,10 @@ Run <code>yarn</code> from the directory where you downloaded the repo. If you h
 Run the following global npm installs
 
 {% highlight bash %}
-yarn global add jest
+yarn global add jest@v16.0.2
 yarn global add nodemon
 yarn global add webpack@v2.1.0-beta.25
-yarn global add standard
+yarn global add standard@v8.4.0
 {% endhighlight %}
 
 We'll be using webpack v2.1.0-beta.25 (the stable version of v2 may be available by the time read this,) Jest v16.0.2 and standard v8.4.0. It doesn't really matter version of nodemon you use. You don't necessarily need these exact versions but you may run into issues if you use different major or minor releases as things make break between versions.
