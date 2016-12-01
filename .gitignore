@@ -6,3 +6,5 @@ coverage
 .DS_Store
 *.map
 *.bundle.js
+_site/
+.sass-cache/
