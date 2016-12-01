@@ -1,0 +1,395 @@
+exports[`test Search snapshot test 1`] = `
+<div
+  className="search">
+  <header>
+    <h1>
+      svideo
+    </h1>
+    <input
+      onChange={[Function bound handleSearchTermChange]}
+      placeholder="Search"
+      type="text"
+      value="" />
+  </header>
+  <div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/hoc.jpg" />
+      <div>
+        <h3>
+          House of Cards
+        </h3>
+        <h4>
+          (
+          2013–
+          )
+        </h4>
+        <p>
+          A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/dd.jpg" />
+      <div>
+        <h3>
+          Daredevil
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          A blind lawyer with his other senses superhumanly enhanced fights crime as a costumed superhero.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/oitnb.jpg" />
+      <div>
+        <h3>
+          Orange Is the New Black
+        </h3>
+        <h4>
+          (
+          2013–
+          )
+        </h4>
+        <p>
+          The story of Piper Chapman, a woman in her thirties who is sentenced to fifteen months in prison after being convicted of a decade-old crime of transporting money for her drug-dealing girlfriend.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/ad.jpg" />
+      <div>
+        <h3>
+          Arrested Development
+        </h3>
+        <h4>
+          (
+          2003–
+          )
+        </h4>
+        <p>
+          Level-headed son Michael Bluth takes over family affairs after his father is imprisoned. But the rest of his spoiled, dysfunctional family are making his job unbearable.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/uks.jpg" />
+      <div>
+        <h3>
+          Unbreakable Kimmy Schmidt
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          A woman is rescued from a doomsday cult and starts life over again in New York City.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/mp.jpg" />
+      <div>
+        <h3>
+          Marco Polo
+        </h3>
+        <h4>
+          (
+          2014–
+          )
+        </h4>
+        <p>
+          In a world replete with greed, betrayal, sexual intrigue and rivalry, \"Marco Polo\" is based on the famed explorer\'s adventures in Kublai Khan\'s court in 13th century China.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/bl.jpg" />
+      <div>
+        <h3>
+          Bloodline
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          A family of adult siblings find that their secrets and scars are revealed when their black sheep of a brother returns home.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/bh.jpg" />
+      <div>
+        <h3>
+          BoJack Horseman
+        </h3>
+        <h4>
+          (
+          2014–
+          )
+        </h4>
+        <p>
+          Meet the most beloved sitcom horse of the \'90s - 20 years later. BoJack Horseman was the star of the hit TV show \"Horsin\' Around,\" but today he\'s washed up, living in Hollywood, complaining about everything, and wearing colorful sweaters.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/hg.jpg" />
+      <div>
+        <h3>
+          Hemlock Grove
+        </h3>
+        <h4>
+          (
+          2013–
+          )
+        </h4>
+        <p>
+          A teenage girl is brutally murdered, sparking a hunt for her killer. But in a town where everyone hides a secret, will they find the monster among them?
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/tk.jpg" />
+      <div>
+        <h3>
+          The Killing
+        </h3>
+        <h4>
+          (
+          2011–
+          )
+        </h4>
+        <p>
+          A police investigation, the saga of a grieving family, and a Seattle mayoral campaign all interlock after the body of 17-year-old Rosie Larsen is found in the trunk of a submerged car.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/l.jpg" />
+      <div>
+        <h3>
+          Love
+        </h3>
+        <h4>
+          (
+          2016–
+          )
+        </h4>
+        <p>
+          A program that follows a couple who must navigate the exhilarations and humiliations of intimacy, commitment and other things they were hoping to avoid.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/mon.jpg" />
+      <div>
+        <h3>
+          Master of None
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          The personal and professional life of Dev, a 30-year-old actor in New York.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/f.jpg" />
+      <div>
+        <h3>
+          Flaked
+        </h3>
+        <h4>
+          (
+          2016–
+          )
+        </h4>
+        <p>
+          Will Arnett will star as a self-help guru who needs a decent amount of help himself.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/jj.jpg" />
+      <div>
+        <h3>
+          Jessica Jones
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          A former superhero decides to reboot her life by becoming a private investigator.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/n.jpg" />
+      <div>
+        <h3>
+          Narcos
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          A chronicled look at the criminal exploits of Colombian drug lord Pablo Escobar.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/whas.jpg" />
+      <div>
+        <h3>
+          Wet Hot American Summer: First Day of Camp
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          Follow the counselors and campers on their first day at Camp Firewood in the summer of 1981.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/cdc.jpg" />
+      <div>
+        <h3>
+          Club de Cuervos
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          When the patriarch of a prominent family dies, his heirs battle to determine who will gain control of his beloved soccer team: The Cuervos of Nuevo Toledo.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/mam.jpg" />
+      <div>
+        <h3>
+          Making a Murderer
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          Filmed over a 10-year period, Making a Murderer is an unprecedented real-life thriller about Steven Avery, a DNA exoneree who, while in the midst of exposing corruption in local law enforcement, finds himself the prime suspect in a grisly new crime.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/s8.jpg" />
+      <div>
+        <h3>
+          Sense8
+        </h3>
+        <h4>
+          (
+          2015–
+          )
+        </h4>
+        <p>
+          A group of people around the world are suddenly linked mentally, and must find a way to survive being hunted by those who see them as a threat to the world\'s order.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/fh.jpg" />
+      <div>
+        <h3>
+          Fuller House
+        </h3>
+        <h4>
+          (
+          2016–
+          )
+        </h4>
+        <p>
+          D.J. Tanner-Fuller is a widow and mother of three. Things become too much to handle, so she asks for help from her sister Stephanie and her best friend Kimmy.
+        </p>
+      </div>
+    </div>
+    <div
+      className="show-card">
+      <img
+        src="/public/img/posters/wbd.jpg" />
+      <div>
+        <h3>
+          w/ Bob & David
+        </h3>
+        <h4>
+          (
+          2016–
+          )
+        </h4>
+        <p>
+          Bob and David emerge from the time machine they entered sixteen years ago and are reunited with the cast of Mr. Show.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
