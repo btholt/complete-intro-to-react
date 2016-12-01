@@ -1,6 +1,5 @@
 ---
 title:  "Intro"
-layout: post
 ---
 
 Welcome to _A Complete Intro to React_. The goal of this workshop is to get you full up to speed on modern development and give you an idea what it is like to develop an app in the React ecosystem.
