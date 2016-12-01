@@ -1,5 +1,6 @@
 ---
 title:  "Setup"
+layout: post
 ---
 
 In order to be able to complete this entire workshop, we need to go ahead and get some tools downloaded. Even better if you can complete this before the workshop since conference Wi-Fi is notoriously spotty.
