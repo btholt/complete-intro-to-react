@@ -6,7 +6,9 @@
   "author": "Brian Holt <btholt@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "standard"
+    "lint": "standard",
+    "build": "webpack",
+    "watch": "npm run build -- --watch"
   },
   "dependencies": {
     "axios": "^0.15.3",
