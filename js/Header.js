@@ -1,11 +1,21 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { setSearchTerm } from './actionCreators'
 import { Link } from 'react-router'
 
 class Header extends React.Component {
+  constructor (props) {
+    super(props)
+
+    this.handleSearchTermChange = this.handleSearchTermChange.bind(this)
+  }
+  handleSearchTermChange (event) {
+    this.props.dispatch(setSearchTerm(event.target.value))
+  }
   render () {
     let utilSpace
     if (this.props.showSearch) {
-      utilSpace = <input onChange={this.props.handleSearchTermChange} value={this.props.searchTerm} type='text' placeholder='Search' />
+      utilSpace = <input onChange={this.handleSearchTermChange} value={this.props.searchTerm} type='text' placeholder='Search' />
     } else {
       utilSpace = (
         <h2>
@@ -30,9 +40,15 @@ class Header extends React.Component {
 
 const { func, bool, string } = React.PropTypes
 Header.propTypes = {
-  handleSearchTermChange: func,
+  dispatch: func,
   showSearch: bool,
   searchTerm: string
 }
 
-export default Header
+const mapStateToProps = (state) => {
+  return {
+    searchTerm: state.searchTerm
+  }
+}
+
+export default connect(mapStateToProps)(Header)
