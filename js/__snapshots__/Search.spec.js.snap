@@ -1,16 +1,8 @@
 exports[`test Search snapshot test 1`] = `
 <div
   className="search">
-  <header>
-    <h1>
-      svideo
-    </h1>
-    <input
-      onChange={[Function bound handleSearchTermChange]}
-      placeholder="Search"
-      type="text"
-      value="" />
-  </header>
+  <Connect(Header)
+    showSearch={true} />
   <div>
     <ShowCard
       description="A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him."
