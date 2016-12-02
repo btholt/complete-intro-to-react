@@ -1,10 +1,8 @@
 import React from 'react'
-import { BrowserRouter, Match } from 'react-router'
+import { Match } from 'react-router'
 import { Provider } from 'react-redux'
 import store from './store'
 import AsyncRoute from './AsyncRoute'
-import Search from './Search'
-import Details from './Details'
 import preload from '../public/data.json'
 if (global) {
   global.System = { import () {} }
@@ -21,13 +19,19 @@ const App = () => {
         />
         <Match
           pattern='/search'
-          component={(props) => <Search shows={preload.shows} {...props} />}
+          component={(props) => <AsyncRoute
+            props={Object.assign({shows: preload.shows}, props)}
+            loadingPromise={System.import('./Search')}
+          />}
         />
         <Match
           pattern='/details/:id'
           component={(props) => {
             const shows = preload.shows.filter((show) => props.params.id === show.imdbID)
-            return <Details show={shows[0]} {...props} />
+            return <AsyncRoute
+              props={Object.assign({show: shows[0]}, props)}
+              loadingPromise={System.import('./Details')}
+            />
           }}
         />
       </div>

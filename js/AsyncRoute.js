@@ -1,7 +1,7 @@
 import React from 'react'
 const { object } = React.PropTypes
 
-const AsyncRoute = React.createClass ({
+const AsyncRoute = React.createClass({
   propTypes: {
     props: object,
     loadingPromise: object
