@@ -2,27 +2,133 @@
 layout: default
 ---
 
-<!-- <div>
-  <h1>A Complete Intro to React, version 2</h1>
-
-  <h2>If you are looking for version 1, (<a href="https://frontendmasters.com/courses/react-intro/?u=7d41e3a531b6613e764e16dd68d588b2b2b75469">this version</a>), you need to go <a href="https://btholt.github.io/complete-intro-to-react-v1/">here.</a></h2>
-
-  <p>Welcome to a complete intro to React! This course is designed to take from knowing nothing about React, Redux, or the tooling surrounding it to comfortable proficiency in all the above. This class does assume a basis in ES5-era JavaScript. The course does use ES6 but it's explained as it's used. These course materials were created for and funded by <a href="http://www.frontendmasters.com?ref=citr">Frontend Masters</a>. While these materials are and forever will be open source and free, please consider getting a membership with Frontend Masters; it's worth it!</p>
-
-  <p><strong>NOTE: </strong> This is version 2 of this workshop that uses React v15, Jest, Webpack v2, React-Router v4, Yarn, and other technologies. If you are looking for v1 with Mocha, Sinon, Chai, React-Router v1, Webpack v1, and React v0.14, look <a href="https://btholt.github.io/complete-intro-to-react-v1/">here</a>.</p>
-
-  <h2>To get started with this workshop, <a href="all.html">click here!</a></h2>
-</div> -->
-
-<!-- <div>
-  <h1>A Complete Intro to React</h1>
-  <h2>If you are here from Frontend Masters, <a href="https://btholt.github.io/complete-intro-to-react-v1/">go here.</a></h2>
-  <p>If you would like to see the second version of this workshop (which does not follow the current Frontend Masters video) <a href="all.html">go here</a>. If you would like to attend this workshop live on December 1-2, 2016, <a href="https://frontendmasters.com/workshops/intro-react-2/?u=7d41e3a531b6613e764e16dd68d588b2b2b75469">register here.</a></p>
-</div>
- -->
+<style type="text/css">
+  td img {
+    max-height: 200px;
+  }
+  td {
+    text-align: center;
+  }
+  #courses {
+    border-collapse: collapse;
+    margin-bottom: 30px;
+  }
+  #courses td {
+    border: 1px solid black;
+  }
+  table {
+    width: 100%;
+  }
+  .center {
+    text-align: center;
+  }
+</style>
 
  <div>
-   <h1>A Complete Intro to React</h1>
-   <h2>If you are here for the live recording (given December 1 and 2, 2016), <a href="all.html">go here.</a></h2>
-   <h2>If you are here for the previously recorded and posted version, <a href="https://btholt.github.io/complete-intro-to-react-v1/">go here.</a></h2>
+   <h1 class='center'>A Complete Intro to React</h1>
+   <h2 class='center'>There are two versions of this workshop.</h2>
+   <table>
+     <tbody>
+       <tr>
+        <td><a href="https://btholt.github.io/complete-intro-to-react-v1/"><h1>v1</h1></a></td>
+        <td><a href="all.html"><h1>v2</h1></a></td>
+       </tr>
+     </tbody>
+   </table>
+   <p>If you are here from <a href="https://frontendmasters.com">Frontend Masters</a>, you need to choose the one that corresponds to the video you're watching. Here's a guide based on what I look like:</p>
+
+   <table>
+     <thead>
+       <tr>
+         <td></td>
+         <td>Day One</td>
+         <td>Day Two</td>
+       </tr>
+     </thead>
+     <tbody>
+       <tr>
+         <td>v1</td>
+         <td><img src="images/v1-1.png" alt="shirt I was wearing during day one during v1"></td>
+         <td><img src="images/v1-2.png" alt="shirt I was wearing during day two during v1"></td>
+       </tr>
+       <tr>
+         <td>v2</td>
+         <td><img src="images/v2-1.png" alt="shirt I was wearing during day one during v2"></td>
+         <td><img src="images/v2-2.png" alt="shirt I was wearing during day one during v2"></td>
+       </tr>
+     </tbody>
+   </table>
+
+   <p>Notice during the first day you can see the light-up Apple logo on my laptop whereas on the second time it was covered by a Netflix logo. If you can see the light-up album, follow the v1 version of the course. If you cannot see it, follow the v2 version.</p>
+
+   <p>Otherwise, if you're not here from Frontend Masters and just want to follow the workshop materials, you <em>probably</em> want the v2 version; it's more updated with the latest tech. Below is the full break down of what they both cover.</p>
+
+   <table id='courses'>
+     <thead>
+       <tr>
+         <td></td>
+         <td>v1</td>
+         <td>v2</td>
+       </tr>
+     </thead>
+     <tbody>
+       <tr>
+         <td>React Version</td>
+         <td>v0.14.7</td>
+         <td>v15.3.2</td>
+       </tr>
+       <tr>
+         <td>Redux</td>
+         <td>Sync Actions</td>
+         <td>Sync Actions and Async Thunks</td>
+       </tr>
+       <tr>
+         <td>Webpack</td>
+         <td>v1 w/ code splitting</td>
+         <td>v2 w/ code splitting, loading CSS, tree shaking, and production builds</td>
+       </tr>
+       <tr>
+         <td>React-Router</td>
+         <td>v2</td>
+         <td>v4</td>
+       </tr>
+       <tr>
+         <td>Testing</td>
+         <td>Mocha, Chai, Sinon, Enzyme, and nyc</td>
+         <td>Jest w/ istanbul, snapshot testing, Enzyme, and autogenerated Redux tests</td>
+       </tr>
+       <tr>
+         <td>Package Manager</td>
+         <td>npm</td>
+         <td>yarn</td>
+       </tr>
+       <tr>
+         <td>React replacements</td>
+         <td>N/A</td>
+         <td>Preact</td>
+       </tr>
+       <tr>
+         <td>Code Splitting</td>
+         <td>Yes</td>
+         <td>Yes</td>
+       </tr>
+       <tr>
+         <td>Server Side Rendering</td>
+         <td>Yes</td>
+         <td>Yes</td>
+       </tr>
+     </tbody>
+   </table>
+
+   <h2 class='center'>Click the link of which version you want to see.</h2>
+
+   <table>
+     <tbody>
+       <tr>
+        <td><a href="https://btholt.github.io/complete-intro-to-react-v1/"><h1>v1</h1></a></td>
+        <td><a href="all.html"><h1>v2</h1></a></td>
+       </tr>
+     </tbody>
+   </table>
+
  </div>
