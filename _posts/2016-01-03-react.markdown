@@ -37,7 +37,7 @@ So let's start our first React code!
               )
             )
           }
-        )
+        })
 
         ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
     </script>
