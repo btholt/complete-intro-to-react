@@ -8,3 +8,5 @@ coverage
 *.bundle.js
 _site/
 .sass-cache/
+*.iml
+.idea/
