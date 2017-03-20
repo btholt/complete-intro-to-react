@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Fixing Our Tests and Testing Redux</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So we broke all of our tests. They all fail now. High five! This is a big reason why I'm hesitant to test UI code: I find my tests break all the time just because I'm rewriting markup or other code. Nonetheless, let's refix our tests and add two for Redux. As opposed to testing React which I don't do much of, I test the hell out of my Redux code. Redux code is very testable by design and you should cover all or nearly-all of your reducers with tests.</p>
+<p>At the end of Search.js add:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Unwrapped = Search
+</code></pre>
+<p>We need an &quot;unconnected&quot; version of Search to test. We're decoupling this from Redux so we can just test the React portion. It will still work without Redux as long as we pass in proper parameters. Go to Search.spec.js.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// import the new Unwrapped Search as just Search</span>
+<span class="hljs-keyword">import</span> { Unwrapped <span class="hljs-keyword">as</span> UnwrappedSearch} <span class="hljs-keyword">from</span> <span class="hljs-string">'./Search'</span>
+
+<span class="hljs-comment">// in the first test, change the shallow call</span>
+<span class="hljs-keyword">const</span> component = shallow(&lt;UnwrappedSearch shows={preload.shows} searchTerm='' /&gt;)
+
+// in the second test, change the shallow call
+const component = shallow(&lt;UnwrappedSearch shows={preload.shows} searchTerm='' /&gt;)
+
+// go ahead and comment out the last test so we can test these first two first
+</code></pre>
+<p>Once we provide the proper params, these tests will be able to pass again. The snapshot is going to fail because we wrapped Header with a connect but go ahead and run <code>npm run update-test</code> to take care of that.</p>
+<p>Since the last test tests the integration of Header and Search which were previously married together, we're going to need to do two things: switch our render to be able to render Header inside of Search instead of just stubbing it out and we're going to have to bring in Redux and integrate that.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// imports at top</span>
+<span class="hljs-keyword">import</span> { Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-redux'</span>
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">'./store'</span>
+<span class="hljs-keyword">import</span> { setSearchTerm } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actionCreators'</span>
+<span class="hljs-keyword">import</span> { shallow, render } <span class="hljs-keyword">from</span> <span class="hljs-string">'enzyme'</span> <span class="hljs-comment">// add render import</span>
+
+<span class="hljs-comment">// replace last test</span>
+test(<span class="hljs-string">'Search should render correct amount of shows based on search'</span>, () =&gt; {
+  <span class="hljs-keyword">const</span> searchWord = <span class="hljs-string">'house'</span>
+  store.dispatch(setSearchTerm(searchWord))
+  <span class="hljs-keyword">const</span> component = render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Provider</span> <span class="hljs-attr">store</span>=<span class="hljs-string">{store}</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">Search</span> <span class="hljs-attr">shows</span>=<span class="hljs-string">{preload.shows}</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">Provider</span>&gt;</span>)
+  const showCount = preload.shows.filter((show) =&gt; `${show.title.toUpperCase()} ${show.description.toUpperCase()}`.includes(searchWord.toUpperCase())).length
+  expect(showCount).toEqual(component.find('.show-card').length)
+})
+</span></code></pre>
+<p>We need to simulate events to Redux instead of to the DOM. Ultimately this isn't a big deal since you should be testing that action creator individually anyway. We also need to use Provider to make Redux work for Header since that's how Header and Search communicate now. Also, we can't do the ShowCard component trick anymore with render since it's not stubbing out ShowCard so we're just checking for the CSS class instead.</p>
+<p>There's a layer deeper that you can go with Enzyme: static rendering with <a href="http://cheeriojs.github.io/cheerio/">Cheerio</a>. If you need to do serious manipulation, this is the tool you need to go with. Be forewarned this slows down startup a lot since it brings in jsdom and it is slow as 💩 to start up.</p>
+<p>Cool! Let's go test Redux now.</p>
+<p>One of the primary reasons to use Redux is how testable it is. It was a big part of its design. Redux makes you create <a href="http://www.nicoespeon.com/en/2015/01/pure-functions-javascript/">pure functions</a>. These functions are then able to pulled out and thoroughly tested. And, lucky for us, Redux dev tools now lets you generate test automatically! Open Search and paste the word &quot;orange&quot; in there. We paste it so it's one atomic operation. Open the Redux dev tools and select the last action. Click on the test tab. You'll see an automatically generated test! Copy that and paste it into reducers.spec.js. You may have to mess with the paths to get it correct. And get rid of the semi-colons!</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> reducers <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers'</span>
+
+test(<span class="hljs-string">'SET_SEARCH_STATE'</span>, () =&gt; {
+  <span class="hljs-keyword">let</span> state
+  state = reducers({<span class="hljs-attr">searchTerm</span>:<span class="hljs-string">''</span>}, {<span class="hljs-attr">type</span>:<span class="hljs-string">'SET_SEARCH_TERM'</span>,<span class="hljs-attr">searchTerm</span>:<span class="hljs-string">'orange'</span>})
+  expect(state).toEqual({<span class="hljs-attr">searchTerm</span>:<span class="hljs-string">'orange'</span>})
+})
+</code></pre>
+<p>Free tests. All we have to do is recreate what we want to test, copy, paste, and commit! Pretty slick. In this particular case, it's not terribly interesting. But you can't beat how low effort it is to get a test out the door. And if you have to later throw this test away you won't care because it was a minute to create start-to-finish. And if you get more complex Redux actions you can save <em>a lot</em> of time doing this. Let's also grab the @@INIT action to make sure we bootstrap the way we think.</p>
+<pre><code class="language-javascript">test(<span class="hljs-string">'@@INIT'</span>, () =&gt; {
+  <span class="hljs-keyword">let</span> state
+  state = reducers(<span class="hljs-literal">undefined</span>, {})
+  expect(state).toEqual({<span class="hljs-attr">searchTerm</span>:<span class="hljs-string">''</span>})
+})
+</code></pre>
+<p>You can also test your actionCreators by making sure they craft their action objects correctly but I'll leave that to you. For now this is enough!</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

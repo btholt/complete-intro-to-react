@@ -8,9 +8,9 @@ What istanbul is going to do? Istanbul instruments your code to see what code ge
 
 So let's implement that as an npm script. Add:
 
-{% highlight json %}
+```json
 "cover": "npm test -- --coverage"
-{% endhighlight %}
+```
 
 Now if you run <code>npm run cover</code> you should see 100% coverage on Search and and 66% ShowCard. That means all the exported code is getting covered in a test for Search and only 2/3 of it is for ShowCard. Yay! But where are the rest of our files? Well, we're not testing them at all yet so istanbul doesn't know about them. Once you start testing those files they'll show up.
 

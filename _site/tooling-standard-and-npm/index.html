@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Tooling – standard and npm</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Before we can introduce JSX to React, we are going to have to send it through a compilation step. So we are going to take a brief repose from React here to start working on our tooling a bit.</p>
+<h2>standard</h2>
+<p>Let's start with the easiest to start with right now: standard.</p>
+<p>standard is a linting tool. Specifically, the executable version of standard that you get when you <code>yarn global add standard</code> is a wrapper around a pre-configured <a href="http://eslint.org/">eslint</a>. If you are unfamiliar with linting tools (like jshint, jslint, jscs) the basic gist is that this tool programatically checks for certain violations of code style in your code. A common (and arguably the most useful) check that it does is make sure you have no unused variables and that you make use of no undeclared variables in your code. A common reason to trip either of those rules is that misspelled a variable somewhere. There are dozens of other checks standard does: check them out <a href="https://github.com/feross/standard/blob/master/RULES.md#javascript-standard-style">here</a>.</p>
+<p>A note on standard, since it inevitably causes controversy. standard is a set of eslint rules that is meant to not to be configurable to totally sidestep the conversation of what rules to include and what not to. It's meant to be a step in the direction of a standard format in the JavaScript community, much akin to how the Go community has standardized on one. Perhaps the most controversial rule in standard is no semicolons. It's okay to not use semicolons in JS. Really. I promise. It's not slower and it won't introduce crazy bugs. It's okay to use them too! It doesn't particularly matter. However, in this workshop, you code won't pass lint if you use semicolons. If you <em>insist</em> that you need your semicolons, you can use the package <a href="https://github.com/Flet/semistandard">semistandard</a>. But give standard a shot. You may like it.</p>
+<p>That being said, we <em>will</em> introducing new rules for our JSX since we want some rules added to enforce good &quot;Reactful&quot; code.</p>
+<p>So, head to your terminal and navigate to the directory of the project. Given that standard is preconfigured to recursively check all js and jsx files recursively in a project and leave out some sane defaults (it doesn't check node_modules/) you should be able to just run <code>standard</code> from your terminal and see if you have any issues. If you do, go fix them! If you feel so inclined, you can use <a href="https://github.com/maxogden/standard-format">standard-format</a> to have your code auto-fixed for you. I've found it sometimes has some derpy indentation but you may have better results.</p>
+<h2>npm scripts</h2>
+<p>One of the nice convenience that npm allows you is its scripts features. If you work on a team or an open source project, it's a great way to standardize how things are done in your project. Even if it's just you, it's an easy way to shorten commands. So go to your package.json and add:</p>
+<pre><code class="language-json">"scripts": {
+    "lint": "standard"
+},
+</code></pre>
+<p>Once in your package.json, now you can go to your terminal and run <code>npm run lint</code> and it will run standard for you. This isn't a big right now but we'll start chaining our whole testing process together and we won't have to remember the complex stuff we're doing each time. We'll have several scripts in here and it quickly becomes <em>very</em> convenient.</p>
+<p>Since all our tests, lints, and builds will be done through npm scripts (which are just commands piped to the terminal) we don't need any tools like Grunt, Gulp, or the like. Anyone who has ever maintained a Gruntfile knows why this is such a big deal. Not to disparage task running tools though; if you have a complex build they quickly are worth their weight in gold. Our builds will be simple and so a simple tool serves nicely.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

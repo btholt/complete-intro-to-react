@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">A Note on Hot Module Reload</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So webpack has a nifty ability to do what's called hot module reload (HMR.) If you've ever used LiveReload's CSS injection, this will sound familiar. HMR will take your code, compile it on the fly, and then inject it into your live-running code. Pretty cool tech.</p>
+<p>If you're working a dropdown that requires three different clicks to get there, it's pretty neat to be able to change the code and watch the UI change without having to reload and get the UI back into a state where you can see the effects of your change.</p>
+<p>But we're not going to do it today. For one, HMR does not work with our stateless functional components at all. It also just requires a lot of setup that can be finicky at times. The author himself says <a href="https://medium.com/@dan_abramov/the-death-of-react-hot-loader-765fa791d7c4#.80xafsv2d">the tech is a (great) hack</a>.</p>
+<p>So suffice to say, I want you to be aware of its existence and continuing evolution but I feel like our time is better off investigating other parts of the React ecosystem.</p>
+<p>These problems are soon going to be resolved with <a href="https://github.com/gaearon/react-hot-loader/pull/240">react-hot-loader v3</a>. However, it's still in beta and not totally working and it wouldn't be a great idea to talk about here. Feel free to checkout the newest version and if it's landed then try it out!</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

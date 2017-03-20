@@ -10,7 +10,7 @@ So try it. While the plain JS way isn't too bad, once you start writing JSX I _a
 
 Side note: good idea to install a JSX syntax highlighter. If you're using Sublime, I highly recommend the "Babel" package off of Package Control. If you're using VIM, try [VimBox][vimbox]. I have no experience with it but I've heard it helps.
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 const div = React.DOM.div
 const h1 = React.DOM.h1
@@ -29,7 +29,7 @@ const MyTitle = React.createClass({
 })
 
 export default MyTitle
-{% endhighlight %}
+```
 
 We're using JSX finally! Make sure you're inserting those opening and closing parens around the component. It's just letting JS know you're going to put your expression on the next line (which we want to do for readability.)
 
@@ -39,7 +39,7 @@ Lastly, you may notice that I switched to an ES6 style here. This is synonymous 
 
 Let's rewrite ClientApp.js.
 
-{% highlight javascript %}
+```javascript
 const React = require('react')
 const ReactDOM = require('react-dom')
 const MyTitle = require('./MyTitle')
@@ -57,7 +57,7 @@ const MyFirstComponent = React.createClass({
 })
 
 ReactDOM.render(<MyFirstComponent/>, document.getElementById('app'))
-{% endhighlight %}
+```
 
 Also make sure you update your webpack.config.js to point the JSX path of ClientApp.js on the entry line.
 
@@ -67,7 +67,7 @@ Also notice we're including React in both files but not directly manipulating it
 
 Something to make note of: the top level component has to be singular, or in other words, your top level component cannot be sibling to something else. This makes sense if you think about what JSX is transpiling to: function calls.
 
-{% highlight javascript %}
+```javascript
 
 // won't compile
 const InvalidComponent = () => (
@@ -83,7 +83,7 @@ const ValidComponent = () => (
   </div>
 );
 
-{% endhighlight %}
+```
 
 Hence why you'll see a lot of wrapping divs in JSX; it's so the whole thing will compile. This is fine if you need to do this; an extra wrapping div does nothing of harm unless you have structurally sensitive CSS. Also notice that if you have just raw text to put into JSX, you can enter it just as if was normal HTML. It's only when you have JS expressions when you need to use the curly braces.
 

@@ -8,7 +8,7 @@ We're going to be using React Router version 4 here. This is significant because
 
 We are just use the top level router at the moment. First, let's move our landing page into its own component so we can use ClientApp as the entry point for the app. Move all the code (except the ReactDOM last line; leave that there) to Landing.js.
 
-{% highlight javascript %}
+```javascript
 // Landing.js
 import React from 'react'
 import '../public/normalize.css'
@@ -27,9 +27,9 @@ const Landing = React.createClass({
 })
 
 export default Landing
-{% endhighlight %}
+```
 
-{% highlight javascript %}
+```javascript
 // ClientApp.js
 import React from 'react'
 import { render } from 'react-dom'
@@ -49,13 +49,13 @@ const App = React.createClass({
 })
 
 render(<App />, document.getElementById('app'))
-{% endhighlight %}
+```
 
 Cool. Make sure standard isn't yelling at you and that your app still works. It should appear pretty much the same to you. The HashRouter is a sort of hacky router which puts your route information into the hash of the URL (after the #). We'll use BrowserRouter later so we have nice URLs, but for now this gets us started. The Match component is a route; when it matchs the pattern provided (in this case we don't want fuzzy matching, hence the exactly attribute) it render the component provided, in this case the Landing component. It's wrapped in a div because routers can only have one child since they render them directly, but it's nice because all routes will now get the styling from the .app class for free.
 
 Now we have a router so we're free to introduce a second page! Let's make our search page. Create a new file called Search.js. In Search.js put:
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 
 const Search = React.createClass({
@@ -67,11 +67,11 @@ const Search = React.createClass({
 })
 
 export default Search
-{% endhighlight %}
+```
 
 Put in ClientApp
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 import { render } from 'react-dom'
 import { HashRouter, Match } from 'react-router'
@@ -92,17 +92,17 @@ const App = React.createClass({
 })
 
 render(<App />, document.getElementById('app'))
-{% endhighlight %}
+```
 
 In Landing, change the <code><a>or Browse All</a></code> to
 
-{% highlight javascript %}
+```javascript
 // add at top with other requires
 import { Link } from 'react-router'
 
 // change <a> to
 <Link to='/search' className='browse-all'>or Browse All</Link>
-{% endhighlight %}
+```
 
 Now you have another working route (which all it's doing is showing an h1) and a link to get there. When linking between routes with react-router, use the Link component. This allows you to refactor how routes work without having refactor all of your individual links (you could just make your a's href "#/search" and it would work for now but could break later.) Now your button should work to take you to the browser page and you should be able to use back and forward for free thanks to react-router.
 

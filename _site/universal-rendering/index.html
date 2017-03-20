@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Universal Rendering</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Universal rendering, or the artist formerly known as isomorphic rendering. The idea here is that you server-side prerender your code so that when it gets down to the client, your browser can <strong>instantly</strong> show the markup while your app bootstraps in the background. It makes everything feel very instantaneous.</p>
+<p>With just vanilla React, universal rendering is a cinch. Check out the <a href="https://github.com/btholt/es6-react-pres/blob/master/completed/app.js">whole node file from another one of my workshops</a>. It does server-side rendering in just a few lines.</p>
+<p>It's not quite so simple now that we have routing involved. We don't want to have to duplicate all of our routing info that we wrote for react-router. Rather, if possible, we just want to reuse the routes we already built for react-router. So let's do that (with some refactoring.)</p>
+<p>First thing is we need to split browser concerns away from our app. Right now ClientApp.js worries about the creating the base app <em>and</em> rendering it to the DOM. We need to do a few things to satisfy those requirements. First let's split the app into browser and app concerns. Create a new file called App.js and put this in there:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { Match } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router'</span>
+<span class="hljs-keyword">import</span> { Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-redux'</span>
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">'./store'</span>
+<span class="hljs-keyword">import</span> Landing <span class="hljs-keyword">from</span> <span class="hljs-string">'./Landing'</span>
+<span class="hljs-keyword">import</span> Search <span class="hljs-keyword">from</span> <span class="hljs-string">'./Search'</span>
+<span class="hljs-keyword">import</span> Details <span class="hljs-keyword">from</span> <span class="hljs-string">'./Details'</span>
+<span class="hljs-keyword">import</span> preload <span class="hljs-keyword">from</span> <span class="hljs-string">'../public/data.json'</span>
+
+<span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">return</span> (
+    &lt;Provider store={store}&gt;
+      &lt;div className='app'&gt;
+        &lt;Match exactly pattern='/' component={Landing} /&gt;
+        &lt;Match pattern='/search' component={(props) =&gt; &lt;Search shows={preload.shows} {...props} /&gt;} /&gt;
+        &lt;Match pattern='/details/:id' component={(props) =&gt; {
+          const show = preload.shows.filter((show) =&gt; props.params.id === show.imdbID)
+          return &lt;Details show={show[0]} {...props} /&gt;
+        }} /&gt;
+      &lt;/div&gt;
+    &lt;/Provider&gt;
+  )
+}
+
+export default App
+</code></pre>
+<p>Now all ClientApp.js should be is:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>
+<span class="hljs-keyword">import</span> { BrowserRouter } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router'</span>
+<span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">'./App'</span>
+
+render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">BrowserRouter</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">BrowserRouter</span>&gt;</span></span>, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'app'</span>))
+</code></pre>
+<p>Now all browser concerns lie in ClientApp and the general app has been split out and is ready to be server renderered. We'll use a special ServerRouter for server rendering so that's why we put the BrowserRouter inside of ClientApp.</p>
+<p>Also, since App itself carries no state, we put it inside of a stateless functional component. I typically default to this kind of component and only migrate to React.createClass when I need lifecycle methods or need to keep track of state. They're great because they're simpler.</p>
+<p>Okay, copout here: doing CSS modules in server-side rendering is going to add a bunch of complexity that with how little we're using CSS modules. It's possible, you need to pull in <a href="https://github.com/kriasoft/isomorphic-style-loader">isomorphic-style-loader</a> instead of css-loader, but we're skip it for now. Remove/comment-out the css imports inside of Landing.js and add them to the head in index.html. Change index.html to look like:</p>
+<pre><code class="language-javascript">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Vidflix&lt;/title&gt;
+  &lt;link rel="stylesheet" href="/public/normalize.css" /&gt;
+  &lt;link rel="stylesheet" href="/public/style.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="app"&gt;&lt;%= body %&gt;&lt;/div&gt;
+  &lt;&amp;NegativeMediumSpace;script src="/public/bundle.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>We also added a <a href="https://lodash.com/docs#template">lodash template</a> tag in it. We'll use it as we server-side render.</p>
+<p>Go to .babelrc and add env, for server. For now it'll be the same as test (since we need Babel to make the modules to CommonJS here too) but we don't want to tie those together.</p>
+<pre><code class="language-json">{
+  "presets": [
+    "react",
+    ["es2015", {modules: false, loose: true}]
+  ],
+  "env": {
+    "server": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    },
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}
+</code></pre>
+<p>Okay, let's create a server now! Create a server.js <em>outside</em> the js folder and put it just in the root directory of your project. Put:</p>
+<pre><code class="language-javascript"><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-register'</span>)
+
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)
+<span class="hljs-keyword">const</span> React = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react'</span>)
+<span class="hljs-keyword">const</span> ReactDOMServer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react-dom/server'</span>)
+<span class="hljs-keyword">const</span> ReactRouter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react-router'</span>)
+<span class="hljs-keyword">const</span> ServerRouter = ReactRouter.ServerRouter
+<span class="hljs-keyword">const</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>)
+<span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)
+<span class="hljs-keyword">const</span> port = <span class="hljs-number">5050</span>
+<span class="hljs-keyword">const</span> baseTemplate = fs.readFileSync(<span class="hljs-string">'./index.html'</span>)
+<span class="hljs-keyword">const</span> template = _.template(baseTemplate)
+<span class="hljs-keyword">const</span> App = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./js/App'</span>).default
+
+<span class="hljs-keyword">const</span> server = express()
+
+server.use(<span class="hljs-string">'/public'</span>, express.static(<span class="hljs-string">'./public'</span>))
+
+server.use(<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> context = ReactRouter.createServerRenderContext()
+  <span class="hljs-keyword">let</span> body = ReactDOMServer.renderToString(
+    React.createElement(ServerRouter, {<span class="hljs-attr">location</span>: req.url, <span class="hljs-attr">context</span>: context},
+      React.createElement(App)
+    )
+  )
+
+  res.write(template({<span class="hljs-attr">body</span>: body}))
+  res.end()
+})
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">'listening on '</span> + port)
+server.listen(port)
+</code></pre>
+<p>We're switching back to CommonJS here to work with Node; Node doesn't natively understand ES6 modules so we need to use CommonJS. We require in a bunch of stuff. We're using Lodash templates but that's a detail; I just did it since it's an easy way to template. There's ten billion other ways to do it. We do some static serving for our CSS. And then we do the magic of server side rendering.</p>
+<p>Notably here we are <em>not</em> handling the 404 or redirect case. react-router is able to handle these without a ton of effort, both server and client-side, but we'll get to that later. With the createElement stuff is just like we were at the beginning of the workshop; it's just here we're doing out of necessity since Node can't read JSX either.</p>
+<p>babel-register at the top lets us require modules that need transpilation. This isn't ideal; in production you'll probably want to pre-transpile them so you don't continually pay that cost.</p>
+<p>Okay. Let's run the app. Run in your CLI <code>npm run build</code> then run <code>NODE_ENV=server node server.js</code>. Make sure you re-run build because the webpack-dev-server doesn't necessarily re-write out the bundle.js. Okay, so now try going to localhost:5050. While you won't necessarily notice it loading quicker since you were developing locally, check out view source. You should see it ships with a bunch of markup which means your page will load <em>much</em> quicker on a slower connection since markup will start rendering before the JS is done downloading.</p>
+<p>Congrats! You've done server-side rendering!</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

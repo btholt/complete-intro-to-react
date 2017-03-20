@@ -1,0 +1,27 @@
+@import "variables.less";
+
+.clearfix:before,
+.clearfix:after {
+    content: " "; /* 1 */
+    display: table; /* 2 */
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+body {
+  color: #444;
+}
+
+a {
+  color: @color-blueLight;
+
+  &:visited {
+    opacity: 0.8;
+  }
+
+  &:hover {
+    opacity: 0.6;
+  }
+}

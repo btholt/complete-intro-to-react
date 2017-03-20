@@ -1,0 +1,26 @@
+name: 'citr'
+
+path:
+  templates:   ./templates
+  plugins:     ./plugins
+  destination: ./
+
+assets:
+  css:
+    source: ./css/main.less
+    processor:
+      name: less
+      hash: true
+      plugins:
+        autoprefixer:
+          browsers: ["last 2 versions"]
+        clean-css:
+
+  js:
+    source: ./js/main.js
+    processor:
+      hash: true
+      name: browserify
+      plugins:
+        babelify:
+        uglifyify:

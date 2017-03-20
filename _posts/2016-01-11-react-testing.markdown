@@ -8,7 +8,7 @@ Now that we have something worth testing, let's test it. We're going to be using
 
 In Search.spec.js, put:
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 import Search from './Search'
 import renderer from 'react-test-renderer'
@@ -18,7 +18,7 @@ test('Search should search titles', () => {
   let tree = component.toJSON()
   expect(tree).toMatchSnapshot()
 })
-{% endhighlight %}
+```
 
 This is a snapshot test and it's a super cool new feature of Jest. Jest is going to render out the component you tell it to and dump the state of that to a file. It's basically a free unit test that the computer generates for you. If the markup changes in the future unexpectedly, your unit test will fail and you'll see why it failed.
 
@@ -26,7 +26,7 @@ This is a snapshot test and it's a super cool new feature of Jest. Jest is going
 
  Okay, so go the CLI and run <code>npm t</code> (which is just short for npm run test or npm test, they all work the same.) You're going to get some error about import being a bad token; this is true since as of Node.js 7, V8 (the JS engine that power Node.js) still doesn't understand ES6 modules, but we still want to use them in dev so we need to do some special Babel transformations just for testing. Go to your .babelrc file and put this:
 
-{% highlight json %}
+```json
 {
   "presets": [
     "react",
@@ -38,7 +38,7 @@ This is a snapshot test and it's a super cool new feature of Jest. Jest is going
     }
   }
 }
-{% endhighlight %}
+```
 
 This will add the correct Babel transformation when you are the test environment. Now let's make it so the jest command is run in the test environment (since by default it won't). Go back and change your line in your npm scripts to be <code>"test": "NODE_ENV=test jest"</code>. Now it will apply that extra transformation for you. Now try running npm t again and see what happens. If it still fails on the import token, run <code>npm t -- --no-cache</code>. The double dash means you want to pass parameters to whatever npm is running, in this case jest, so the command you're actually running is <code>jest --no-cache</code>. That's a useful trick to know. Then Jest likes to cache Babel transformations for ones it's already done so that you don't have to do it every time; this greatly speeds up running tests but it also doesn't check to see if you updated your .babelrc. So here we need to tell it to do so.
 
@@ -48,7 +48,7 @@ Okay, so now we have a few problems with this test. First, if we modify ShowCard
 
 So modifiy your test to read:
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 import Search from './Search'
 import { shallow } from 'enzyme'
@@ -59,11 +59,11 @@ test('Search render correctly', () => {
   const tree = shallowToJson(component)
   expect(tree).toMatchSnapshot()
 })
-{% endhighlight %}
+```
 
 Run npm t and you can see the difference. Instead of rendering out all the individual shows, we're rendering stubs of ShowCard with the props going into each of them. This ends up being preferable since if ShowCard breaks, it won't break _this_ test. Run <code>npm run update-test</code>. You should see it updated your snapshot and now you're good to keep going. Let's test that if we search on the Search component, it displays the correct amount of shows.
 
-{% highlight javascript %}
+```javascript
 // add two imports
 import ShowCard from './ShowCard'
 import preload from '../public/data.json'
@@ -73,11 +73,11 @@ test('Search should render correct amount of shows', () => {
   const component = shallow(<Search />)
   expect(preload.shows.length).toEqual(component.find(ShowCard).length)
 })
-{% endhighlight %}
+```
 
 Enzyme gives us lots of useful features. In this case, we can use it to do jQuery-like selections from our app. We can actually ask it, "How times does it use this React component". Logically, based on how our app works, it should have a ShowCard for each item in the preload data, so that's what we've checked here. Let's take it a step further and see if it searches correctly.
 
-{% highlight javascript %}
+```javascript
 // underneath the last test
 test('Search should render correct amount of shows based on search', () => {
   const searchWord = 'house'
@@ -86,7 +86,7 @@ test('Search should render correct amount of shows based on search', () => {
   const showCount = preload.shows.filter((show) => `${show.title.toUpperCase()} ${show.description.toUpperCase()}`.includes(searchWord.toUpperCase())).length
   expect(showCount).toEqual(component.find(ShowCard).length)
 })
-{% endhighlight %}
+```
 
 Here we're making sure that the UI displays the correct amount of ShowCards for how many shows it should match. If I were to take this a bit further, I would extract that filter function to a module, test that, and then import that same function into the production environment and the test environment. Here we're duplicating logic which isn't the best idea.
 

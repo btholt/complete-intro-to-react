@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Webpack Code-Splitting and Async Routing</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So far all of our routing with react-router has synchronous which makes sense. When we detect that a user has requested a route, we already have that route in our bundle.js and we render and serve that to them. The logic follows.</p>
+<p>However, as our app grows and grows, our bundle.js is going to get bigger and bigger in file size. Wouldn't it be better if you were on Search that it served you <em>just</em> the JavaScript you need for that page and none of the JS for Landing or Details? For example, Search doesn't need the axios client we brought in: that client can safely just be loaded on the Details page.</p>
+<p>Enter webpack's code splitting ability. It's smart enough to know which files are required by which other files and thus if you choose to use webpack's async loading API (<code>require</code>) then webpack will <em>automatically</em> start chunking your JS for you. What's more is we don't have to write the glue code that will download the chunks as we need them: webpack just does this for us. All we have to do is identify the modules that can be async by treating them as if they were. Really cool.</p>
+<p>So we're going to treat all of our routes as async and luckily react-router is already instrumented for this for both server and client-side. So let's go make it happen! We're going to be using to do this. There are many ways to do this; I've just found this easiest to teach you. People right now like <a href="https://github.com/threepointone/react-modules">react-modules</a> despite it having some issues with server-side rendering.</p>
+<p>So first we need give a minor tweak to webpack.config.js.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// inside of the output config object (not the devServer object)</span>
+publicPath: <span class="hljs-string">'/public/'</span>
+</code></pre>
+<p>First we need to tell webpack where to find all of its bundles instead when it calls back to the server to grab them.</p>
+<p>Let's go create a component that will handle our asynchronous routes to contain all that craziness. Create a file called AsyncRoute and go there.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">const</span> { object } = React.PropTypes
+
+<span class="hljs-keyword">const</span> AsyncRoute = React.createClass({
+  <span class="hljs-attr">propTypes</span>: {
+    <span class="hljs-attr">props</span>: object,
+    <span class="hljs-attr">loadingPromise</span>: object
+  },
+  getInitialState () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">loaded</span>: <span class="hljs-literal">false</span>
+    }
+  },
+  componentDidMount () {
+    <span class="hljs-keyword">this</span>.props.loadingPromise.then(<span class="hljs-function">(<span class="hljs-params"><span class="hljs-built_in">module</span></span>) =&gt;</span> {
+      <span class="hljs-keyword">this</span>.component = <span class="hljs-built_in">module</span>.default
+      <span class="hljs-keyword">this</span>.setState({<span class="hljs-attr">loaded</span>: <span class="hljs-literal">true</span>})
+    })
+  },
+  render () {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.loaded) {
+      <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">this.component</span> {<span class="hljs-attr">...this.props.props</span>} /&gt;</span>
+    } else {
+      return <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    }
+  }
+})
+
+export default AsyncRoute
+</span></code></pre>
+<p>AsyncRoute is going to passed a promise which will resolve to a module. Once that promise has completed, that means the module is loaded and available. Then we can render it. Notice that we stick the module on this and not into state. Modules are large and it would slow down our component to have so much state. Furthermore we don't expect it to change. Before that we'll render a loading state. That's all we're going to do with AsyncRoute. Go to App.js</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// at top</span>
+<span class="hljs-comment">// delete Landing import</span>
+<span class="hljs-keyword">import</span> AsyncRoute <span class="hljs-keyword">from</span> <span class="hljs-string">'./AsyncRoute'</span>
+<span class="hljs-keyword">if</span> (global) {
+  global.System = { <span class="hljs-keyword">import</span> () {} }
+}
+
+<span class="hljs-comment">// replace Landing Match</span>
+&lt;Match
+  exactly
+  pattern=<span class="hljs-string">'/'</span>
+  loadingPromise={(props) =&gt; <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">AsyncRoute</span> <span class="hljs-attr">props</span>=<span class="hljs-string">{props}</span> <span class="hljs-attr">component</span>=<span class="hljs-string">{System.import(</span>'<span class="hljs-attr">.</span>/<span class="hljs-attr">Landing</span>')} /&gt;</span>}
+/&gt;
+</span></code></pre>
+<p>So now we're using our AsyncRoute function to make Landing Async. First we import our route and then we have to shim System.import out. Node doesn't have System.import (it's tied to the new ES6 module system which Node doesn't have yet.) Then we pull in our async route and use it inside of Match. This is amazing since Webpack knows to perform a code split here and we get all the rest of that for free.</p>
+<p>Let's talk about what sucks about this. Now, server-side rendered or not, we get a loading screen first thing. No matter what. Ideally we get this loading screen <em>sooner</em> but nonetheless that happens. There are ways around this but it involves either making some compromises by not server-side rendering properly and getting a <a href="https://stackoverflow.com/questions/34311221/what-is-checksum-in-react-and-how-to-use-it">checksum violation</a> or by greatly increasing the complexity of this by introducing the concept of module hydration where on the server you make sure to send down the bundle and the correct chunk at the same time and detect that on the client. For now I'm happy just introducing code-splitting to our app for now.</p>
+<p>Also, in order for System.import (or <a href="https://webpack.github.io/docs/code-splitting.html#commonjs-require-ensure">require.ensure</a>, which is the CommonJS version) to be able to code split, the parameter passed to it must be a string of the path. It cannot be a variable. Webpack is doing static analsysis of your code and cannot follow variables.</p>
+<p>Open up your browser to /search (without hitting / first) and watch the network tab. Make sure your npm run watch and your npm run start are both running. You should see bundle.js being downloaded but you should also see 0.bundle.js being downloaded too. This is the chunks that Webpack is sending down piecemeal, meaning your route and associated modules are not included in the initial payload. This becomes a bigger and bigger deal as your app expands. Let's finish the rest of our async routes.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// delete Search and Details import</span>
+
+<span class="hljs-comment">// replace Details and Search matches</span>
+&lt;Match
+  pattern=<span class="hljs-string">'/search'</span>
+  component={(props) =&gt; {
+    <span class="hljs-keyword">return</span> &lt;AsyncRoute props={Object.assign({shows: preload.shows}, props)} loadingPromise={System.import('./Search')} /&gt;
+  }}
+/&gt;
+&lt;Match
+  pattern='/details/:id'
+  component={(props) =&gt; {
+    const show = preload.shows.filter((show) =&gt; props.params.id === show.imdbID)
+    return &lt;AsyncRoute props={Object.assign({show: show[0]}, props)} loadingPromise={System.import('./Details')} /&gt;
+  }}
+/&gt;
+</code></pre>
+<p>Nothing too crazy here either. Just extendingo out the same ideas. Now try navigating around your app and watch the network tab. You should different bundles being pulled in. If you look at your terminal output, you'll see we actually haven't optimized too much: our main bundle is nearly a megabyte and the smaller bundles are between three and fifty kilobytes. Like I said, this is wonderful for big apps where you can section off where dependencies. For example the fifty kilobyte bundle is the only one that has axios. The rest of the app doesn't need it. But for our tiny React routes, this isn't super useful. And the ability to codesplit isn't free either: Webpack includes some glue code to make this work. So evaluate this tool carefully!</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

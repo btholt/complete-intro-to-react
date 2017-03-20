@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">React Lifecycle Methods and AJAX with React</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Due to the structuring of our app, we haven't had to use React lifecycle methods despite the fact they're fairly common to use and thus important to know. One of the most compelling reasons to use lifecycle methods is to do AJAX. Once a component gets mounted to the page then we want to be able request data from the server. First let's discuss the lifecycle of a React component.</p>
+<ol>
+<li><strong>constructor/getInitialState</strong> - This is where set up your components initial state. The former is for ES6 classes (that you'll see how to do at the end) and the latter is for the React.createClass method (that we've been using.)</li>
+<li><strong>componentWillMount</strong> - This method runs right <em>before</em> the component gets mounted. This one is not too common to use, but you will want to use it any time you want code to run both in node and in the browser.</li>
+<li><strong>componentDidMount</strong> - This method runs right <em>after</em> your component gets put into the DOM. This method <em>will not get run in node but will in the browser</em>. This makes it so your component can render first <em>then</em> you can go get the data you need. In your component you can throw up a loader if you need to. Also if you need to interact with the DOM (like if you were wrapping D3 or a jQuery plugin) this would be the place to do it.</li>
+<li><strong>componentWillUnmount</strong> - This method runs right before the component is taken off the DOM. Most common thing to do here is get rid of external event listeners or other things you need to clean up.</li>
+</ol>
+<p>Cool! So let's make our Details page check the IMDB rating! Open Details.js.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// import in axios</span>
+<span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>
+
+<span class="hljs-comment">// add propType inside show</span>
+imdbID: string
+
+<span class="hljs-comment">// add getInitialState and componentDidMount to Details</span>
+getInitialState () {
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">omdbData</span>: {}
+  }
+},
+componentDidMount () {
+  axios.get(<span class="hljs-string">`http://www.omdbapi.com/?i=<span class="hljs-subst">${<span class="hljs-keyword">this</span>.props.show.imdbID}</span>`</span>)
+    .then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'response'</span>, response)
+      <span class="hljs-keyword">this</span>.setState({<span class="hljs-attr">omdbData</span>: response.data})
+    })
+    .catch(<span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> {
+      <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'axios error'</span>, error)
+    })
+},
+
+<span class="hljs-comment">// add to render before return</span>
+<span class="hljs-keyword">let</span> rating
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.omdbData.imdbRating) {
+  rating = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{this.state.omdbData.imdbRating}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span>
+} <span class="hljs-keyword">else</span> {
+  rating = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">'/public/img/loading.png'</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">'loading indicator'</span> /&gt;</span>
+}
+
+// add between year and poster
+{rating}
+</span></code></pre>
+<p>We're requiring in <a href="https://github.com/mzabriskie/axios">axios</a> which is a great little promise-based AJAX client and using that to make requests to the Open Movie Database to find the IMDB ratings. If you go to your pages now you'll notice that the rating is showing up a little after the page renders. That's because it's being grabbed from the magical Internet tubes! As you can see, we did this componentDidMount so that the user could see UI before waiting on an AJAX request. Note that it won't get server-side rendered either because the server doesn't call componentDidMount.</p>
+<p>That's it! That's all you need to need know about AJAX with React as well as the lifecycle methods!</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

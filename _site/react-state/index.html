@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">React: State</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>We've discussed props which all you to have immutable state passed from parents to children. However, as any seasoned UI developer will point out, user interfaces are inherently stateful. You app at some level must contain some level of mutability. React gives you a very controlled window to introduce this mutability to be able to reason easily about this mutability aptly called state.</p>
+<p>While props are passed down from parents and are immutable, state is created, read, and mutated all <em>inside of</em> a component. In other words, if a component has state, that state cannot be mutated by a parent, child, or any other external influence; only that same component has access to the setState method which is the only way to mutate state. That component has the ability to expose methods to children that the child can call to let the parent know it should mutate its state, but again, it is totally up to the parent to respect that call and mutate the state; the child can only call methods exposed to it via passed-down props.</p>
+<p>So let's see this in action. We're going to add a header that allows us to search our shows.</p>
+<p>In Search.js, add the following:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// inside div.search, above and sibling to the div that contains the shows</span>
+&lt;header&gt;
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>svideo<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span>
+  &lt;input type=<span class="hljs-string">'text'</span> placeholder=<span class="hljs-string">'Search'</span> /&gt;
+<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span></span>
+</code></pre>
+<p>Now the UI is in place. Let's start tracking what's actually in the input.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> ShowCard <span class="hljs-keyword">from</span> <span class="hljs-string">'./ShowCard'</span>
+<span class="hljs-keyword">import</span> preload <span class="hljs-keyword">from</span> <span class="hljs-string">'../public/data.json'</span>
+
+<span class="hljs-keyword">const</span> Search = React.createClass({
+  getInitialState () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">searchTerm</span>: <span class="hljs-string">'this is the default searchTerm'</span>
+    }
+  },
+  render () {
+    <span class="hljs-keyword">return</span> (
+      &lt;div className='search'&gt;
+        &lt;header&gt;
+          &lt;h1&gt;{this.state.searchTerm}&lt;/h1&gt;
+          &lt;input type='text' placeholder='Search' /&gt;
+        &lt;/header&gt;
+        &lt;div&gt;
+          {preload.shows.map((show) =&gt; {
+            return (
+              &lt;ShowCard {...show} key={show.imdbID} /&gt;
+            )
+          })}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    )
+  }
+})
+
+export default Search
+</code></pre>
+<p>I replaced the brand momentarily so you can see the see the searchTerm change. You should see whatever you made the initial state for searchTerm show up as the brand. Neat, right? Alright, let's make it mutable now. Change the input in the header to be this:</p>
+<pre><code class="language-javascript">&lt;input type=<span class="hljs-string">'text'</span> placeholder=<span class="hljs-string">'Search'</span> value={<span class="hljs-keyword">this</span>.state.searchTerm} /&gt;
+</code></pre>
+<p>Cool! Now your input should have the initial state of your searchTerm. Now try and type and/or delete anything. You can't! You broke the Internet! Just kidding. But to understand why this weird bug is happening you have to understand how React handles keypresses. Your state object on your component states that the value of searchTerm is <code>'this is the default searchTerm'</code>. When a keypress happens, React kicks off a re-render. Since nothing modified the value of searchTerm, it's still the same string and thus it re-renders the same string there. Your state object is the source of truth. So let's make the value of searchTerm bound to the value of the input.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add method</span>
+handleSearchTermChange (event) {
+  <span class="hljs-keyword">this</span>.setState({ <span class="hljs-attr">searchTerm</span>: event.target.value })
+},
+
+<span class="hljs-comment">// replace input</span>
+&lt;input type=<span class="hljs-string">'text'</span> placeholder=<span class="hljs-string">'Search'</span> value={<span class="hljs-keyword">this</span>.state.searchTerm} onChange={<span class="hljs-keyword">this</span>.handleSearchTermChange} /&gt;
+</code></pre>
+<p>Now try typing in the input. As you see, the title is now reflective of whatever you type in the search input. So let's chat about what we did here. We made an event listener that handles the change events that the input throws off when it has a keypress. That event listener accepts an event that's technically a React synthetic event but its API looks just like a normal DOM event. In the event listener, we call <code>this.setState</code>, a method that allows you to mutate the state and then lets React re-render. If you don't call setState and instead mutate <code>this.state</code> yourself, React isn't privy to the fact the fact that you're changing stuff and thus doesn't know to re-render. In other words, never modify <code>this.state</code> directly and always just use setState. setState works like <code>Object.assign</code> in that it will do a merge of your objects (it's a shallow merge and not a deep merge) so you're free to just modify the keys you need to.</p>
+<p>So go back now and change the brand to the correct title.</p>
+<p>Let's make the search actually <em>do</em> something now. Since now we have our state being tracked, let's use it do a real time search on our titles.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// replace div inside search which contains shows</span>
+&lt;div&gt;
+  {data.shows
+    .filter(<span class="hljs-function">(<span class="hljs-params">show</span>) =&gt;</span> <span class="hljs-string">`<span class="hljs-subst">${show.title}</span> <span class="hljs-subst">${show.description}</span>`</span>.toUpperCase().indexOf(<span class="hljs-keyword">this</span>.state.searchTerm.toUpperCase()) &gt;= <span class="hljs-number">0</span>)
+    .map(<span class="hljs-function">(<span class="hljs-params">show, index</span>) =&gt;</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">ShowCard</span> {<span class="hljs-attr">...show</span>} <span class="hljs-attr">key</span>=<span class="hljs-string">{index}</span> <span class="hljs-attr">id</span>=<span class="hljs-string">{index}</span> /&gt;</span>
+  ))}
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+</code></pre>
+<p>This is a little clever but let's dissect the new filter line we added. We're looking at both the title and description lines to search on and using the indexOf method from strings to see if the searchTerm exists within the description or title. We use toUpperCase on both to make it case agnostic. And the filter method on arrays just filters out items in an array that the method returns false on. Now try typing in your searchBox. You should see it filter as you type. We could make this more efficient but I'll leave that to you in your own time.</p>
+<p>If you're unfamiliar with filter, <a href="http://adripofjavascript.com/blog/drips/filtering-arrays-with-array-filter">check this out</a>. If you're unfamiliar with arrow functions, <a href="http://www.2ality.com/2012/04/arrow-functions.html">check this out</a>. If you're unfamiliar with indexOf, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf">look here</a>. And finally, for template strings (the back ticks instead of the quotes for the strings) <a href="https://developers.google.com/web/updates/2015/01/ES6-Template-Strings">look here</a>.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

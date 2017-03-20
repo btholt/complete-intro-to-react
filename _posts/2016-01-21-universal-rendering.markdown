@@ -10,7 +10,7 @@ It's not quite so simple now that we have routing involved. We don't want to hav
 
 First thing is we need to split browser concerns away from our app. Right now ClientApp.js worries about the creating the base app _and_ rendering it to the DOM. We need to do a few things to satisfy those requirements. First let's split the app into browser and app concerns. Create a new file called App.js and put this in there:
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 import { Match } from 'react-router'
 import { Provider } from 'react-redux'
@@ -36,18 +36,18 @@ const App = () => {
 }
 
 export default App
-{% endhighlight %}
+```
 
 Now all ClientApp.js should be is:
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 import { render } from 'react-dom'
 import { BrowserRouter } from 'react-router'
 import App from './App'
 
 render(<BrowserRouter><App /></BrowserRouter>, document.getElementById('app'))
-{% endhighlight %}
+```
 
 Now all browser concerns lie in ClientApp and the general app has been split out and is ready to be server renderered. We'll use a special ServerRouter for server rendering so that's why we put the BrowserRouter inside of ClientApp.
 
@@ -55,7 +55,7 @@ Also, since App itself carries no state, we put it inside of a stateless functio
 
 Okay, copout here: doing CSS modules in server-side rendering is going to add a bunch of complexity that with how little we're using CSS modules. It's possible, you need to pull in [isomorphic-style-loader][isl] instead of css-loader, but we're skip it for now. Remove/comment-out the css imports inside of Landing.js and add them to the head in index.html. Change index.html to look like:
 
-{% highlight javascript %}
+```javascript
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,13 +69,13 @@ Okay, copout here: doing CSS modules in server-side rendering is going to add a 
   <&NegativeMediumSpace;script src="/public/bundle.js"></script>
 </body>
 </html>
-{% endhighlight %}
+```
 
 We also added a [lodash template][lodash] tag in it. We'll use it as we server-side render.
 
 Go to .babelrc and add env, for server. For now it'll be the same as test (since we need Babel to make the modules to CommonJS here too) but we don't want to tie those together.
 
-{% highlight json %}
+```json
 {
   "presets": [
     "react",
@@ -90,11 +90,11 @@ Go to .babelrc and add env, for server. For now it'll be the same as test (since
     }
   }
 }
-{% endhighlight %}
+```
 
 Okay, let's create a server now! Create a server.js *outside* the js folder and put it just in the root directory of your project. Put:
 
-{% highlight javascript %}
+```javascript
 require('babel-register')
 
 const express = require('express')
@@ -127,7 +127,7 @@ server.use((req, res) => {
 
 console.log('listening on ' + port)
 server.listen(port)
-{% endhighlight %}
+```
 
 We're switching back to CommonJS here to work with Node; Node doesn't natively understand ES6 modules so we need to use CommonJS. We require in a bunch of stuff. We're using Lodash templates but that's a detail; I just did it since it's an easy way to template. There's ten billion other ways to do it. We do some static serving for our CSS. And then we do the magic of server side rendering.
 

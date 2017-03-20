@@ -8,7 +8,7 @@ There are several ways to get it working but I'm going to show you the bare mini
 
 In Store.js put:
 
-{% highlight javascript %}
+```javascript
 import { createStore, compose } from 'redux'
 import rootReducer from './reducers'
 
@@ -17,7 +17,7 @@ const store = createStore(rootReducer, compose(
 ))
 
 export default store
-{% endhighlight %}
+```
 
 That's it for code! It just adds a middleware to redux that hooks into the dev tools. It's also doing a window check to make sure if you're unit testing or running your components in node that the window reference doesn't blow up.
 

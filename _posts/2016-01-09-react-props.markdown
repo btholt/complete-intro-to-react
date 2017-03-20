@@ -6,14 +6,14 @@ Let's start making our search page. We're going to start with some dummy data an
 
 Webpack allows you to require in json files just like you would another JavaScript file so we'll take advantage of that when we start coding our new search page. However we do have add another loader to do that. Add the following object to your <code>loaders</code> array in your webpack.config.js.
 
-{% highlight javascript %}
+```javascript
   {
     test: /\.json$/,
     loader: 'json-loader'
   }
-{% endhighlight %}
+```
 
-{% highlight javascript %}
+```javascript
 // in replace Search.js
 import React from 'react'
 import preload from '../public/data.json'
@@ -29,13 +29,13 @@ const Search = React.createClass({
 })
 
 export default Search
-{% endhighlight %}
+```
 
 You should see it say dump a lot of JSON to the page at the top of the page. When you use curly braces in JSX, you're telling JSX you want it run a JavaScript expression and then display whatever it returns. If you take away those curly braces (try it) you'll see it literally displays "JSON.stringify(preload, null, 4)" as a string. So that's a neat tool to have; let's take it a step further and display all of the titles as their own components.
 
 As you may remember, JSX is transpiling your JSX-HTML to function calls. As such, you may be able to imagine that a bunch of sibling components are just an array of components. Since they're just normal ol' JavaScript arrays, we can use some functional-programming-fu to transform data into components.
 
-{% highlight javascript %}
+```javascript
 // replace render's return
 <div className='search'>
   {preload.shows.map((show) => {
@@ -44,11 +44,11 @@ As you may remember, JSX is transpiling your JSX-HTML to function calls. As such
     )
   })}
 </div>
-{% endhighlight %}
+```
 
 You should now see all of the titles in a nice scrollable list. This is the ng-repeat/#each of React: plain ol' JavaScript map. If you are not familiar with map, [read this][map]. This is one of the reasons I _love_ React: for the most part best practices of React are just JavaScript best practices. There's very little DSL to learn. Cool! Let's flesh out how our search results are going to look.
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 import preload from '../public/data.json'
 
@@ -76,13 +76,13 @@ const Search = React.createClass({
 })
 
 export default Search
-{% endhighlight %}
+```
 
 Try saving and re-rendering. You should see some nice cards for the shows. Notice that we can use those fancy curly braces to insert JavaScript expressions into HTML attribute too. Neat.
 
 However we can reorganize this a bit better: the ShowCard component can be broken out into its own component. Let's do that. Make a file called ShowCard.js and put this in there:
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 
 const ShowCard = React.createClass({
@@ -101,7 +101,7 @@ const ShowCard = React.createClass({
 })
 
 export default ShowCard
-{% endhighlight %}
+```
 
 Notice we're using this strange props object that's coming from <code>this</code> context. This is what we are going to be receiving from our parents. In this case, an individual ShowCard needs to receive all the necessary data from its parent to be able to display it.
 
@@ -115,7 +115,7 @@ And these principles? Not invented by React. These are battle-tested ideas that 
 
 Okay, great, let's go to Search and drop in our new component.
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 import ShowCard from './ShowCard'
 import preload from '../public/data.json'
@@ -137,7 +137,7 @@ const Search = React.createClass({
 })
 
 export default Search
-{% endhighlight %}
+```
 
 Much like you give an HTML tag an attribute is how you give props to children components in React. Here we're passing down an object to our child component to make it available to the ShowCard via props. Neat, right? Save it and reload the page. standard is going to give you a bunch of complaints but we're going to address that momentarily. You should see the same UI.
 
@@ -147,7 +147,7 @@ So let's fix our standard errors now. standard-react dictates that all props hav
 
 In ShowCard, go add this just below the declaration of the ShowCard function:
 
-{% highlight javascript %}
+```javascript
 // add below import React
 
 // top level property in ShowCard's React.createClass object
@@ -159,13 +159,13 @@ propTypes: {
     description: string
   })
 },
-{% endhighlight %}
+```
 
 Now React knows to expect that show is both an object full of strings _and_ those strings are required for the ShowCard to work. If a prop is optional (which is fine if it is indeed optional) then leave off the isRequired part.
 
 We can make this a little neater via the ES6/JSX spread operator. Let's try that. Change Search's ShowCard from <code><ShowCard show={show} /></code> to <code><ShowCard {...show} key={show.imdbID} /></code>. This will take all the properties from show and spread them out as individual properties on ShowCard. You _could_ write <code><ShowCard title={show.title} poster={show.poster} description={show.description} year={show.year} /></code> but that's a lot of writing and this cuts an easy corner. Let's go modify ShowCard to match.
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 const {string} = React.PropTypes
 
@@ -191,7 +191,7 @@ const ShowCard = React.createClass({
 })
 
 export default ShowCard
-{% endhighlight %}
+```
 
 We've now made our code a bit cleaner since we don't have to props.show... ad nauseam. I should mention that if you go down the path of [Flow][flow] or TypeScript[ts] you don't really need propTypes as much since the static checkers accomplish that and more for you.
 

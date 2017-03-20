@@ -14,7 +14,7 @@ It bears mentioning that we are slowly going to build a full stack app progressi
 
 So let's start our first React code!
 
-{% highlight html %}
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,13 +37,13 @@ So let's start our first React code!
               )
             )
           }
-        })
+        )
 
         ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
     </script>
 </body>
 </html>
-{% endhighlight %}
+```
 
 ## My Second Component
 
@@ -53,7 +53,7 @@ Notice we are using two React methods here: <code>createClass</code> and <code>c
 
 Before we start here, let's delete that bottom script tag in index.html and add <code><&NegativeMediumSpace;script src="js/ClientApp.js"></script></code> so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put
 
-{% highlight javascript %}
+```javascript
 /* global React ReactDOM */
 
 var div = React.DOM.div
@@ -79,7 +79,7 @@ var MyFirstComponent = (
 
 ReactDOM.render(MyFirstComponent, document.getElementById('app'))
 
-{% endhighlight %}
+```
 
 Cool, right!
 
@@ -96,7 +96,7 @@ To sum-up, we're using `createClass` to create the component and then we're usin
 
 This is a bit verbose to write <code>React.createElement</code> so many damn times. Let's use a shortcut.
 
-{% highlight javascript %}
+```javascript
 // replace MyFirstComponent
 var MyTitleFact = React.createFactory(MyTitle)
 
@@ -108,7 +108,7 @@ return (
     MyTitleFact(null)
   )
 )
-{% endhighlight %}
+```
 
 We can use createFactory to side step this. Now we can use our class like we use div. In fact <code>React.createElement('div', null)</code> works the same as <code>React.DOM.div</code>. The one I showed you is just a convenience factory method that React provides for all of the HTML tags.
 
@@ -116,7 +116,7 @@ We can use createFactory to side step this. Now we can use our class like we use
 
 Our title component is cute but not super reuseable. Let's make it a bit more flexible by using some props. Props are variables that you pass from the parent to the child but the child cannot modify the props it gets. This simple restriction helps a lot in the future because when bugs arise, you know the child didn't modify the variable because it can't! Let's see how to do it.
 
-{% highlight javascript %}
+```javascript
 /* global React ReactDOM */
 
 var div = React.DOM.div
@@ -148,11 +148,11 @@ var MyFirstComponent = React.createClass({
 })
 
 ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
-{% endhighlight %}
+```
 
 Now we can change the contents of the title. But since we can pass in lots of props, we can widely differing elements of the same class based on what props are passed into the element. Let's take it a step further (and show you how to do inline styles and attributes with React.)
 
-{% highlight javascript %}
+```javascript
 // change MyTitle's inside h1
 h1({ style: {color: this.props.color} }, this.props.title)
 
@@ -160,7 +160,7 @@ h1({ style: {color: this.props.color} }, this.props.title)
 MyTitleFact({title: 'Props are great!', color: 'rebeccapurple'}),
 MyTitleFact({title: 'Use props everywhere!', color: 'mediumaquamarine'}),
 MyTitleFact({title: 'Props are the best!', color: 'peru'})
-{% endhighlight %}
+```
 
 Let's stop there and switch our attention a bit to tooling. So far we've been writing React with no compile step which is pretty cool and not something enough do in the course of React. Certain things will just make sense because you know what it complies to. In any case, onward!
 

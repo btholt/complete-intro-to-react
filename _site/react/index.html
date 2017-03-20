@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">React</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Welcome to the wonderful world of React. We are going to start with the most absolutely barebone version of React. No JSX. No ES6. No transpilation. Just pure component-oriented pleasure of coding.</p>
+<p>So let's talk about what React is. I imagine most of those who take this class will come from another framework or library, be it jQuery, Angular, Backbone, Ember, Knockout, or something else. I will draw comparisons and contrasts to these other frameworks (despite not being the same, I'll be using the word library and framework interchangeably for brevity's sake) to help illuminate some of the differences but you needn't have programmed in these other frameworks to understand this workshop.</p>
+<p>React is a library to build the views in your app. In truth, it shares more similar responsibilities to jQuery than it does to Angular or Ember: it is not a the framework but rather a component you'll use in constructing your own framework. If you've done Backbone, React is <em>just</em> the view but not the model or component. While it can do a little data management (which is sufficient for small apps,) you really need some other construct to manage your data if you are doing some sort of app. We will get to that later using redux.</p>
+<p>It bears mentioning that we are slowly going to build a full stack app progressively over the course of this workshop, piece-by-piece. By the end of the workshop, you'll have built a real-time app that does streaming video.</p>
+<h2>My First Component!</h2>
+<p>So let's start our first React code!</p>
+<pre><code class="language-html"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Vidflix<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"app"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"node_modules/react/dist/react.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"node_modules/react-dom/dist/react-dom.js"</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+        <span class="hljs-keyword">var</span> div = React.DOM.div
+        <span class="hljs-keyword">var</span> h1 = React.DOM.h1
+
+        <span class="hljs-keyword">var</span> MyFirstComponent = React.createClass({
+          <span class="hljs-attr">render</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+            <span class="hljs-keyword">return</span> (
+              div(<span class="hljs-literal">null</span>,
+                h1(<span class="hljs-literal">null</span>, <span class="hljs-string">'This is my first component!'</span>)
+              )
+            )
+          }
+        )
+
+        ReactDOM.render(React.createElement(MyFirstComponent), <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'app'</span>))
+    </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</code></pre>
+<h2>My Second Component</h2>
+<p>Good job! You should see the text &quot;This is my first component!&quot; on the screen. As you may see, we constructed a bit of DOM using functions. That's all components are in React: functions. This ends up being a useful and powerful abstraction which you hopefully will see as we go on. This is about as simple as it gets as far as a React component goes. Let's take it one step further by nesting some components.</p>
+<p>Notice we are using two React methods here: <code>createClass</code> and <code>createElement</code>. createClass creates a new blueprint for an element, allowing you to create many of the same class. createElement creates a new, single instance of that blueprint. In this case we create an instance of that blueprint for the DOM. Once we start using JSX, you won't actually need to ever use the createElement API; JSX calls it for you.</p>
+<p>Before we start here, let's delete that bottom script tag in index.html and add <code>&lt;​script src=&quot;js/ClientApp.js&quot;&gt;</script></code> so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put</p>
+<pre><code class="language-javascript"><span class="hljs-comment">/* global React ReactDOM */</span>
+
+<span class="hljs-keyword">var</span> div = React.DOM.div
+<span class="hljs-keyword">var</span> h1 = React.DOM.h1
+
+<span class="hljs-keyword">var</span> MyTitle = React.createClass({
+  render () {
+    <span class="hljs-keyword">return</span> (
+      div(<span class="hljs-literal">null</span>,
+        h1(<span class="hljs-literal">null</span>, <span class="hljs-string">'Check out this component!'</span>)
+      )
+    )
+  }
+})
+
+<span class="hljs-keyword">var</span> MyFirstComponent = (
+  div(<span class="hljs-literal">null</span>,
+    React.createElement(MyTitle, <span class="hljs-literal">null</span>),
+    React.createElement(MyTitle, <span class="hljs-literal">null</span>),
+    React.createElement(MyTitle, <span class="hljs-literal">null</span>)
+  )
+)
+
+ReactDOM.render(MyFirstComponent, <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'app'</span>))
+
+</code></pre>
+<p>Cool, right!</p>
+<p><code>MyTitle</code> is a <code>ReactComponent</code> class. This is a constructor function that, once invoked, is expected to return a JavaScript object with at least a <code>render</code> method on it.</p>
+<p>To invoke this constructor and create a new instance of the <code>MyTitle</code> component, you have to use the <code>React.createElement</code> method. The resulting instance is a <code>ReactElement</code>.</p>
+<p>We can use this element the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and reuse these components everywhere!</p>
+<p>To sum-up, we're using <code>createClass</code> to create the component and then we're using <code>createElement</code> to create an <em>instance</em> of that class, resulting in an element that can be used in others components.</p>
+<h2>Factories</h2>
+<p>This is a bit verbose to write <code>React.createElement</code> so many damn times. Let's use a shortcut.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// replace MyFirstComponent</span>
+<span class="hljs-keyword">var</span> MyTitleFact = React.createFactory(MyTitle)
+
+<span class="hljs-comment">//replace render method's body</span>
+<span class="hljs-keyword">return</span> (
+  div(<span class="hljs-literal">null</span>,
+    MyTitleFact(<span class="hljs-literal">null</span>),
+    MyTitleFact(<span class="hljs-literal">null</span>),
+    MyTitleFact(<span class="hljs-literal">null</span>)
+  )
+)
+</code></pre>
+<p>We can use createFactory to side step this. Now we can use our class like we use div. In fact <code>React.createElement('div', null)</code> works the same as <code>React.DOM.div</code>. The one I showed you is just a convenience factory method that React provides for all of the HTML tags.</p>
+<h2>Props</h2>
+<p>Our title component is cute but not super reuseable. Let's make it a bit more flexible by using some props. Props are variables that you pass from the parent to the child but the child cannot modify the props it gets. This simple restriction helps a lot in the future because when bugs arise, you know the child didn't modify the variable because it can't! Let's see how to do it.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">/* global React ReactDOM */</span>
+
+<span class="hljs-keyword">var</span> div = React.DOM.div
+<span class="hljs-keyword">var</span> h1 = React.DOM.h1
+
+<span class="hljs-keyword">var</span> MyTitle = React.createClass({
+  render () {
+    <span class="hljs-keyword">return</span> (
+      div(<span class="hljs-literal">null</span>,
+         h1(<span class="hljs-literal">null</span>, <span class="hljs-keyword">this</span>.props.title)
+      )
+    )
+  }
+})
+
+<span class="hljs-keyword">var</span> MyTitleFact = React.createFactory(MyTitle)
+
+<span class="hljs-comment">//replace render method</span>
+<span class="hljs-keyword">var</span> MyFirstComponent = React.createClass({
+  render () {
+    <span class="hljs-keyword">return</span> (
+      div(<span class="hljs-literal">null</span>,
+        MyTitleFact({<span class="hljs-attr">title</span>: <span class="hljs-string">'Props are great!'</span>}),
+        MyTitleFact({<span class="hljs-attr">title</span>: <span class="hljs-string">'Use props everywhere!'</span>}),
+        MyTitleFact({<span class="hljs-attr">title</span>: <span class="hljs-string">'Props are the best!'</span>})
+      )
+    )
+  }
+})
+
+ReactDOM.render(React.createElement(MyFirstComponent), <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'app'</span>))
+</code></pre>
+<p>Now we can change the contents of the title. But since we can pass in lots of props, we can widely differing elements of the same class based on what props are passed into the element. Let's take it a step further (and show you how to do inline styles and attributes with React.)</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// change MyTitle's inside h1</span>
+h1({ <span class="hljs-attr">style</span>: {<span class="hljs-attr">color</span>: <span class="hljs-keyword">this</span>.props.color} }, <span class="hljs-keyword">this</span>.props.title)
+
+<span class="hljs-comment">// change MyFirstComponent inside div</span>
+MyTitleFact({<span class="hljs-attr">title</span>: <span class="hljs-string">'Props are great!'</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">'rebeccapurple'</span>}),
+MyTitleFact({<span class="hljs-attr">title</span>: <span class="hljs-string">'Use props everywhere!'</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">'mediumaquamarine'</span>}),
+MyTitleFact({<span class="hljs-attr">title</span>: <span class="hljs-string">'Props are the best!'</span>, <span class="hljs-attr">color</span>: <span class="hljs-string">'peru'</span>})
+</code></pre>
+<p>Let's stop there and switch our attention a bit to tooling. So far we've been writing React with no compile step which is pretty cool and not something enough do in the course of React. Certain things will just make sense because you know what it complies to. In any case, onward!</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

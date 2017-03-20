@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Data in React</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So now we want to add a third page: a page where we can watch the trailer. This is going to be an application of what we know already.</p>
+<p>Create a new file in js/ called Details.js. In Details put:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+
+<span class="hljs-keyword">const</span> Details = React.createClass({
+  render () {
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'details'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>lolhi<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Details
+</code></pre>
+<p>In ClientApp.js, put your new route:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// require your new route</span>
+<span class="hljs-keyword">import</span> Details <span class="hljs-keyword">from</span> <span class="hljs-string">'./Details'</span>
+
+<span class="hljs-comment">// add as last route in the nested routes</span>
+&lt;Match pattern=<span class="hljs-string">'/details/:id'</span> component={Details} /&gt;
+</code></pre>
+<p>Here we've added a URL parameter using the colon. Now as a prop to Details you'll get whatever :id was. So now try to manually change the anchor on your url to be <code>http://localhost:8080/#/details/1</code>. You should see your new component here.</p>
+<p>Let's show you a neat debugging tip I totally stole from <a href="https://twitter.com/ryanflorence">Ryan Florence</a>. replace that h1 with this:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// instead of the h1 in render</span>
+&lt;pre&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">code</span>&gt;</span>
+  {JSON.stringify(this.props, null, 4)}
+<span class="hljs-tag">&lt;/<span class="hljs-name">code</span>&gt;</span></span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">pre</span>&gt;</span></span>
+
+<span class="hljs-comment">// TODO</span>
+<span class="hljs-comment">// at the bottom to shut up lint</span>
+Details.propTypes = {
+  <span class="hljs-attr">params</span>: React.PropTypes.object
+}
+</code></pre>
+<p>// ENDTODO</p>
+<p>This is a useful way to dump your params to the page to see what react-router is giving you. This is <strong>awesome</strong> for state too; it shows you in real time what your state looks like. We'll dig into React Tools here in a sec for even better debugging but for now let's keep trucking with our Details.js.</p>
+<p>We're going to show all the details of a show on this page and be able to play the trailer. There's a <em>big</em> problem here that we don't have that data on this page though; it's available in the Search route. We <em>could</em> require in data.json here given that our data is available that way but that typically isn't the case: we typically get this data from the server. If that's the case, you don't want to make two AJAX requests to get the same data. In other words, we need to share this state between components. The way you do this is by pushing up the state to the highest common ancestor component. In this case, that'd be the router in ClientApp. So let's first refactor Search to still work while it pulls in that data from Search.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// in ClientApp.js</span>
+<span class="hljs-comment">// another import</span>
+<span class="hljs-keyword">import</span> preload <span class="hljs-keyword">from</span> <span class="hljs-string">'../public/data.json'</span>
+
+<span class="hljs-comment">// modify the existing route</span>
+&lt;Match pattern=<span class="hljs-string">'/search'</span> component={(props) =&gt; <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Search</span> <span class="hljs-attr">shows</span>=<span class="hljs-string">{preload.shows}</span> {<span class="hljs-attr">...props</span>} /&gt;</span>} /&gt;
+</span></code></pre>
+<p>Now make Search use it</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// delete import preload from '../public/data.json'</span>
+
+<span class="hljs-comment">// pull out PropTypes</span>
+<span class="hljs-keyword">const</span> { shape, arrayOf, string } = React.PropTypes
+
+<span class="hljs-comment">// add propTypes</span>
+propTypes: {
+  <span class="hljs-attr">shows</span>: arrayOf(shape({
+    <span class="hljs-attr">title</span>: string,
+    <span class="hljs-attr">description</span>: string
+  }))
+},
+
+<span class="hljs-comment">// change the map map call</span>
+{<span class="hljs-keyword">this</span>.props.route.shows
+<span class="hljs-comment">// instead of {data.shows</span>
+</code></pre>
+<p>Cool. Now it should still work but Search no longer controls the data but merely receives it as props. Now we can share this data with Details. Another thing to notice is that with components, you can pass them functions that return markup, essentially a render function inside of component. Indeed you can do this anywhere you can put a components. These are called stateless functional components. We'll see more of these later.</p>
+<p>Now we're going to pass the correct show to the Details page. There's a bunch of ways to do this:</p>
+<ul>
+<li>We could pass all the shows and let Details select the correct show. This isn't great because Details is given an additional concern it doesn't need to have.</li>
+<li>We could create a callback in ClientApp that it passes to Details that Details calls with the correct ID and ClientApp hands back the correct show. This is slightly better but it's an odd API for getting data. Ideally we just hand down props and not a callback, especially since this isn't async.</li>
+<li>Or we could hook into react-router's ability to pass props down through stateless functions like we did with Search and just pass down the correct show. This is the best approach.</li>
+</ul>
+<p>Add the following to ClientApp:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// replace Details Match component</span>
+&lt;Match pattern=<span class="hljs-string">'/details/:id'</span> component={(props) =&gt; {
+  <span class="hljs-keyword">const</span> show = preload.shows.filter(<span class="hljs-function">(<span class="hljs-params">show</span>) =&gt;</span> props.params.id === show.imdbID)
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Details</span> <span class="hljs-attr">show</span>=<span class="hljs-string">{show[0]}</span> {<span class="hljs-attr">...props</span>} /&gt;</span>
+}} /&gt;
+</span></code></pre>
+<p>This should put the correct show as one of the props that ClientApp passes down to Details. If you refresh the page, you should see it now.</p>
+<p>As an aside, I've found the <em>best</em> way to organize React method component is the following</p>
+<ol>
+<li>propTypes</li>
+<li>getInitialState / constructor</li>
+<li>Other lifecycle methods like componentDidUpdate (we'll talk about those in a sec)</li>
+<li>Your methods you create (like assignShow)</li>
+<li>render</li>
+</ol>
+<p>Makes it easier to find things when you look for them.</p>
+<p>So let's actually display some cool stuff:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">const</span> { shape, string } = React.PropTypes
+
+<span class="hljs-keyword">const</span> Details = React.createClass({
+  <span class="hljs-attr">propTypes</span>: {
+    <span class="hljs-attr">show</span>: shape({
+      <span class="hljs-attr">title</span>: string,
+      <span class="hljs-attr">year</span>: string,
+      <span class="hljs-attr">poster</span>: string,
+      <span class="hljs-attr">trailer</span>: string
+    })
+  },
+  render () {
+    <span class="hljs-keyword">const</span> { title, description, year, poster, trailer } = <span class="hljs-keyword">this</span>.props.show
+    <span class="hljs-keyword">return</span> (
+      &lt;div className='details'&gt;
+        &lt;header&gt;
+          &lt;h1&gt;svideo&lt;/h1&gt;
+        &lt;/header&gt;
+        &lt;section&gt;
+          &lt;h1&gt;{title}&lt;/h1&gt;
+          &lt;h2&gt;({year})&lt;/h2&gt;
+          &lt;img src={`/public/img/posters/${poster}`} /&gt;
+          &lt;p&gt;{description}&lt;/p&gt;
+        &lt;/section&gt;
+        &lt;div&gt;
+          &lt;iframe src={`https://www.youtube-nocookie.com/embed/${trailer}?rel=0&amp;amp;controls=0&amp;amp;showinfo=0`} frameBorder='0' allowFullScreen /&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    )
+  }
+})
+
+export default Details
+</code></pre>
+<p>Now you should have some nice looking UI.</p>
+<p>Well, now we have a header in two places. That's a <strong>strong</strong> indicator that you should make it's its own component. Let's abstract that in a component and use that in both places. Create a new file called Header.js and put this in there:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { Link } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router'</span>
+
+<span class="hljs-keyword">const</span> Header = React.createClass({
+  render () {
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">'/'</span>&gt;</span>
+            svideo
+          <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span></span>
+    )
+  }
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Header
+</code></pre>
+<p>We're even going to throw in a link back to the home page for fun. Now open Details.js and put:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add to the top</span>
+<span class="hljs-keyword">import</span> Header <span class="hljs-keyword">from</span> <span class="hljs-string">'./Header'</span>
+
+<span class="hljs-comment">// replace &lt;header&gt;...&lt;/header&gt;</span>
+&lt;Header /&gt;
+</code></pre>
+<p>Let's put a back button on the Header so you can get back to Search after you reach it.</p>
+<pre><code class="language-javascript">// after the h1 inside .header
+&lt;h2&gt;
+  &lt;Link to='/search'&gt;
+    Back
+  &lt;/Link&gt;
+&lt;/h2&gt;
+</code></pre>
+<p>So let's integrate this to Search. But it's not so simple since on Search we want the header to have a search input and on Details we want a back button. So let's see how to do that. In Header.js put:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { Link } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router'</span>
+<span class="hljs-keyword">const</span> { func, bool, string } = React.PropTypes
+
+<span class="hljs-keyword">const</span> Header = React.createClass({
+  <span class="hljs-attr">propTypes</span>: {
+    <span class="hljs-attr">handleSearchTermChange</span>: func,
+    <span class="hljs-attr">showSearch</span>: bool,
+    <span class="hljs-attr">searchTerm</span>: string
+  },
+  render () {
+    <span class="hljs-keyword">let</span> utilSpace
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.props.showSearch) {
+      utilSpace = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">'text'</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">'Search'</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{this.props.searchTerm}</span> <span class="hljs-attr">onChange</span>=<span class="hljs-string">{this.props.handleSearchTermChange}</span> /&gt;</span>
+    } else {
+      utilSpace = (
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'header-back'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">'/search'</span>&gt;</span>
+            Back
+          <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+      )
+    }
+    return (
+      <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">'/'</span>&gt;</span>
+            svideo
+          <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+        {utilSpace}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+    )
+  }
+})
+
+export default Header
+</span></code></pre>
+<p>In Search.js:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add to requires</span>
+<span class="hljs-keyword">const</span> Header = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./Header'</span>)
+
+<span class="hljs-comment">// replace &lt;header&gt;&lt;/header&gt;</span>
+&lt;Header handleSearchTermChange={<span class="hljs-keyword">this</span>.handleSearchTermChange} showSearch searchTerm={<span class="hljs-keyword">this</span>.state.searchTerm} /&gt;
+</code></pre>
+<p>This is how you have a child component modify a parent's state: you pass down the callback and let it call the parent to let the parent modify the state. This also demonstrates how to conditionally show one component and not another.</p>
+<p>Lastly let's make our show cards clickable.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { Link } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router'</span>
+<span class="hljs-keyword">const</span> { string } = React.PropTypes
+
+<span class="hljs-keyword">const</span> ShowCard = React.createClass({
+  <span class="hljs-attr">propTypes</span>: {
+    <span class="hljs-attr">poster</span>: string.isRequired,
+    <span class="hljs-attr">title</span>: string.isRequired,
+    <span class="hljs-attr">year</span>: string.isRequired,
+    <span class="hljs-attr">description</span>: string.isRequired,
+    <span class="hljs-attr">imdbID</span>: string.isRequired
+  },
+  render () {
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">details</span>/${<span class="hljs-attr">this.props.imdbID</span>}`}&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'show-card'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">public</span>/<span class="hljs-attr">img</span>/<span class="hljs-attr">posters</span>/${<span class="hljs-attr">this.props.poster</span>}`} /&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{this.props.title}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>({this.props.year})<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{this.props.description}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+    )
+  }
+})
+
+export default ShowCard
+</span></code></pre>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

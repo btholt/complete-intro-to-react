@@ -12,7 +12,7 @@ So instead we're going to drop in the preact-compat library which backfills thos
 
 So we're going to super quick migrate to Preact for the client side. In webpack.config.js, add:
 
-{% highlight javascript %}
+```javascript
 // inside resolve
 alias: {
   react: 'preact-compat',
@@ -24,10 +24,12 @@ include: [
   path.resolve('js'),
   path.resolve('node_modules/preact-compat/src')
 ]
-{% endhighlight %}
+```
 
 The include parts is just telling babel-loader to only run on files that are in the js directory (our code) or in the preact-compat directory. We should have done this sooner since this will speed up your build by not running on every file in node_modules.
 
 The alias bit is telling webpack that everytime in our app we ask for react or react-dom, to actually give it preact-compat (which itself encompasses Preact.) Now build your app for production and compare! In my local env, I'm seeing a difference of 96.2KB vs 228KB for production builds. Not bad!!
 
 Our server more-or-less works as is. It's not ideal; honestly you'd want Preact doing both server and client work, but this is good for now. If you want to make it work, you'll need to make Babel alias React to Preact instead of Webpack since that runs both client and server side whereas Webpack doesn't.
+
+[preact]: https://preactjs.com/

@@ -20,11 +20,11 @@ So, head to your terminal and navigate to the directory of the project. Given th
 
 One of the nice convenience that npm allows you is its scripts features. If you work on a team or an open source project, it's a great way to standardize how things are done in your project. Even if it's just you, it's an easy way to shorten commands. So go to your package.json and add:
 
-{% highlight json %}
+```json
 "scripts": {
     "lint": "standard"
 },
-{% endhighlight %}
+```
 
 Once in your package.json, now you can go to your terminal and run <code>npm run lint</code> and it will run standard for you. This isn't a big right now but we'll start chaining our whole testing process together and we won't have to remember the complex stuff we're doing each time. We'll have several scripts in here and it quickly becomes _very_ convenient.
 

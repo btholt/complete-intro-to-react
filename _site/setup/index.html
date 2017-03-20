@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Setup</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>In order to be able to complete this entire workshop, we need to go ahead and get some tools downloaded. Even better if you can complete this before the workshop since conference Wi-Fi is notoriously spotty.</p>
+<h2>Clone the git repo</h2>
+<p><a href="https://github.com/btholt/complete-intro-to-react/tree/start">Click here.</a></p>
+<h2>node.js 6+</h2>
+<p>You <em>probably</em> can complete this with something less than node 4 but I'm using v6.9.1. Being the node.js LTS release, it's a safe bet to be using. If you need to use a different version of node for work, I strongly recommend using <a href="https://github.com/creationix/nvm">nvm</a>. I recommend getting the binary straight off the <a href="https://nodejs.org/en/">node website</a> and <em>not</em> using homebrew for installation.</p>
+<h2>Yarn</h2>
+<p>We're going to use <a href="https://yarnpkg.com/">Yarn</a> for this workshop. In practice this will be a little differences to you, but what's happening under the hood will be good for your app. Yarn will essentially replace your usage of the npm CLI client in your app. Instead of <code>npm install --save react</code> you'll run <code>yarn add react</code>. This installs the same package from the same npm registry (it runs through their own proxy but as of writing the <code>registry.yarnpkg.com</code> address is just a dumb passthrough.)</p>
+<p>If you haven't installed yarn, install it via <code>npm install --global yarn</code>. You can also install it via homebrew: <code>brew update &amp;&amp; brew install yarn</code>. <a href="https://twitter.com/iamdevloper/status/787992202643374080">Relevant tweet</a>.</p>
+<p>Yarn does a couple of things different from npm. One, it's 100% deterministic. Deterministic is just a fancy way of saying that if you run yarn from any state, any time, 1000x times, it will still work the same way the 1001st time. npm's installs are nondeterministic. If you run it from various states, it will install different ways.</p>
+<p>Yarn does some better caching too. In fact, it does it so well you'll see a <em>significant</em> reduction in your install times. Big code bases have seen a 10x reduction in install times.</p>
+<p>Yarn also locks down your dependencies by default. It's possible to do this with an npm shrinkwrap command but if you've ever had to maintain one of those, it can be messy. This locking down of dependencies means you don't have to rely on npm authors doing <a href="http://semver.org/">semver</a> correctly, a notoriously controversial subject</p>
+<h2>yarn installs</h2>
+<p>Run <code>yarn</code> from the directory where you downloaded the repo. If you have node and npm installed, you should see a list of dependencies being installed.</p>
+<h2>yarn global installs</h2>
+<p>Run the following global npm installs</p>
+<pre><code class="language-bash">yarn global add jest@v16.0.2
+yarn global add nodemon
+yarn global add webpack@v2.1.0-beta.25
+yarn global add standard@v8.4.0
+</code></pre>
+<p>We'll be using webpack v2.1.0-beta.25 (the stable version of v2 may be available by the time read this,) Jest v16.0.2 and standard v8.4.0. It doesn't really matter version of nodemon you use. You don't necessarily need these exact versions but you may run into issues if you use different major or minor releases as things make break between versions.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

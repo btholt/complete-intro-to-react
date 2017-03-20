@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">JSX</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>We have been writing our React with vanilla JavaScript up until now which frankly few people do. Most people take advantage of JSX which essentially adds HTML/XML-like syntax as a &quot;primitive&quot; type to JavaScript. In reality, what it does it takes the HTML you write for your components and translate them into the same calls we writing just using vanilla JavaScript.</p>
+<p>So why JSX? People usually get pretty grossed out by the HTML in the JavaScript and say it looks like 1998 when we were still writing JavaScript in our HTML. However, I assert that markup in JS is a good thing while JS in markup is a bad thing! Here, we're keeping all the concerns of a component in one place: the markup structure, the event listeners, the state, the state mutators, everything. If the component breaks, we know it broke there. That's really valuable.</p>
+<p>So try it. While the plain JS way isn't too bad, once you start writing JSX I <em>almost</em> guarantee you won't want to go back. Let's convert what we have to JSX.</p>
+<p>Side note: good idea to install a JSX syntax highlighter. If you're using Sublime, I highly recommend the &quot;Babel&quot; package off of Package Control. If you're using VIM, try <a href="https://github.com/jordwalke/VimBox">VimBox</a>. I have no experience with it but I've heard it helps.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">const</span> div = React.DOM.div
+<span class="hljs-keyword">const</span> h1 = React.DOM.h1
+
+<span class="hljs-keyword">const</span> MyTitle = React.createClass({
+  render () {
+    <span class="hljs-keyword">const</span> style = {<span class="hljs-attr">color</span>: <span class="hljs-keyword">this</span>.props.color}
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h1</span> <span class="hljs-attr">style</span>=<span class="hljs-string">{</span> <span class="hljs-attr">style</span> }&gt;</span>
+          {this.props.title}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+    )
+  }
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> MyTitle
+</code></pre>
+<p>We're using JSX finally! Make sure you're inserting those opening and closing parens around the component. It's just letting JS know you're going to put your expression on the next line (which we want to do for readability.)</p>
+<p>Notice the curly braces surrounding <code>this.props.title</code>. They're there to let JSX know I want his to be a JS expression. If they weren't there, it would literally put the string 'this.props.title'. Notice the double curly braces surrounding the style value. The exterior set of curly braces are the same as the one as before: they're letting JSX know you want a JS expression. The interior set of curly braces represent a JavaScript object, meaning you're passing in a object to the style attribute. A little strange to get used to seeing that.</p>
+<p>Lastly, you may notice that I switched to an ES6 style here. This is synonymous with the function syntax; just a bit more terse. Feel free to write it in any syntax that fits your fancy; this is very readable to me but may not be to you. Basically, since it's an arrow function and lacks curly braces, the resulting component is implicitly returned automatically.</p>
+<p>Let's rewrite ClientApp.js.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> React = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react'</span>)
+<span class="hljs-keyword">const</span> ReactDOM = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react-dom'</span>)
+<span class="hljs-keyword">const</span> MyTitle = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./MyTitle'</span>)
+
+<span class="hljs-keyword">const</span> MyFirstComponent = React.createClass({
+  render () {
+    <span class="hljs-keyword">return</span> (
+      &lt;div&gt;
+        &lt;MyTitle title='Props are great!' color='rebeccapurple' /&gt;
+        &lt;MyTitle title='Use props everywhere!' color='mediumaquamarine' /&gt;
+        &lt;MyTitle title='Props are the best!' color='peru' /&gt;
+      &lt;/div&gt;
+    )
+  }
+})
+
+ReactDOM.render(&lt;MyFirstComponent/&gt;, document.getElementById('app'))
+</code></pre>
+<p>Also make sure you update your webpack.config.js to point the JSX path of ClientApp.js on the entry line.</p>
+<p>Notice how we use our own components as if they were normal HTML tags. Neat, right? We define our own components and then we can throw anywhere since they're self contained! We even pass them props as if they were normal attributes.</p>
+<p>Also notice we're including React in both files but not directly manipulating it. This is okay since remember JSX is converting these tags to calls to React, so in reality it is using React (and thus we <em>do</em> have to include it.) We dropped the createFactory business. No longer useful since JSX is totally fine to convert our JSX to the long-form function call. Overall a simplification I think!</p>
+<p>Something to make note of: the top level component has to be singular, or in other words, your top level component cannot be sibling to something else. This makes sense if you think about what JSX is transpiling to: function calls.</p>
+<pre><code class="language-javascript">
+// won't compile
+const InvalidComponent = () =&gt; (
+  &lt;h1&gt;My Title&lt;/h1&gt;
+  &lt;h2&gt;My Title 2&lt;/h2&gt;
+);
+
+// will compile
+const ValidComponent = () =&gt; (
+  &lt;div&gt;
+    &lt;h1&gt;My Title&lt;/h1&gt;
+    &lt;h2&gt;My Title 2&lt;/h2&gt;
+  &lt;/div&gt;
+);
+
+</code></pre>
+<p>Hence why you'll see a lot of wrapping divs in JSX; it's so the whole thing will compile. This is fine if you need to do this; an extra wrapping div does nothing of harm unless you have structurally sensitive CSS. Also notice that if you have just raw text to put into JSX, you can enter it just as if was normal HTML. It's only when you have JS expressions when you need to use the curly braces.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

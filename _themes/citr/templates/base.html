@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>{% block head_title %}{{site.title}}{% endblock %}</title>
+  <meta name="description" content="{{site.description}}">
+  <meta name="keywords" content="{{site.keywords}}" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="{{theme.css}}" />
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">{% block header_title %}{{site.title}}{% endblock %}</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    {% block content %}{% endblock%}
+
+    {% include "_pagination.html" %}
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; {{site.title}}
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="{{theme.js}}"></script>
+</body>
+</html>

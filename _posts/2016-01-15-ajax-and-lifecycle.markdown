@@ -11,7 +11,7 @@ Due to the structuring of our app, we haven't had to use React lifecycle methods
 
 Cool! So let's make our Details page check the IMDB rating! Open Details.js.
 
-{% highlight javascript %}
+```javascript
 // import in axios
 import axios from 'axios'
 
@@ -45,7 +45,7 @@ if (this.state.omdbData.imdbRating) {
 
 // add between year and poster
 {rating}
-{% endhighlight %}
+```
 
 We're requiring in [axios][axios] which is a great little promise-based AJAX client and using that to make requests to the Open Movie Database to find the IMDB ratings. If you go to your pages now you'll notice that the rating is showing up a little after the page renders. That's because it's being grabbed from the magical Internet tubes! As you can see, we did this componentDidMount so that the user could see UI before waiting on an AJAX request. Note that it won't get server-side rendered either because the server doesn't call componentDidMount.
 

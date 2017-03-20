@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">More React</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. Over the next few chapters we are going to be talking about redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.</p>
+<p>Rather our toys we've made so far to demonstrate how to make React components, let's actually start building our web app. We are going to make our home page. The home page is going to have a sweet background image, our logo, a text input to search for a specific show, and another button to just browse all videos.</p>
+<p>I have pre-done all the CSS for you (since this is not a workshop on CSS) so if you just follow my CSS naming you will get all the CSS for free. It does bear mentioning here that libraries like <a href="http://stack.formidable.com/radium/">Radium</a> or <a href="https://github.com/Khan/aphrodite">Aphrodite</a> exist that allow you to do all of your styles in JS and let React and Radium handle all the styles for you. This is a pretty big departure from normal web development and not something <em>most</em> developers do so we're not going to cover it. But I will say, should you feel so inclined, go out and give it a shot. I did for a little side project and had a blast with it; it's a fun way to approach CSS since you have all the tools of JS at your disposal and don't really have to care how it compiles down to CSS like you do with PostCSS/Sass/less. Anyway, follow my CSS and you'll be golden. If at any time your styles look broken as compared to mine, chances are you misnamed something or misstructured the tags.</p>
+<p>We are going to do our CSS via imports though, which is pretty fun. I've seen people make a 1-to-1 mapping of CSS file to JS file and that makes a lot of sense to me; here we're just going to scratch the surface by showing you how to import two CSS files and then after that you're on your own to explore. Add the following to your loaders array in webpack:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// in your rules array</span>
+{
+  <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.css$/</span>,
+  <span class="hljs-attr">use</span>: [
+    <span class="hljs-string">'style-loader'</span>,
+    {
+      <span class="hljs-attr">loader</span>: <span class="hljs-string">'css-loader'</span>,
+      <span class="hljs-attr">options</span>: {
+        <span class="hljs-attr">url</span>: <span class="hljs-literal">false</span>
+      }
+    }
+  ]
+},
+</code></pre>
+<p>We need two loaders to load: the CSS loader and the style loader. The CSS loader basically lets Webpack understand CSS; without it Webpack doesn't speak/parse CSS. It doesn't do anything at this point with it though. You could just as easy put the Less or PostCSS loaders instead of the CSS loader if you wanted to have an augmented CSS language to work with. The style loader takes the finished, parsed CSS and then bundles that into your JS bundle. So you do need both but I wanted you to understand why they're separate.</p>
+<p>The <code>url: false</code> option for the CSS loader is so that the CSS loader doesn't attempt to bundle your images into your JS bundle too; by default it will try to read the images from the CSS and bundle it into your JS. I happen to think this is a bad idea and thus opt out of it; if you leave it in there you'll need another loader capable of reading images, base64 encoding it, and bundling that into your package too.</p>
+<p>Let's start building our app. You can delete MyTitle.js if you desire; you can also leave it. We're not going to be using it any further. Go ahead and clear out most ClientApp.js and let's start putting our app in here.</p>
+<p>Oh, and you also have to name your video service. I named mine svideo but name your app whatever you want!</p>
+<p>Right now it's going to be pretty simple. Drop in this:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'../public/normalize.css'</span>
+<span class="hljs-keyword">import</span> <span class="hljs-string">'../public/style.css'</span>
+<span class="hljs-keyword">const</span> App = React.createClass({
+  render () {
+    <span class="hljs-keyword">return</span> (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'app'</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">'landing'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>svideo<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">'text'</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">'Search'</span> /&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">a</span>&gt;</span>or Browse All<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    )
+  }
+})
+
+render(<span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById('app'))
+</span></code></pre>
+<p>Save and run <code>npm run dev</code>. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to make sure if your code is still lint-compliant.</p>
+<p>So, another tooling detour here: I'm getting pretty sick of having to hit the terminal every single time to see run build. Furthermore, build for webpack is pretty slow despite how small our code is. So let's take advantage of webpack's watch feature. This will watch for every time you save rebuild automatically. Additionally it will keep the unchanged bits (like the React library) in memory so it doesn't have to rebuild it every time. Try running <code>webpack --watch</code> in your terminal. It will use the same config we already made. See how much faster it is after running? Let's add a new npm script.</p>
+<pre><code class="language-json">// in package.json in scripts
+"watch": "webpack --watch",
+</code></pre>
+<p>Great, right? So, another part that's been bothering me is that it's such a pain to have to re-run standard every time. Either that or you'll get a bunch of errors all at once when you run it before you commit. Luckily we can have webpack run standard each time it compiles. It will then notify you when you have errors.</p>
+<p>Just like we're using the babel-loader to transpile our code, we're going to use the eslint-loader to run standard for us. eslint is what standard uses under the hood, or in other words standard is just a specific configuration of eslint. We're going to lean on this fact and use a config file with the eslint-loader.</p>
+<p>Create a file called <code>.eslintrc.json</code>. That first period is significant. Inside the new file put:</p>
+<pre><code class="language-json">{
+  <span class="hljs-attr">"extends"</span>: [<span class="hljs-string">"standard"</span>, <span class="hljs-string">"standard-react"</span>]
+}
+</code></pre>
+<p>This will configure eslint to check for everything standard has been checking. In addition, since we're already adding a config file, we're adding a few checks specific to React and JSX. Again, these will spare you bugs in the future and they're super helpful. Let's change our webpack config to use our new eslint-loader. eslint will automatically use our .eslintrc.json, regardless is called via the CLI or programmatically via webpack.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// inside module, before babel-loader</span>
+loaders: [
+  {
+    <span class="hljs-attr">enforce</span>: <span class="hljs-string">"pre"</span>,
+    <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.js$/</span>,
+    <span class="hljs-attr">loader</span>: <span class="hljs-string">"eslint-loader"</span>,
+    <span class="hljs-attr">exclude</span>: <span class="hljs-regexp">/node_modules/</span>
+  }
+],
+</code></pre>
+<p>Nice! Any time you save now using <code>npm run watch</code> it will both compile your code <em>and</em> lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code reloads <em>even faster</em>. We do the <code>enforce: pre</code> part to make sure that the lint part is loaded before the build step, ensuring our uncompiled code (and not the intermediary) is always the one being linted.</p>
+<p>Also, let's fix <code>npm run lint</code> so it runs our new JSX rules. Change the package.json value for lint to be <code>eslint js/<strong>/*.js</code>. Don't worry if you don't have eslint installed globally; the npm CLI is smart enough to look in your node_modules to find it (where we already installed it.) This will run all the code with the js extension in the JS directory through ESLint. It will use the config that we made earlier. The <code></strong></code> means go recursively deep into the directory; otherwise it'll just do the top level.</p>
+<p>Now let's switch to the Webpack dev server which makes things just that much easier. The Webpack dev server speeds up development by letting you run a local server and serve all your content from the dev server. It watches and keeps everything in memory so rebuilds go faster. Add the following to your server to get it to serve your statics correctly:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add as a top level config item</span>
+devServer: {
+  <span class="hljs-attr">publicPath</span>: <span class="hljs-string">'/public/'</span>
+},
+</code></pre>
+<p>Now try running this from the directory of your project: <code>./node_modules/webpack-dev-server/bin/webpack-dev-server.js</code>. You could install this globally but we'll use npm's cli to make this easy. You should see in your CLI a bunch output from the build and probably some linter errors. Feel free to fix your errors but now you should be able to go <code>http://localhost:8080</code> to see your project running. You should also see the build output in the console of the browser. Cool! Add the following line to your npm scripts: <code>&quot;dev&quot;: &quot;webpack-dev-server&quot;,</code>. Now you can do <code>npm run dev</code> and your code will start building and serving right away!</p>
+<p>But first let's keep going with our app. Our landing is pretty much done for now. We want to start working on the browse all page, but we need to move onto the router to do that real quick.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

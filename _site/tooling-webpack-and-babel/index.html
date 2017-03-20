@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Tooling - Webpack and Babel</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Now that we have clean code via a linter and can run our scripts courtesy of npm, let's work on the compilation / build of our code. In order to achieve this we are going to use two tools: Webpack and Babel.</p>
+<h2>Webpack</h2>
+<p>Webpack is an amazing tool that came out two or so years ago that captivated particularly the React crowd quick due to its ease and interesting features. We are going to only scratch the service of this powerful tool; you could give a whole workshop just on Webpack. We are going to lean on two of Webpack's core features: module compilation and the ability to plug in loaders.</p>
+<p>As you saw with our code, it is pretty easy to put one or two components in one file. But what happens when you have an app as complex at Netflix that has hundreds, if not thousands, of components? Having just one file is untenable. You <em>could</em> just split them into separate files, make sure to load them in correct order, and keep a list of files in your HTML directory. But that sucks too, so we're going to introduce a build step that, while build steps suck, this will make things a bit easier.</p>
+<p>For fun, split your MyTitle component from ClientApp.js into a new file, MyTitle.js. You will have to put the appropriate React.DOM helper methods in each file. At the bottom of MyTitle.js, add the line <code>module.exports = MyTitle</code>. At the top of ClientApp.js, put the line <code>var MyTitle = require('./MyTitle')</code>. Let's try to compile that.</p>
+<p>You should have Webpack 2.1+ installed. Go to the directory of the project in the terminal and run <code>mkdir public</code>. After that, run <code>webpack js/ClientApp.js public/bundle.js</code>. In your index.html, change the line of <code>&lt;​script src=&quot;js/ClientApp.js&quot;&gt;</script></code> to <code>&lt;​script src=&quot;/public/bundle.js&quot;&gt;</script></code>.</p>
+<p>Try your browser again. bundle.js has all the stuff for both files now. Now we can keep components in their own files which is a huge win for organization. But wait, we can use Webpack for even greater code by using it to bring in node modules. In index.html, remove the other script tags so <em>just</em> bundle.js is left.</p>
+<p>In ClientApp.js, remove the global comment at the top and add at the top</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> (<span class="hljs-string">'react-dom'</span>)
+
+<span class="hljs-comment">// change render</span>
+render(React.createElement(MyFirstComponent), <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'app'</span>))
+</code></pre>
+<p>In MyTitle, add:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// remove global comment, add at top</span>
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>
+
+<span class="hljs-comment">// add to bottom</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> MyTitle
+</code></pre>
+<p>Run your Webpack command again. Try your browser again. Despite only including bundle.js, the whole app works! If you look at Webpack, you'll see it's 99% React code and some of yours. Now we can go forth making new files and including new libraries without worrying about if they are being included!</p>
+<p>Let's add build to our npm scripts. Add to scripts in package.json <code>&quot;build&quot;: &quot;Webpack js/ClientApp.js public/bundle.js&quot;,</code>. Run <code>npm run build</code> from your terminal in the project root directory and see if it works. Magic!</p>
+<p>We're also using ES6 modules here, if you're not familiar with that syntax. The <code>import React from 'react'</code> is semantically identical to <code>var React = require('react')</code>. The <code>import { render } from 'react-dom'</code> as far as you're concerned here is identical to <code>var render = require('react-dom').render</code>. For further reading, checkout <a href="http://www.2ality.com/2014/09/es6-modules-final.html">2ality</a>'s post on it.</p>
+<h2>Babel</h2>
+<p>Babel is an amazing, amazing tool that has fundamentally altered the landscape of JavaScript as we know. Though they didn't invent the idea of transpiling future syntax of JavaScript into current syntax (thanks Traceur,) they did make it so damn <em>easy</em>. Couple that with the fact it worked with React's JSX (which we'll talk about in a sec) and it was a perfect storm the be massively successful. Babel, in short, is amazing and should be something you consider for every project.</p>
+<p>Babel 6 (the latest revision of Babel) took away a tiny bit of that ease of use but in return it became much easier to develop which is important  when you're maintaining a massive project that's very important. In return it requires a bit of config now.</p>
+<p>Create a new file called .babelrc. Inside .babelrc, put:</p>
+<pre><code class="language-json">{
+  <span class="hljs-attr">"presets"</span>: [
+    <span class="hljs-string">"react"</span>,
+    [<span class="hljs-string">"es2015"</span>, {<span class="hljs-attr">"modules"</span>: <span class="hljs-literal">false</span>}]
+  ]
+}
+</code></pre>
+<p>Babel has the concept of plugins. Each transformation comes in the form a plugin. However ES6 and React each have a number of transformation and it's a huge pain to include each one. Thus Babel has the concept of presets, or in other words bundles of plugins. In this case, we're including <em>all</em> of the React and ES6 transformations. If this were a production app we would definitely go through and only include the transformations we needed and <em>not</em> all of them. For example, this includes a fairly large library to get ES6 generators working. Few people these days are actually using generators and thus it's better to leave them off if you don't need them. In our case, this is a teaching app so page weight isn't a big deal to us. This will also allow us to start using JSX.</p>
+<p>Also, we're telling Babel to <em>not</em> transform modules. New to Webpack 2 is the ability to do tree shaking. Tree shaking (also known as live code inclusion, as opposed to dead code elimination) is where you start with the entry point to your program (usually an index.js) and begin working outwards, only including the parts of code your code uses. Usually this doesn't buy you much in terms of <em>your</em> code; we tend to not write much dead code for our apps. However it's extremely helpful for modules you're including. If you use lodash for one function, you don't want to include the whole library. Instead, you want your bundler to just include that barebones of what you need for to work. This is what Webpack 2 and Uglify buy for us; Webpack 2 bundles and Uglify takes the dead code paths out.</p>
+<h2>Webpack loaders</h2>
+<p>So, we could use the Babel CLI to compile our code but we are already using Webpack and Webpack has a good way to send your code through Babel via its loader mechanism. Loaders are utilities that Webpack will pipe input into and accept output out of. You can use loaders to transpile things like CoffeeScript, TypeScript, or PureScript. Webpack loaders can do some other powerful things like allowing you to <em>include</em> CSS, inline images via encoding, and transform SVGs. We're just going to be using the JS transformation abilities for now. Run the command <code>webpack --module-bind 'js=babel' js/ClientApp.js public/bundle.js</code>. Should take a bit longer since it's doing more. Since we're going to be using Webpack for a few other things, let's abstract that configuration from inline to a config file. Add a <code>webpack.config.js</code> with the following.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>)
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">context</span>: __dirname,
+  <span class="hljs-attr">entry</span>: <span class="hljs-string">'./js/ClientApp.js'</span>,
+  <span class="hljs-attr">devtool</span>: <span class="hljs-string">'source-map'</span>,
+  <span class="hljs-attr">output</span>: {
+    <span class="hljs-attr">path</span>: path.join(__dirname, <span class="hljs-string">'/public'</span>),
+    <span class="hljs-attr">filename</span>: <span class="hljs-string">'bundle.js'</span>
+  },
+  <span class="hljs-attr">resolve</span>: {
+    <span class="hljs-attr">extensions</span>: [<span class="hljs-string">'.js'</span>, <span class="hljs-string">'.json'</span>]
+  },
+  <span class="hljs-attr">stats</span>: {
+    <span class="hljs-attr">colors</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">reasons</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">chunks</span>: <span class="hljs-literal">false</span>
+  },
+  <span class="hljs-attr">module</span>: {
+    <span class="hljs-attr">rules</span>: [
+      {
+        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.js$/</span>,
+        <span class="hljs-attr">loader</span>: <span class="hljs-string">'babel-loader'</span>
+      }
+    ]
+  }
+}
+
+</code></pre>
+<p>What you see is essentially a config version of what we were doing with CLI flags. Now it's a bit more resilient and guaranteed consistent. If you run just the command <code>webpack</code> from your project directory you should get the same output. Neat. Go change you npm script to just be &quot;webpack&quot; now. Go try it and make sure it still works. Great! Also make sure all the files you've written are still up to snuff with standard via <code>npm run lint</code>. Good? Good. This should get us to a point now where we can talk about JSX.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

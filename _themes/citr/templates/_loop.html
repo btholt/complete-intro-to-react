@@ -1,0 +1,19 @@
+{% for file in pagination.files %}
+<article class="post">
+  <header class="post-header">
+    <h2 class="post-title">
+      <a href="{{file.url}}">{{file.title}}</a>
+    </h2>
+  </header>
+  <section class="post-excerpt">
+    {{file.content | safe}}
+  </section>
+  <footer class="post-meta">
+    <time class="post-date" datetime="{{file.date | date('YYYY-MM-DD')}}">{{file.date | date('D MMMM YYYY')}}</time>
+    &middot;
+    <span>{% for tag in file.tags %}
+      <a href="/tag/{{tag}}/">{{tag}}</a>
+    {% endfor%}</span>
+  </footer>
+</article>
+{% endfor %}

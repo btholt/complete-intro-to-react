@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Preact</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So this is a React work, why the 💩 are we talking about [Preact][preact]? Let me tell you why! Preact is amazing! Preact is an <em>almost</em> drop in replacement for React that is  <strong>much</strong> smaller in file size while maintaing nearly all the features and actually being faster (or so my limited, flawed benchmarking leads me to believe.) One thing is for sure though, it's much smaller!</p>
+<p>It sounds just better, right? Well, it's certainly something you and your company should discuss. Preact is just 3KB gzipped; that's really small! React for comparison's sake is around 80KB, give or take 10KB. That's a huge difference! The way Preact is able to achieve a lot of the size difference is by cutting out some of the legacy bits of React, letting browser do more, and focusing on a smaller API.</p>
+<p>Speaking of a smaller API, we can't switch to Preact wholesale as-is right now; we're using the React and ReactDOM package everywhere. In addition, we're using propTypes (Preact doesn't have those) and the createClass syntax (Preact only supports ES6 classes and stateless functional components.)</p>
+<p>So instead we're going to drop in the preact-compat library which backfills those APIs at the cost of adding 5KB to your payload; still a win. preact-compat gets you started on your migration; eventually you want to drop it and just be on Preact.</p>
+<p>So we're going to super quick migrate to Preact for the client side. In webpack.config.js, add:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// inside resolve</span>
+alias: {
+  <span class="hljs-attr">react</span>: <span class="hljs-string">'preact-compat'</span>,
+  <span class="hljs-string">'react-dom'</span>: <span class="hljs-string">'preact-compat'</span>
+},
+
+<span class="hljs-comment">// inside 'babel-loader' loader</span>
+include: [
+  path.resolve(<span class="hljs-string">'js'</span>),
+  path.resolve(<span class="hljs-string">'node_modules/preact-compat/src'</span>)
+]
+</code></pre>
+<p>The include parts is just telling babel-loader to only run on files that are in the js directory (our code) or in the preact-compat directory. We should have done this sooner since this will speed up your build by not running on every file in node_modules.</p>
+<p>The alias bit is telling webpack that everytime in our app we ask for react or react-dom, to actually give it preact-compat (which itself encompasses Preact.) Now build your app for production and compare! In my local env, I'm seeing a difference of 96.2KB vs 228KB for production builds. Not bad!!</p>
+<p>Our server more-or-less works as is. It's not ideal; honestly you'd want Preact doing both server and client work, but this is good for now. If you want to make it work, you'll need to make Babel alias React to Preact instead of Webpack since that runs both client and server side whereas Webpack doesn't.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

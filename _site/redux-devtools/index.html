@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>My Reptar Title</title>
+  <meta name="description" content="Your website's description goes here.
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">My Reptar Title</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">redux Devtools</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>One of the most compelling reason to use redux is its amazing debugging experience. redux has the <em>fantastic</em> ability to do time-traveling debugging, meaning you can step forwards and backwards through actions you've dispatched. It's really powerful for debugging.</p>
+<p>There are several ways to get it working but I'm going to show you the bare minimum to get up and running. Unlike React, there is some code you have to put in to get it working. Luckily, it's like two or three lines.</p>
+<p>In Store.js put:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> { createStore, compose } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux'</span>
+<span class="hljs-keyword">import</span> rootReducer <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers'</span>
+
+<span class="hljs-keyword">const</span> store = createStore(rootReducer, compose(
+  <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span> === <span class="hljs-string">'object'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.devToolsExtension !== <span class="hljs-string">'undefined'</span> ? <span class="hljs-built_in">window</span>.devToolsExtension() : <span class="hljs-function">(<span class="hljs-params">f</span>) =&gt;</span> f
+))
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store
+</code></pre>
+<p>That's it for code! It just adds a middleware to redux that hooks into the dev tools. It's also doing a window check to make sure if you're unit testing or running your components in node that the window reference doesn't blow up.</p>
+<p>Now go grab the <a href="https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en">Chrome extension</a> or <a href="https://addons.mozilla.org/en-US/firefox/addon/remotedev/">Firefox extension</a>. The Safari one is forthcoming. Good news is that you can actually just build the debugger into the page so it works everywhere. Bad news is I'm going to show you how since I've never done it. In any case, feel free to explore it on your time.</p>
+<p>Okay, last bit: this doesn't work with the <code>file:///</code> protocol. But luckily we're using webpack-dev-server so it doesn't matter.</p>
+<p>Now you should see three green circles with smaller orange circles circling the green ones on your Chrome or Firefox tool bar. Click on that and that should show you the redux tools. This allows you to play with the redux tools. I'll let you toy with them but suffice to say they're pretty impressive.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; My Reptar Title
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
+</body>
+</html>

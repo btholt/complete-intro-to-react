@@ -12,16 +12,16 @@ So we're going to treat all of our routes as async and luckily react-router is a
 
 So first we need give a minor tweak to webpack.config.js.
 
-{% highlight javascript %}
+```javascript
 // inside of the output config object (not the devServer object)
 publicPath: '/public/'
-{% endhighlight%}
+```
 
 First we need to tell webpack where to find all of its bundles instead when it calls back to the server to grab them.
 
 Let's go create a component that will handle our asynchronous routes to contain all that craziness. Create a file called AsyncRoute and go there.
 
-{% highlight javascript %}
+```javascript
 import React from 'react'
 const { object } = React.PropTypes
 
@@ -51,11 +51,11 @@ const AsyncRoute = React.createClass({
 })
 
 export default AsyncRoute
-{% endhighlight %}
+```
 
 AsyncRoute is going to passed a promise which will resolve to a module. Once that promise has completed, that means the module is loaded and available. Then we can render it. Notice that we stick the module on this and not into state. Modules are large and it would slow down our component to have so much state. Furthermore we don't expect it to change. Before that we'll render a loading state. That's all we're going to do with AsyncRoute. Go to App.js
 
-{% highlight javascript %}
+```javascript
 // at top
 // delete Landing import
 import AsyncRoute from './AsyncRoute'
@@ -69,7 +69,7 @@ if (global) {
   pattern='/'
   loadingPromise={(props) => <AsyncRoute props={props} component={System.import('./Landing')} />}
 />
-{% endhighlight %}
+```
 
 So now we're using our AsyncRoute function to make Landing Async. First we import our route and then we have to shim System.import out. Node doesn't have System.import (it's tied to the new ES6 module system which Node doesn't have yet.) Then we pull in our async route and use it inside of Match. This is amazing since Webpack knows to perform a code split here and we get all the rest of that for free.
 
@@ -80,7 +80,7 @@ Also, in order for System.import (or [require.ensure][ensure], which is the Comm
 
 Open up your browser to /search (without hitting / first) and watch the network tab. Make sure your npm run watch and your npm run start are both running. You should see bundle.js being downloaded but you should also see 0.bundle.js being downloaded too. This is the chunks that Webpack is sending down piecemeal, meaning your route and associated modules are not included in the initial payload. This becomes a bigger and bigger deal as your app expands. Let's finish the rest of our async routes.
 
-{% highlight javascript %}
+```javascript
 // delete Search and Details import
 
 // replace Details and Search matches
@@ -97,7 +97,7 @@ Open up your browser to /search (without hitting / first) and watch the network 
     return <AsyncRoute props={Object.assign({show: show[0]}, props)} loadingPromise={System.import('./Details')} />
   }}
 />
-{% endhighlight %}
+```
 
 Nothing too crazy here either. Just extendingo out the same ideas. Now try navigating around your app and watch the network tab. You should different bundles being pulled in. If you look at your terminal output, you'll see we actually haven't optimized too much: our main bundle is nearly a megabyte and the smaller bundles are between three and fifty kilobytes. Like I said, this is wonderful for big apps where you can section off where dependencies. For example the fifty kilobyte bundle is the only one that has axios. The rest of the app doesn't need it. But for our tiny React routes, this isn't super useful. And the ability to codesplit isn't free either: Webpack includes some glue code to make this work. So evaluate this tool carefully!
 

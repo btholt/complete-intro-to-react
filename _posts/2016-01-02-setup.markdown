@@ -32,11 +32,11 @@ Run <code>yarn</code> from the directory where you downloaded the repo. If you h
 
 Run the following global npm installs
 
-{% highlight bash %}
+```bash
 yarn global add jest@v16.0.2
 yarn global add nodemon
 yarn global add webpack@v2.1.0-beta.25
 yarn global add standard@v8.4.0
-{% endhighlight %}
+```
 
 We'll be using webpack v2.1.0-beta.25 (the stable version of v2 may be available by the time read this,) Jest v16.0.2 and standard v8.4.0. It doesn't really matter version of nodemon you use. You don't necessarily need these exact versions but you may run into issues if you use different major or minor releases as things make break between versions.
