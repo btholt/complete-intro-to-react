@@ -4,7 +4,7 @@ title: "React: Props"
 
 Let's start making our search page. We're going to start with some dummy data and work our way from there. Again, follow the same HTML structure and CSS naming as me and you'll get all the styling for free. Feel free to take a glance at public/data.json to see what's there. As you may have guessed, it's a bunch of Netflix shows. This whole workshop is actually just an elaborate advertisement for Netflix (just kidding; I promise.)
 
-Webpack allows you to require in json files just like you would another JavaScript file so we'll take advantage of that when we start coding our new search page. However we do have add another loader to do that. Add the following object to your <code>loaders</code> array in your webpack.config.js.
+Webpack allows you to require in json files just like you would another JavaScript file so we'll take advantage of that when we start coding our new search page. However we do have add another loader to do that. Add the following object to your `loaders` array in your webpack.config.js.
 
 ```javascript
   {
@@ -22,7 +22,7 @@ const Search = React.createClass({
   render () {
     return (
       <div className='search'>
-        <pre><code>{JSON.stringify(preload, null, 4)}</code></pre>
+        <pre>`{JSON.stringify(preload, null, 4)}`</pre>
       </div>
     )
   }
@@ -103,7 +103,7 @@ const ShowCard = React.createClass({
 export default ShowCard
 ```
 
-Notice we're using this strange props object that's coming from <code>this</code> context. This is what we are going to be receiving from our parents. In this case, an individual ShowCard needs to receive all the necessary data from its parent to be able to display it.
+Notice we're using this strange props object that's coming from `this` context. This is what we are going to be receiving from our parents. In this case, an individual ShowCard needs to receive all the necessary data from its parent to be able to display it.
 
 This is a good time to discuss the philosophy that's sort of tough to get used to with React coding. We typically think of user interfaces as entities that change over a span of actions and events. Think of a jQuery UI you have made. Imagine making a drop down. You would have to write the code for a user clicking it to opening the drop down to the user clicking an item in the drop down. It's a progression of time, events, and interactions. Imagine if there was a bug with that final interaction. You now have to work out in your head the sequence of events to get it to that same state that the bug occurs in to able to fix it. This is second nature to many of us since we have done it so many times.
 
@@ -141,7 +141,7 @@ export default Search
 
 Much like you give an HTML tag an attribute is how you give props to children components in React. Here we're passing down an object to our child component to make it available to the ShowCard via props. Neat, right? Save it and reload the page. standard is going to give you a bunch of complaints but we're going to address that momentarily. You should see the same UI.
 
-One of the errors you'll notice in the browser console is something like: "Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `Search`." You see this because we have multiple, similiar sibling components next to each other and React doesn't have a quick way to tell them apart. If you start reordering them (like if we added a sort feature) then React would just destroy and re-create them each time since it doesn't know you're just reordering them. This is unnecessarily expensive, as you may imagine. You can give React a shortcut to be able to tell them quickly apart: give each a component a unique identifier as a key attribute. So go add it to the ShowCard component like so: <code><ShowCard show={show} key={show.imdbID} /></code>.
+One of the errors you'll notice in the browser console is something like: "Warning: Each child in an array or iterator should have a unique "key" prop. Check the render method of `Search`." You see this because we have multiple, similiar sibling components next to each other and React doesn't have a quick way to tell them apart. If you start reordering them (like if we added a sort feature) then React would just destroy and re-create them each time since it doesn't know you're just reordering them. This is unnecessarily expensive, as you may imagine. You can give React a shortcut to be able to tell them quickly apart: give each a component a unique identifier as a key attribute. So go add it to the ShowCard component like so: `<ShowCard show={show} key={show.imdbID} />`.
 
 So let's fix our standard errors now. standard-react dictates that all props have a propType. React has a features that allows you to set propTypes which it then validates at runtime. This ends up being great for debugging because React now knows what type of props it should be getting so it can give you a meaningful error messages if there's a type mismatch or omission. So let's go fix the errors.
 
@@ -163,7 +163,7 @@ propTypes: {
 
 Now React knows to expect that show is both an object full of strings _and_ those strings are required for the ShowCard to work. If a prop is optional (which is fine if it is indeed optional) then leave off the isRequired part.
 
-We can make this a little neater via the ES6/JSX spread operator. Let's try that. Change Search's ShowCard from <code><ShowCard show={show} /></code> to <code><ShowCard {...show} key={show.imdbID} /></code>. This will take all the properties from show and spread them out as individual properties on ShowCard. You _could_ write <code><ShowCard title={show.title} poster={show.poster} description={show.description} year={show.year} /></code> but that's a lot of writing and this cuts an easy corner. Let's go modify ShowCard to match.
+We can make this a little neater via the ES6/JSX spread operator. Let's try that. Change Search's ShowCard from `<ShowCard show={show} />` to `<ShowCard {...show} key={show.imdbID} />`. This will take all the properties from show and spread them out as individual properties on ShowCard. You _could_ write `<ShowCard title={show.title} poster={show.poster} description={show.description} year={show.year} />` but that's a lot of writing and this cuts an easy corner. Let's go modify ShowCard to match.
 
 ```javascript
 import React from 'react'

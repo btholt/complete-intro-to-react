@@ -2,41 +2,48 @@
 title:  "Setup"
 ---
 
-In order to be able to complete this entire workshop, we need to go ahead and get some tools downloaded. Even better if you can complete this before the workshop since conference Wi-Fi is notoriously spotty.
+In order to be able to complete this entire workshop, we need to go ahead and get some tools downloaded.
 
 ## Clone the git repo
 
-<a href="https://github.com/btholt/complete-intro-to-react/tree/start">Click here.</a>
+[Click here][start] to go clone the `start`
 
 ## node.js 6+
 
-You _probably_ can complete this with something less than node 4 but I'm using v6.9.1. Being the node.js LTS release, it's a safe bet to be using. If you need to use a different version of node for work, I strongly recommend using <a href="https://github.com/creationix/nvm">nvm</a>. I recommend getting the binary straight off the <a href="https://nodejs.org/en/">node website</a> and _not_ using homebrew for installation.
+You _probably_ can complete this with something less than node 4 but I'm using v6.9.5. Being a Node.js LTS release, it's a safe bet to be using. If you need to use a different version of Node for work, I strongly recommend using [nvm][nvm]. I recommend getting the binary straight off the [Node website][node] and _not_ using homebrew for installation.
 
 ## Yarn
 
-We're going to use [Yarn](https://yarnpkg.com/) for this workshop. In practice this will be a little differences to you, but what's happening under the hood will be good for your app. Yarn will essentially replace your usage of the npm CLI client in your app. Instead of <code>npm install --save react</code> you'll run <code>yarn add react</code>. This installs the same package from the same npm registry (it runs through their own proxy but as of writing the <code>registry.yarnpkg.com</code> address is just a dumb passthrough.)
+We're going to use [Yarn][yarn] for this workshop. In practice this will be a little differences to you, but what's happening under the hood will be good for your app. Yarn will essentially replace your usage of the npm CLI client in your app. Instead of `npm install --save react` you'll run `yarn add react`. This installs the same package from the same npm registry (it runs through their own proxy but as of writing the `registry.yarnpkg.com` address is just a dumb passthrough.)
 
-If you haven't installed yarn, install it via <code>npm install --global yarn</code>. You can also install it via homebrew: <code>brew update && brew install yarn</code>. [Relevant tweet](https://twitter.com/iamdevloper/status/787992202643374080).
+If you haven't installed yarn, install it via `npm install --global yarn`. You can also install it via homebrew: `brew update && brew install yarn`.
 
 Yarn does a couple of things different from npm. One, it's 100% deterministic. Deterministic is just a fancy way of saying that if you run yarn from any state, any time, 1000x times, it will still work the same way the 1001st time. npm's installs are nondeterministic. If you run it from various states, it will install different ways.
 
 Yarn does some better caching too. In fact, it does it so well you'll see a _significant_ reduction in your install times. Big code bases have seen a 10x reduction in install times.
 
-Yarn also locks down your dependencies by default. It's possible to do this with an npm shrinkwrap command but if you've ever had to maintain one of those, it can be messy. This locking down of dependencies means you don't have to rely on npm authors doing [semver](http://semver.org/) correctly, a notoriously controversial subject
+Yarn also locks down your dependencies by default. It's possible to do this with an npm shrinkwrap command but if you've ever had to maintain one of those, it can be messy. This locking down of dependencies means you don't have to rely on npm authors doing [semver][semver] correctly, a notoriously controversial subject
 
 ## yarn installs
 
-Run <code>yarn</code> from the directory where you downloaded the repo. If you have node and npm installed, you should see a list of dependencies being installed.
+Run `yarn` from the directory where you downloaded the repo. If you have node and npm installed, you should see a list of dependencies being installed.
 
 ## yarn global installs
 
 Run the following global npm installs
 
 ```bash
-yarn global add jest@v16.0.2
+yarn global add jest@v19.0.2
 yarn global add nodemon
-yarn global add webpack@v2.1.0-beta.25
-yarn global add standard@v8.4.0
+yarn global add webpack@v2.2.1
+yarn global add prettier@v0.22.0
+yarn global add eslint@v3.18.0
 ```
 
-We'll be using webpack v2.1.0-beta.25 (the stable version of v2 may be available by the time read this,) Jest v16.0.2 and standard v8.4.0. It doesn't really matter version of nodemon you use. You don't necessarily need these exact versions but you may run into issues if you use different major or minor releases as things make break between versions.
+I have you install specific versions so that if the libraries change at all this workshop will all still apply. It doesn't really matter version of nodemon you use. You don't necessarily need these exact versions but you may run into issues if you use different major or minor releases as things make break between versions.
+
+[start]: https://github.com/btholt/complete-intro-to-react/tree/start
+[yarn]: https://yarnpkg.com/
+[nvm]: https://github.com/creationix/nvm
+[node]: https://nodejs.org/en/
+[semver]: http://semver.org/

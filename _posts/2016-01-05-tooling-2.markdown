@@ -10,9 +10,9 @@ Webpack is an amazing tool that came out two or so years ago that captivated par
 
 As you saw with our code, it is pretty easy to put one or two components in one file. But what happens when you have an app as complex at Netflix that has hundreds, if not thousands, of components? Having just one file is untenable. You _could_ just split them into separate files, make sure to load them in correct order, and keep a list of files in your HTML directory. But that sucks too, so we're going to introduce a build step that, while build steps suck, this will make things a bit easier.
 
-For fun, split your MyTitle component from ClientApp.js into a new file, MyTitle.js. You will have to put the appropriate React.DOM helper methods in each file. At the bottom of MyTitle.js, add the line <code>module.exports = MyTitle</code>. At the top of ClientApp.js, put the line <code>var MyTitle = require('./MyTitle')</code>. Let's try to compile that.
+For fun, split your MyTitle component from ClientApp.js into a new file, MyTitle.js. You will have to put the appropriate React.DOM helper methods in each file. At the bottom of MyTitle.js, add the line `module.exports = MyTitle`. At the top of ClientApp.js, put the line `var MyTitle = require('./MyTitle')`. Let's try to compile that.
 
-You should have Webpack 2.1+ installed. Go to the directory of the project in the terminal and run <code>mkdir public</code>. After that, run <code>webpack js/ClientApp.js public/bundle.js</code>. In your index.html, change the line of <code><&NegativeMediumSpace;script src="js/ClientApp.js"></script></code> to <code><&NegativeMediumSpace;script src="/public/bundle.js"></script></code>.
+You should have Webpack 2.1+ installed. Go to the directory of the project in the terminal and run `mkdir public`. After that, run `webpack js/ClientApp.js public/bundle.js`. In your index.html, change the line of `<&NegativeMediumSpace;script src="js/ClientApp.js"></script>` to `<&NegativeMediumSpace;script src="/public/bundle.js"></script>`.
 
 Try your browser again. bundle.js has all the stuff for both files now. Now we can keep components in their own files which is a huge win for organization. But wait, we can use Webpack for even greater code by using it to bring in node modules. In index.html, remove the other script tags so _just_ bundle.js is left.
 
@@ -38,9 +38,9 @@ export default MyTitle
 
 Run your Webpack command again. Try your browser again. Despite only including bundle.js, the whole app works! If you look at Webpack, you'll see it's 99% React code and some of yours. Now we can go forth making new files and including new libraries without worrying about if they are being included!
 
-Let's add build to our npm scripts. Add to scripts in package.json <code>"build": "Webpack js/ClientApp.js public/bundle.js",</code>. Run <code>npm run build</code> from your terminal in the project root directory and see if it works. Magic!
+Let's add build to our npm scripts. Add to scripts in package.json `"build": "Webpack js/ClientApp.js public/bundle.js",`. Run `npm run build` from your terminal in the project root directory and see if it works. Magic!
 
-We're also using ES6 modules here, if you're not familiar with that syntax. The <code>import React from 'react'</code> is semantically identical to <code>var React = require('react')</code>. The <code>import { render } from 'react-dom'</code> as far as you're concerned here is identical to <code>var render = require('react-dom').render</code>. For further reading, checkout [2ality][es6-modules]'s post on it.
+We're also using ES6 modules here, if you're not familiar with that syntax. The `import React from 'react'` is semantically identical to `var React = require('react')`. The `import { render } from 'react-dom'` as far as you're concerned here is identical to `var render = require('react-dom').render`. For further reading, checkout [2ality][es6-modules]'s post on it.
 
 ## Babel
 
@@ -66,7 +66,7 @@ Also, we're telling Babel to _not_ transform modules. New to Webpack 2 is the ab
 
 ## Webpack loaders
 
-So, we could use the Babel CLI to compile our code but we are already using Webpack and Webpack has a good way to send your code through Babel via its loader mechanism. Loaders are utilities that Webpack will pipe input into and accept output out of. You can use loaders to transpile things like CoffeeScript, TypeScript, or PureScript. Webpack loaders can do some other powerful things like allowing you to _include_ CSS, inline images via encoding, and transform SVGs. We're just going to be using the JS transformation abilities for now. Run the command <code>webpack --module-bind 'js=babel' js/ClientApp.js public/bundle.js</code>. Should take a bit longer since it's doing more. Since we're going to be using Webpack for a few other things, let's abstract that configuration from inline to a config file. Add a <code>webpack.config.js</code> with the following.
+So, we could use the Babel CLI to compile our code but we are already using Webpack and Webpack has a good way to send your code through Babel via its loader mechanism. Loaders are utilities that Webpack will pipe input into and accept output out of. You can use loaders to transpile things like CoffeeScript, TypeScript, or PureScript. Webpack loaders can do some other powerful things like allowing you to _include_ CSS, inline images via encoding, and transform SVGs. We're just going to be using the JS transformation abilities for now. Run the command `webpack --module-bind 'js=babel' js/ClientApp.js public/bundle.js`. Should take a bit longer since it's doing more. Since we're going to be using Webpack for a few other things, let's abstract that configuration from inline to a config file. Add a `webpack.config.js` with the following.
 
 ```javascript
 const path = require('path')
@@ -99,6 +99,6 @@ module.exports = {
 
 ```
 
-What you see is essentially a config version of what we were doing with CLI flags. Now it's a bit more resilient and guaranteed consistent. If you run just the command <code>webpack</code> from your project directory you should get the same output. Neat. Go change you npm script to just be "webpack" now. Go try it and make sure it still works. Great! Also make sure all the files you've written are still up to snuff with standard via <code>npm run lint</code>. Good? Good. This should get us to a point now where we can talk about JSX.
+What you see is essentially a config version of what we were doing with CLI flags. Now it's a bit more resilient and guaranteed consistent. If you run just the command `webpack` from your project directory you should get the same output. Neat. Go change you npm script to just be "webpack" now. Go try it and make sure it still works. Great! Also make sure all the files you've written are still up to snuff with standard via `npm run lint`. Good? Good. This should get us to a point now where we can talk about JSX.
 
 [es6-modules]: http://www.2ality.com/2014/09/es6-modules-final.html

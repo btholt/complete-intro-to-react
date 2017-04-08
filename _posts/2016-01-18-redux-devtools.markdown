@@ -23,7 +23,7 @@ That's it for code! It just adds a middleware to redux that hooks into the dev t
 
 Now go grab the [Chrome extension][chrome-extension] or [Firefox extension][firefox]. The Safari one is forthcoming. Good news is that you can actually just build the debugger into the page so it works everywhere. Bad news is I'm going to show you how since I've never done it. In any case, feel free to explore it on your time.
 
-Okay, last bit: this doesn't work with the <code>file:///</code> protocol. But luckily we're using webpack-dev-server so it doesn't matter.
+Okay, last bit: this doesn't work with the `file:///` protocol. But luckily we're using webpack-dev-server so it doesn't matter.
 
 Now you should see three green circles with smaller orange circles circling the green ones on your Chrome or Firefox tool bar. Click on that and that should show you the redux tools. This allows you to play with the redux tools. I'll let you toy with them but suffice to say they're pretty impressive.
 

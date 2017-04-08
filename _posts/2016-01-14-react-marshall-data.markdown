@@ -32,15 +32,15 @@ import Details from './Details'
 <Match pattern='/details/:id' component={Details} />
 ```
 
-Here we've added a URL parameter using the colon. Now as a prop to Details you'll get whatever :id was. So now try to manually change the anchor on your url to be <code>http://localhost:8080/#/details/1</code>. You should see your new component here.
+Here we've added a URL parameter using the colon. Now as a prop to Details you'll get whatever :id was. So now try to manually change the anchor on your url to be `http://localhost:8080/#/details/1`. You should see your new component here.
 
 Let's show you a neat debugging tip I totally stole from [Ryan Florence][ryflo]. replace that h1 with this:
 
 ```javascript
 // instead of the h1 in render
-<pre><code>
+<pre>`
   {JSON.stringify(this.props, null, 4)}
-</code></pre>
+`</pre>
 
 // TODO
 // at the bottom to shut up lint

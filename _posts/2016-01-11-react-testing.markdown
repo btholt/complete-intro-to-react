@@ -4,7 +4,7 @@ title: "Testing React with Jest, Snapshots, and Enzyme"
 
 **Note**: This is using Jest. If you want to see how to test React components using [Mocha][mocha], Chai, Sinon, and Enzyme, see the [previous version][v1] of this workshop.
 
-Now that we have something worth testing, let's test it. We're going to be using Facebook's Jest (v15.1.1) to do it since it has some neat features. Go ahead and add the following to your npm scripts: <code>"test": "jest"</code>. Then go to your JS directory and create a file called Search.spec.js. I like to make my tests live right along side the files they test but I'm okay putting them in another directory: up to you. In either case Jest is smart enough to autodiscover them if you make the extension *.spec.js.
+Now that we have something worth testing, let's test it. We're going to be using Facebook's Jest (v15.1.1) to do it since it has some neat features. Go ahead and add the following to your npm scripts: `"test": "jest"`. Then go to your JS directory and create a file called Search.spec.js. I like to make my tests live right along side the files they test but I'm okay putting them in another directory: up to you. In either case Jest is smart enough to autodiscover them if you make the extension *.spec.js.
 
 In Search.spec.js, put:
 
@@ -24,7 +24,7 @@ This is a snapshot test and it's a super cool new feature of Jest. Jest is going
 
  So then you may ask, "What happens if I update the component on purpose?" Easy! You run the test again with the -u flag and it will write out new snapshots. Awesome! Also note you're supposed to commit snapshots to git.
 
- Okay, so go the CLI and run <code>npm t</code> (which is just short for npm run test or npm test, they all work the same.) You're going to get some error about import being a bad token; this is true since as of Node.js 7, V8 (the JS engine that power Node.js) still doesn't understand ES6 modules, but we still want to use them in dev so we need to do some special Babel transformations just for testing. Go to your .babelrc file and put this:
+ Okay, so go the CLI and run `npm t` (which is just short for npm run test or npm test, they all work the same.) You're going to get some error about import being a bad token; this is true since as of Node.js 7, V8 (the JS engine that power Node.js) still doesn't understand ES6 modules, but we still want to use them in dev so we need to do some special Babel transformations just for testing. Go to your .babelrc file and put this:
 
 ```json
 {
@@ -40,9 +40,9 @@ This is a snapshot test and it's a super cool new feature of Jest. Jest is going
 }
 ```
 
-This will add the correct Babel transformation when you are the test environment. Now let's make it so the jest command is run in the test environment (since by default it won't). Go back and change your line in your npm scripts to be <code>"test": "NODE_ENV=test jest"</code>. Now it will apply that extra transformation for you. Now try running npm t again and see what happens. If it still fails on the import token, run <code>npm t -- --no-cache</code>. The double dash means you want to pass parameters to whatever npm is running, in this case jest, so the command you're actually running is <code>jest --no-cache</code>. That's a useful trick to know. Then Jest likes to cache Babel transformations for ones it's already done so that you don't have to do it every time; this greatly speeds up running tests but it also doesn't check to see if you updated your .babelrc. So here we need to tell it to do so.
+This will add the correct Babel transformation when you are the test environment. Now let's make it so the jest command is run in the test environment (since by default it won't). Go back and change your line in your npm scripts to be `"test": "NODE_ENV=test jest"`. Now it will apply that extra transformation for you. Now try running npm t again and see what happens. If it still fails on the import token, run `npm t -- --no-cache`. The double dash means you want to pass parameters to whatever npm is running, in this case jest, so the command you're actually running is `jest --no-cache`. That's a useful trick to know. Then Jest likes to cache Babel transformations for ones it's already done so that you don't have to do it every time; this greatly speeds up running tests but it also doesn't check to see if you updated your .babelrc. So here we need to tell it to do so.
 
-So now that you have a passing test, try modifiying Search and running it again. It'll give you a git diff type output and you can see what changed. If it's what you expect, you just re-run the command with -u at the end, <code>npm t -- -u</code>. Let's actually put that as an npm script so we don't have to remember that. Add <code>"update-test": "npm run test -- -u"</code> to your npm scripts in package.json.
+So now that you have a passing test, try modifiying Search and running it again. It'll give you a git diff type output and you can see what changed. If it's what you expect, you just re-run the command with -u at the end, `npm t -- -u`. Let's actually put that as an npm script so we don't have to remember that. Add `"update-test": "npm run test -- -u"` to your npm scripts in package.json.
 
 Okay, so now we have a few problems with this test. First, if we modify ShowCard, it's going to fail this test, and I think that's a problem. As much as possible, we want a Search test to only fail if something in Search breaks, and we want ShowCard to fail if ShowCard breaks. Luckily we can do that with a tool called [Enzyme][enzyme] from Airbnb and a helper tool called enzyme-to-json meant to connect Enzyme and Jest's snapshot testing. I show you both so you can see the easiest, more standard of doing snapshot testing (with react-test-renderer) and the less standard but I suggest superior way of using enzyme-to-json. Also, react-test-renderer and Enzyme can't be imported into the same file and we need to use Enzyme for other tests later.
 
@@ -61,7 +61,7 @@ test('Search render correctly', () => {
 })
 ```
 
-Run npm t and you can see the difference. Instead of rendering out all the individual shows, we're rendering stubs of ShowCard with the props going into each of them. This ends up being preferable since if ShowCard breaks, it won't break _this_ test. Run <code>npm run update-test</code>. You should see it updated your snapshot and now you're good to keep going. Let's test that if we search on the Search component, it displays the correct amount of shows.
+Run npm t and you can see the difference. Instead of rendering out all the individual shows, we're rendering stubs of ShowCard with the props going into each of them. This ends up being preferable since if ShowCard breaks, it won't break _this_ test. Run `npm run update-test`. You should see it updated your snapshot and now you're good to keep going. Let's test that if we search on the Search component, it displays the correct amount of shows.
 
 ```javascript
 // add two imports

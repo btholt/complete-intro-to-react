@@ -135,7 +135,7 @@ Notably here we are _not_ handling the 404 or redirect case. react-router is abl
 
 babel-register at the top lets us require modules that need transpilation. This isn't ideal; in production you'll probably want to pre-transpile them so you don't continually pay that cost.
 
-Okay. Let's run the app. Run in your CLI <code>npm run build</code> then run <code>NODE_ENV=server node server.js</code>. Make sure you re-run build because the webpack-dev-server doesn't necessarily re-write out the bundle.js. Okay, so now try going to localhost:5050. While you won't necessarily notice it loading quicker since you were developing locally, check out view source. You should see it ships with a bunch of markup which means your page will load _much_ quicker on a slower connection since markup will start rendering before the JS is done downloading.
+Okay. Let's run the app. Run in your CLI `npm run build` then run `NODE_ENV=server node server.js`. Make sure you re-run build because the webpack-dev-server doesn't necessarily re-write out the bundle.js. Okay, so now try going to localhost:5050. While you won't necessarily notice it loading quicker since you were developing locally, check out view source. You should see it ships with a bunch of markup which means your page will load _much_ quicker on a slower connection since markup will start rendering before the JS is done downloading.
 
 Congrats! You've done server-side rendering!
 

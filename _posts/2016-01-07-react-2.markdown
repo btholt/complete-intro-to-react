@@ -28,7 +28,7 @@ We are going to do our CSS via imports though, which is pretty fun. I've seen pe
 
 We need two loaders to load: the CSS loader and the style loader. The CSS loader basically lets Webpack understand CSS; without it Webpack doesn't speak/parse CSS. It doesn't do anything at this point with it though. You could just as easy put the Less or PostCSS loaders instead of the CSS loader if you wanted to have an augmented CSS language to work with. The style loader takes the finished, parsed CSS and then bundles that into your JS bundle. So you do need both but I wanted you to understand why they're separate.
 
-The <code>url: false</code> option for the CSS loader is so that the CSS loader doesn't attempt to bundle your images into your JS bundle too; by default it will try to read the images from the CSS and bundle it into your JS. I happen to think this is a bad idea and thus opt out of it; if you leave it in there you'll need another loader capable of reading images, base64 encoding it, and bundling that into your package too.
+The `url: false` option for the CSS loader is so that the CSS loader doesn't attempt to bundle your images into your JS bundle too; by default it will try to read the images from the CSS and bundle it into your JS. I happen to think this is a bad idea and thus opt out of it; if you leave it in there you'll need another loader capable of reading images, base64 encoding it, and bundling that into your package too.
 
 Let's start building our app. You can delete MyTitle.js if you desire; you can also leave it. We're not going to be using it any further. Go ahead and clear out most ClientApp.js and let's start putting our app in here.
 
@@ -58,9 +58,9 @@ const App = React.createClass({
 render(<App />, document.getElementById('app'))
 ```
 
-Save and run <code>npm run dev</code>. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to make sure if your code is still lint-compliant.
+Save and run `npm run dev`. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to make sure if your code is still lint-compliant.
 
-So, another tooling detour here: I'm getting pretty sick of having to hit the terminal every single time to see run build. Furthermore, build for webpack is pretty slow despite how small our code is. So let's take advantage of webpack's watch feature. This will watch for every time you save rebuild automatically. Additionally it will keep the unchanged bits (like the React library) in memory so it doesn't have to rebuild it every time. Try running <code>webpack --watch</code> in your terminal. It will use the same config we already made. See how much faster it is after running? Let's add a new npm script.
+So, another tooling detour here: I'm getting pretty sick of having to hit the terminal every single time to see run build. Furthermore, build for webpack is pretty slow despite how small our code is. So let's take advantage of webpack's watch feature. This will watch for every time you save rebuild automatically. Additionally it will keep the unchanged bits (like the React library) in memory so it doesn't have to rebuild it every time. Try running `webpack --watch` in your terminal. It will use the same config we already made. See how much faster it is after running? Let's add a new npm script.
 
 ```json
 // in package.json in scripts
@@ -71,7 +71,7 @@ Great, right? So, another part that's been bothering me is that it's such a pain
 
 Just like we're using the babel-loader to transpile our code, we're going to use the eslint-loader to run standard for us. eslint is what standard uses under the hood, or in other words standard is just a specific configuration of eslint. We're going to lean on this fact and use a config file with the eslint-loader.
 
-Create a file called <code>.eslintrc.json</code>. That first period is significant. Inside the new file put:
+Create a file called `.eslintrc.json`. That first period is significant. Inside the new file put:
 
 ```json
 {
@@ -93,9 +93,9 @@ loaders: [
 ],
 ```
 
-Nice! Any time you save now using <code>npm run watch</code> it will both compile your code _and_ lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code reloads _even faster_. We do the <code>enforce: pre</code> part to make sure that the lint part is loaded before the build step, ensuring our uncompiled code (and not the intermediary) is always the one being linted.
+Nice! Any time you save now using `npm run watch` it will both compile your code _and_ lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code reloads _even faster_. We do the `enforce: pre` part to make sure that the lint part is loaded before the build step, ensuring our uncompiled code (and not the intermediary) is always the one being linted.
 
-Also, let's fix <code>npm run lint</code> so it runs our new JSX rules. Change the package.json value for lint to be <code>eslint js/**/*.js</code>. Don't worry if you don't have eslint installed globally; the npm CLI is smart enough to look in your node_modules to find it (where we already installed it.) This will run all the code with the js extension in the JS directory through ESLint. It will use the config that we made earlier. The <code>**</code> means go recursively deep into the directory; otherwise it'll just do the top level.
+Also, let's fix `npm run lint` so it runs our new JSX rules. Change the package.json value for lint to be `eslint js/**/*.js`. Don't worry if you don't have eslint installed globally; the npm CLI is smart enough to look in your node_modules to find it (where we already installed it.) This will run all the code with the js extension in the JS directory through ESLint. It will use the config that we made earlier. The `**` means go recursively deep into the directory; otherwise it'll just do the top level.
 
 Now let's switch to the Webpack dev server which makes things just that much easier. The Webpack dev server speeds up development by letting you run a local server and serve all your content from the dev server. It watches and keeps everything in memory so rebuilds go faster. Add the following to your server to get it to serve your statics correctly:
 
@@ -106,7 +106,7 @@ devServer: {
 },
 ```
 
-Now try running this from the directory of your project: <code>./node_modules/webpack-dev-server/bin/webpack-dev-server.js</code>. You could install this globally but we'll use npm's cli to make this easy. You should see in your CLI a bunch output from the build and probably some linter errors. Feel free to fix your errors but now you should be able to go <code>http://localhost:8080</code> to see your project running. You should also see the build output in the console of the browser. Cool! Add the following line to your npm scripts: <code>"dev": "webpack-dev-server",</code>. Now you can do <code>npm run dev</code> and your code will start building and serving right away!
+Now try running this from the directory of your project: `./node_modules/webpack-dev-server/bin/webpack-dev-server.js`. You could install this globally but we'll use npm's cli to make this easy. You should see in your CLI a bunch output from the build and probably some linter errors. Feel free to fix your errors but now you should be able to go `http://localhost:8080` to see your project running. You should also see the build output in the console of the browser. Cool! Add the following line to your npm scripts: `"dev": "webpack-dev-server",`. Now you can do `npm run dev` and your code will start building and serving right away!
 
 But first let's keep going with our app. Our landing is pretty much done for now. We want to start working on the browse all page, but we need to move onto the router to do that real quick.
 

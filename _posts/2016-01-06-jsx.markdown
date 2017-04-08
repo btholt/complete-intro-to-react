@@ -33,7 +33,7 @@ export default MyTitle
 
 We're using JSX finally! Make sure you're inserting those opening and closing parens around the component. It's just letting JS know you're going to put your expression on the next line (which we want to do for readability.)
 
-Notice the curly braces surrounding <code>this.props.title</code>. They're there to let JSX know I want his to be a JS expression. If they weren't there, it would literally put the string 'this.props.title'. Notice the double curly braces surrounding the style value. The exterior set of curly braces are the same as the one as before: they're letting JSX know you want a JS expression. The interior set of curly braces represent a JavaScript object, meaning you're passing in a object to the style attribute. A little strange to get used to seeing that.
+Notice the curly braces surrounding `this.props.title`. They're there to let JSX know I want his to be a JS expression. If they weren't there, it would literally put the string 'this.props.title'. Notice the double curly braces surrounding the style value. The exterior set of curly braces are the same as the one as before: they're letting JSX know you want a JS expression. The interior set of curly braces represent a JavaScript object, meaning you're passing in a object to the style attribute. A little strange to get used to seeing that.
 
 Lastly, you may notice that I switched to an ES6 style here. This is synonymous with the function syntax; just a bit more terse. Feel free to write it in any syntax that fits your fancy; this is very readable to me but may not be to you. Basically, since it's an arrow function and lacks curly braces, the resulting component is implicitly returned automatically.
 

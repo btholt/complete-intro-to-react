@@ -6,9 +6,9 @@ Welcome to the wonderful world of React. We are going to start with the most abs
 
 So let's talk about what React is. I imagine most of those who take this class will come from another framework or library, be it jQuery, Angular, Backbone, Ember, Knockout, or something else. I will draw comparisons and contrasts to these other frameworks (despite not being the same, I'll be using the word library and framework interchangeably for brevity's sake) to help illuminate some of the differences but you needn't have programmed in these other frameworks to understand this workshop.
 
-React is a library to build the views in your app. In truth, it shares more similar responsibilities to jQuery than it does to Angular or Ember: it is not a the framework but rather a component you'll use in constructing your own framework. If you've done Backbone, React is _just_ the view but not the model or component. While it can do a little data management (which is sufficient for small apps,) you really need some other construct to manage your data if you are doing some sort of app. We will get to that later using redux.
+React is a library unto itself: it's not a full fledged framework like Ember or Backbone. It does not demand to own everything in the app. It can be happy being a side component on your page and being fed data into it. Some people like to bill React the `V` in `MVC` but this is selling it short; it's more than just a view. You can make full-fledged apps with just React and no other libraries. The concerns you would normally put into the model and controller can be done in React, and just as well outside of it. Its philosophy is more similar to Angular's: React gives you new primitives so you can construct your own applications / framework.
 
-It bears mentioning that we are slowly going to build a full stack app progressively over the course of this workshop, piece-by-piece. By the end of the workshop, you'll have built a real-time app that does streaming video.
+It bears mentioning that we are slowly going to build a full stack app progressively over the course of this workshop, piece-by-piece. By the end of the workshop, you'll have built a app that simulates the Netflix experience.
 
 ## My First Component!
 
@@ -26,20 +26,16 @@ So let's start our first React code!
     <script src="node_modules/react/dist/react.js"></script>
     <script src="node_modules/react-dom/dist/react-dom.js"></script>
     <script>
-        var div = React.DOM.div
-        var h1 = React.DOM.h1
+        var MyFirstComponent = function() {
+          return React.createElement('div', null,
+            React.createElement('h1', null, "This is my first component!")
+          );
+        };
 
-        var MyFirstComponent = React.createClass({
-          render: function () {
-            return (
-              div(null,
-                h1(null, 'This is my first component!')
-              )
-            )
-          }
-        )
-
-        ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
+        ReactDOM.render(
+          React.createElement(MyFirstComponent),
+          document.getElementById("app")
+        );
     </script>
 </body>
 </html>
@@ -49,117 +45,116 @@ So let's start our first React code!
 
 Good job! You should see the text "This is my first component!" on the screen. As you may see, we constructed a bit of DOM using functions. That's all components are in React: functions. This ends up being a useful and powerful abstraction which you hopefully will see as we go on. This is about as simple as it gets as far as a React component goes. Let's take it one step further by nesting some components.
 
-Notice we are using two React methods here: <code>createClass</code> and <code>createElement</code>. createClass creates a new blueprint for an element, allowing you to create many of the same class. createElement creates a new, single instance of that blueprint. In this case we create an instance of that blueprint for the DOM. Once we start using JSX, you won't actually need to ever use the createElement API; JSX calls it for you.
+Notice we sort of have to two ideas in play here. `MyFirstComponent` ends up being a sort of blueprint, a rubber stamp for a type of components. When we call `React.createElement` we are creating one instance of `MyFirstComponent`, like we are stamping one stamp of it. We can create many `MyFirstComponents` using the same blueprint.
 
-Before we start here, let's delete that bottom script tag in index.html and add <code><&NegativeMediumSpace;script src="js/ClientApp.js"></script></code> so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put
+This method of creating components is called a stateless functional component. This is as opposed to the class version of a component which has more features. You'll see this later in the course as we keep going. Note that the `React.createClass` method of creating components is deprecated so we are moving on to the functions and classes versions of components. If you want to see the createClass version, see v1 and v2 of this workshop.
+
+Before we start here, let's delete that bottom script tag in index.html and add `<&NegativeMediumSpace;script src="js/ClientApp.js"></script>` so we can get some good code separation going. Once done with that, create the js directory and add the ClientApp.js file. In this file, let's put
 
 ```javascript
 /* global React ReactDOM */
 
-var div = React.DOM.div
-var h1 = React.DOM.h1
-
-var MyTitle = React.createClass({
-  render () {
-    return (
-      div(null,
-        h1(null, 'Check out this component!')
-      )
+var MyTitle = function () {
+  return (
+    React.createElement('div', null,
+      React.createElement('h1', null, 'Check out this component!')
     )
-  }
-})
+  );
+};
 
-var MyFirstComponent = (
-  div(null,
-    React.createElement(MyTitle, null),
-    React.createElement(MyTitle, null),
-    React.createElement(MyTitle, null)
-  )
-)
+var MyFirstComponent = function () {
+  return (
+    React.createElement('div', null,
+      React.createElement(MyTitle, null),
+      React.createElement(MyTitle, null),
+      React.createElement(MyTitle, null)
+    )
+  );
+};
 
-ReactDOM.render(MyFirstComponent, document.getElementById('app'))
-
+ReactDOM.render(
+  React.createElement(MyFirstComponent),
+  document.getElementById("app")
+);
 ```
 
 Cool, right!
 
-`MyTitle` is a `ReactComponent` class. This is a constructor function that, once invoked, is expected to return a JavaScript object with at least a `render` method on it.
+`MyTitle` is a `ReactComponent` class. This is a stateless functional component that, once invoked, is expected to return a React element.
 
-To invoke this constructor and create a new instance of the `MyTitle` component, you have to use the `React.createElement` method. The resulting instance is a `ReactElement`.
+To invoke this function and create a new instance of the `MyTitle` component, you have to use the `React.createElement` method. The resulting instance is a `ReactElement`.
 
 We can use this element the same way we use any other HTML-native tag. This allows us to encapsulate style, behavior, and markup into one neat little package and reuse these components everywhere!
 
-To sum-up, we're using `createClass` to create the component and then we're using `createElement` to create an _instance_ of that class, resulting in an element that can be used in others components.
+To sum-up, we're making functions that create the component and then we're using `createElement` to create an _instance_ of that class, resulting in an element that can be used in others components.
 
 
 ## Factories
 
-This is a bit verbose to write <code>React.createElement</code> so many damn times. Let's use a shortcut.
+This is a bit verbose to write `React.createElement` so many damn times. Let's use a shortcut.
 
 ```javascript
 // replace MyFirstComponent
-var MyTitleFact = React.createFactory(MyTitle)
+var ce = React.createElement;
 
-//replace render method's body
+//replace MyFirstComponent's body
 return (
-  div(null,
-    MyTitleFact(null),
-    MyTitleFact(null),
-    MyTitleFact(null)
+  ce('div', null,
+    ce(MyTitleFact, null),
+    ce(MyTitleFact, null),
+    ce(MyTitleFact, null)
   )
-)
+);
 ```
 
-We can use createFactory to side step this. Now we can use our class like we use div. In fact <code>React.createElement('div', null)</code> works the same as <code>React.DOM.div</code>. The one I showed you is just a convenience factory method that React provides for all of the HTML tags.
+This just helps us from having to write `React.createElement` so many times. There are DOM helpers and an additional package you can bring in that creates helper functions but in all honesty we're not going to use this way of creating React components once we get to using JSX.
 
 ## Props
 
 Our title component is cute but not super reuseable. Let's make it a bit more flexible by using some props. Props are variables that you pass from the parent to the child but the child cannot modify the props it gets. This simple restriction helps a lot in the future because when bugs arise, you know the child didn't modify the variable because it can't! Let's see how to do it.
 
+Props are received as a parameter to stateless functional components and are on the `this` contextual object for stateful ES6 class components.
+
 ```javascript
 /* global React ReactDOM */
 
-var div = React.DOM.div
-var h1 = React.DOM.h1
+var ce = React.createElement;
 
-var MyTitle = React.createClass({
-  render () {
-    return (
-      div(null,
-         h1(null, this.props.title)
-      )
+var MyTitle = function (props) {
+  return (
+    ce('div', null,
+      ce('h1', null, props.title)
     )
-  }
-})
+  );
+};
 
-var MyTitleFact = React.createFactory(MyTitle)
-
-//replace render method
-var MyFirstComponent = React.createClass({
-  render () {
-    return (
-      div(null,
-        MyTitleFact({title: 'Props are great!'}),
-        MyTitleFact({title: 'Use props everywhere!'}),
-        MyTitleFact({title: 'Props are the best!'})
-      )
+var MyFirstComponent = function () {
+  return (
+    ce('div', null,
+      ce(MyTitle, {title: 'House of Cards'}),
+      ce(MyTitle, {title: 'Orange is the New Black'}),
+      ce(MyTitle, {title: 'Stranger Things'})
     )
-  }
-})
+  );
+};
 
-ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
+ReactDOM.render(
+  ce(MyFirstComponent),
+  document.getElementById("app")
+);
+
 ```
 
 Now we can change the contents of the title. But since we can pass in lots of props, we can widely differing elements of the same class based on what props are passed into the element. Let's take it a step further (and show you how to do inline styles and attributes with React.)
 
 ```javascript
 // change MyTitle's inside h1
-h1({ style: {color: this.props.color} }, this.props.title)
+ce('h1', {style: {color: props.color}}, props.title)
 
 // change MyFirstComponent inside div
-MyTitleFact({title: 'Props are great!', color: 'rebeccapurple'}),
-MyTitleFact({title: 'Use props everywhere!', color: 'mediumaquamarine'}),
-MyTitleFact({title: 'Props are the best!', color: 'peru'})
+ce(MyTitle, {color: 'rebeccapurple', title: 'House of Cards'}),
+ce(MyTitle, {color: 'peru', title: 'Orange is the New Black'}),
+ce(MyTitle, {color: 'burlywood', title: 'Stranger Things'})
 ```
 
 Let's stop there and switch our attention a bit to tooling. So far we've been writing React with no compile step which is pretty cool and not something enough do in the course of React. Certain things will just make sense because you know what it complies to. In any case, onward!

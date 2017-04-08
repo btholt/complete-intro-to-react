@@ -25,7 +25,7 @@ const component = shallow(<UnwrappedSearch shows={preload.shows} searchTerm='' /
 // go ahead and comment out the last test so we can test these first two first
 ```
 
-Once we provide the proper params, these tests will be able to pass again. The snapshot is going to fail because we wrapped Header with a connect but go ahead and run <code>npm run update-test</code> to take care of that.
+Once we provide the proper params, these tests will be able to pass again. The snapshot is going to fail because we wrapped Header with a connect but go ahead and run `npm run update-test` to take care of that.
 
 Since the last test tests the integration of Header and Search which were previously married together, we're going to need to do two things: switch our render to be able to render Header inside of Search instead of just stubbing it out and we're going to have to bring in Redux and integrate that.
 

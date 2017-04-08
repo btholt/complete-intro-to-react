@@ -10,7 +10,7 @@ As a side-note, there are some super rad new tools out there like [Mobx][mobx] t
 
 So what is Redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. Redux is great because it will run both client and server side, it's easy to test, and easy to debug. While Redux does not __not__ follow the Flux pattern, you can easily see the similarities and once you've done one the other isn't hard to adapt to.
 
-With Redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie <code>tree.prop = 'foo'</code> doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
+With Redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie `tree.prop = 'foo'` doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
 
 So let's do the most basic addition of Redux to our app and convert the Search to use Redux. Again, this is using a sledgehammer to solve a tiny nail problem: huge overkill.
 
@@ -90,7 +90,7 @@ More files! This should be it for our simple project. Actions is just going to a
 
 The actionCreator is what the UI is actually going to interact with to make changes to the Redux store. In other words, your UI never directly interacts with the store nor the reducers. It _only_ interacts with action creators which then are handled in the reducers which then change the store which then inform the UI of the changes. One way data flow!
 
-If you haven't seen the syntax <code>const x = { searchTerm }</code> it just means <code>const x = { searchTerm: searchTerm }</code>. It's just a shortcut.
+If you haven't seen the syntax `const x = { searchTerm }` it just means `const x = { searchTerm: searchTerm }`. It's just a shortcut.
 
 The rootReducer uses the same SET_SEARCH_TERM constant to hinge in the rootReducer. Also note we return a new object every time when we make a new object. This lets Redux know to inform any subscribers (in this case your React app) that changes happened.
 
