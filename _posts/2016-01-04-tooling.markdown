@@ -24,7 +24,7 @@ So it can be painful to try to remember the various CLI commands to run on your 
 
 ```json
 "scripts": {
-	"format": "prettier --write --single-quote --print-width=120 \"!node_modules/ **/*.js\""
+	"format": "prettier --list-different --single-quote --print-width=120 \"js/**/*.{js,jsx}\"",
 },
 ```
 
@@ -61,9 +61,6 @@ Create this file called `.eslintrc.json`.
     "prettier/react"
   ],
   "plugins": [
-    "react",
-    "jsx-a11y",
-    "import",
     "prettier"
   ],
   "parserOptions": {
@@ -77,20 +74,23 @@ Create this file called `.eslintrc.json`.
     "es6": true,
     "browser": true,
     "node": true
-  },
-  "rules": {
-    "prettier/prettier": "error"
   }
 }
 ```
 
-This is a combination of the recommended configs of Airbnb and Prettier. This will lint for both normal JS stuff as well as JSX stuff. Run `eslint script.js` now and you should see we have a few errors. Run it again with the `--fix` flag and see it will fix some of it for us! Go fix the rest of your errors and come back. Let's go add this to our npm scripts.
+This is a combination of the recommended configs of Airbnb and Prettier. This will lint for both normal JS stuff as well as JSX stuff. Run `eslint script.js` now and you should see we have a few errors. Run it again with the `--fix` flag and see it will fix some of it for us! Go fix the rest of your errors and come back. Let's go add this to our npm scripts. If you haven't checked out [Airbnb's style guide][airbnb] it's worth a read.
 
 ```json
-"lint": "eslint **/*.js"
+lint": "eslint **/*.{js,jsx} --quiet"
 ```
 
-You can linting to your editor too but I'll leave that to you. It can be a bit finnicky to get going.
+Worth adding three things here:
+
+- With npm scripts, you can pass additional parameters to the command if you want. Just add a `--` and then put whatever else you want to tack on after that. For example, if I wanted to get the debug output from ESLint, I could run `yarn lint -- --debug` which would translate to `eslint **/*.js --debug`.
+- We can use our fix trick this way: `yarn lint -- --fix`.
+- We're going to both JS and JSX.
+
+You can linting and fixing to your editor too but I'll leave that to you. It can be a bit finnicky to get going.
 
 [jlongster]: https://twitter.com/jlongster
 [prettier]: https://github.com/prettier/prettier
@@ -98,3 +98,4 @@ You can linting to your editor too but I'll leave that to you. It can be a bit f
 [prettier-options]: https://github.com/prettier/prettier#api
 [flow]: https://flow.org/
 [prettier-ide]: https://github.com/prettier/prettier#editor-integration
+[airbnb]: https://github.com/airbnb/javascript

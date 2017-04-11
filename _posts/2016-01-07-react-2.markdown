@@ -2,63 +2,42 @@
 title: "More React"
 ---
 
-So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. Over the next few chapters we are going to be talking about redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.
+So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. Over the next few chapters we are going to be talking about Redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.
 
 Rather our toys we've made so far to demonstrate how to make React components, let's actually start building our web app. We are going to make our home page. The home page is going to have a sweet background image, our logo, a text input to search for a specific show, and another button to just browse all videos.
 
-I have pre-done all the CSS for you (since this is not a workshop on CSS) so if you just follow my CSS naming you will get all the CSS for free. It does bear mentioning here that libraries like [Radium][radium] or [Aphrodite][aphrodite] exist that allow you to do all of your styles in JS and let React and Radium handle all the styles for you. This is a pretty big departure from normal web development and not something _most_ developers do so we're not going to cover it. But I will say, should you feel so inclined, go out and give it a shot. I did for a little side project and had a blast with it; it's a fun way to approach CSS since you have all the tools of JS at your disposal and don't really have to care how it compiles down to CSS like you do with PostCSS/Sass/less. Anyway, follow my CSS and you'll be golden. If at any time your styles look broken as compared to mine, chances are you misnamed something or misstructured the tags.
+I have predone most of the CSS for you for this particular course for you. Later in the course we're actually going to explore using styled-components but for now let's just import the CSS I wrote for you and tackle styled-components later. Follow the structure of the HTML and class names and you'll be golden. If at any time your styles look broken as compared to mine, chances are you misnamed a class or misstructured the tags.
 
-We are going to do our CSS via imports though, which is pretty fun. I've seen people make a 1-to-1 mapping of CSS file to JS file and that makes a lot of sense to me; here we're just going to scratch the surface by showing you how to import two CSS files and then after that you're on your own to explore. Add the following to your loaders array in webpack:
+We are going to add a link tag to our HTML. Typically you wouldn't have both external CSS _and_ styled-components but believe me I'm going to save you a bunch of typing by limiting how much CSS I'm going to have you write. This is not a CSS course, haha.
 
-```javascript
-// in your rules array
-{
-  test: /\.css$/,
-  use: [
-    'style-loader',
-    {
-      loader: 'css-loader',
-      options: {
-        url: false
-      }
-    }
-  ]
-},
-```
+Add this to index.html: `<link rel="stylesheet" href="/public/style.css" />`. From here on out we'll have to use a webserver or else you'll have to mess with the paths to get the CSS to display correctly.
 
-We need two loaders to load: the CSS loader and the style loader. The CSS loader basically lets Webpack understand CSS; without it Webpack doesn't speak/parse CSS. It doesn't do anything at this point with it though. You could just as easy put the Less or PostCSS loaders instead of the CSS loader if you wanted to have an augmented CSS language to work with. The style loader takes the finished, parsed CSS and then bundles that into your JS bundle. So you do need both but I wanted you to understand why they're separate.
-
-The `url: false` option for the CSS loader is so that the CSS loader doesn't attempt to bundle your images into your JS bundle too; by default it will try to read the images from the CSS and bundle it into your JS. I happen to think this is a bad idea and thus opt out of it; if you leave it in there you'll need another loader capable of reading images, base64 encoding it, and bundling that into your package too.
-
-Let's start building our app. You can delete MyTitle.js if you desire; you can also leave it. We're not going to be using it any further. Go ahead and clear out most ClientApp.js and let's start putting our app in here.
+Let's start building our app. You can delete MyTitle.jsx if you desire; you can also leave it. We're not going to be using it any further. Go ahead and clear out most ClientApp.jsx and let's start putting our new app in here.
 
 Oh, and you also have to name your video service. I named mine svideo but name your app whatever you want!
 
 Right now it's going to be pretty simple. Drop in this:
 
 ```javascript
-import React from 'react'
-import { render } from 'react-dom'
-import '../public/normalize.css'
-import '../public/style.css'
-const App = React.createClass({
-  render () {
-    return (
-      <div className='app'>
-        <div className='landing'>
-          <h1>svideo</h1>
-          <input type='text' placeholder='Search' />
-          <a>or Browse All</a>
-        </div>
-      </div>
-    )
-  }
-})
+import React from 'react';
+import { render } from 'react-dom';
 
-render(<App />, document.getElementById('app'))
+const App = () => (
+  <div className="app">
+    <div className="landing">
+      <h1>svideo</h1>
+      <input type="text" placeholder="Search" />
+      <a>or Browse All</a>
+    </div>
+  </div>
+);
+
+render(<App />, document.getElementById('app'));
 ```
 
-Save and run `npm run dev`. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to make sure if your code is still lint-compliant.
+Just in case you're not familiar, notice that we have no curly braces and only parens around our JSX. This means there's an implicit return and it's required by the Airbnb rules. If this is confusing for you, I recommend the [2ality post on it][2ality].
+
+Save and run `npm run build`. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to make sure if your code is still lint-compliant.
 
 So, another tooling detour here: I'm getting pretty sick of having to hit the terminal every single time to see run build. Furthermore, build for webpack is pretty slow despite how small our code is. So let's take advantage of webpack's watch feature. This will watch for every time you save rebuild automatically. Additionally it will keep the unchanged bits (like the React library) in memory so it doesn't have to rebuild it every time. Try running `webpack --watch` in your terminal. It will use the same config we already made. See how much faster it is after running? Let's add a new npm script.
 
@@ -67,35 +46,25 @@ So, another tooling detour here: I'm getting pretty sick of having to hit the te
 "watch": "webpack --watch",
 ```
 
-Great, right? So, another part that's been bothering me is that it's such a pain to have to re-run standard every time. Either that or you'll get a bunch of errors all at once when you run it before you commit. Luckily we can have webpack run standard each time it compiles. It will then notify you when you have errors.
+Great, right? So, another part that's been bothering me is that it's such a pain to have to re-run ESLint every time. Either that or you'll get a bunch of errors all at once when you run it before you commit. Luckily we can have Webpack run ESLint each time it compiles. It will then notify you when you have errors.
 
-Just like we're using the babel-loader to transpile our code, we're going to use the eslint-loader to run standard for us. eslint is what standard uses under the hood, or in other words standard is just a specific configuration of eslint. We're going to lean on this fact and use a config file with the eslint-loader.
+Just like we're using the babel-loader to transpile our code, we're going to use the eslint-loader to run our linting for us. eslint-loader is similar to babel-loader, except it won't change our code: just warn us of linting errors.
 
-Create a file called `.eslintrc.json`. That first period is significant. Inside the new file put:
+Let's change our webpack config to use our new eslint-loader. eslint will automatically use our .eslintrc.json, regardless is called via the CLI or programmatically via webpack.
 
-```json
+```javascript
+// inside rules, before babel-loader
 {
-  "extends": ["standard", "standard-react"]
+  enforce: "pre",
+  test: /\.js$/,
+  loader: "eslint-loader",
+  exclude: /node_modules/
 }
 ```
 
-This will configure eslint to check for everything standard has been checking. In addition, since we're already adding a config file, we're adding a few checks specific to React and JSX. Again, these will spare you bugs in the future and they're super helpful. Let's change our webpack config to use our new eslint-loader. eslint will automatically use our .eslintrc.json, regardless is called via the CLI or programmatically via webpack.
+If you were already running `yarn watch`, stop and start it again.
 
-```javascript
-// inside module, before babel-loader
-loaders: [
-  {
-    enforce: "pre",
-    test: /\.js$/,
-    loader: "eslint-loader",
-    exclude: /node_modules/
-  }
-],
-```
-
-Nice! Any time you save now using `npm run watch` it will both compile your code _and_ lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code reloads _even faster_. We do the `enforce: pre` part to make sure that the lint part is loaded before the build step, ensuring our uncompiled code (and not the intermediary) is always the one being linted.
-
-Also, let's fix `npm run lint` so it runs our new JSX rules. Change the package.json value for lint to be `eslint js/**/*.js`. Don't worry if you don't have eslint installed globally; the npm CLI is smart enough to look in your node_modules to find it (where we already installed it.) This will run all the code with the js extension in the JS directory through ESLint. It will use the config that we made earlier. The `**` means go recursively deep into the directory; otherwise it'll just do the top level.
+Nice! Any time you save now using `yarn watch` it will both compile your code _and_ lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code reloads _even faster_. We do the `enforce: pre` part to make sure that the lint part is loaded before the build step, ensuring our uncompiled code (and not the intermediary) is always the one being linted.
 
 Now let's switch to the Webpack dev server which makes things just that much easier. The Webpack dev server speeds up development by letting you run a local server and serve all your content from the dev server. It watches and keeps everything in memory so rebuilds go faster. Add the following to your server to get it to serve your statics correctly:
 
@@ -106,9 +75,8 @@ devServer: {
 },
 ```
 
-Now try running this from the directory of your project: `./node_modules/webpack-dev-server/bin/webpack-dev-server.js`. You could install this globally but we'll use npm's cli to make this easy. You should see in your CLI a bunch output from the build and probably some linter errors. Feel free to fix your errors but now you should be able to go `http://localhost:8080` to see your project running. You should also see the build output in the console of the browser. Cool! Add the following line to your npm scripts: `"dev": "webpack-dev-server",`. Now you can do `npm run dev` and your code will start building and serving right away!
+Now try running this from the directory of your project: `./node_modules/webpack-dev-server/bin/webpack-dev-server.js`. You could install this globally but we'll use npm's cli to make this easy. You should see in your CLI a bunch output from the build and probably some linter errors. Feel free to fix your errors but now you should be able to go `http://localhost:8080` to see your project running. You should also see the build output in the console of the browser. Cool! Add the following line to your npm scripts: `"dev": "webpack-dev-server",`. Now you can do `yarn dev` and your code will start building and serving right away!
 
 But first let's keep going with our app. Our landing is pretty much done for now. We want to start working on the browse all page, but we need to move onto the router to do that real quick.
 
-[radium]: http://stack.formidable.com/radium/
-[aphrodite]: https://github.com/Khan/aphrodite
+[2ality]: http://2ality.com/2012/04/arrow-functions.html

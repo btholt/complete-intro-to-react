@@ -11,59 +11,53 @@ So try it. While the plain JS way isn't too bad, once you start writing JSX I _a
 Side note: good idea to install a JSX syntax highlighter. If you're using Sublime, I highly recommend the "Babel" package off of Package Control. If you're using VIM, try [VimBox][vimbox]. I have no experience with it but I've heard it helps.
 
 ```javascript
-import React from 'react'
-const div = React.DOM.div
-const h1 = React.DOM.h1
+import React from 'react';
 
-const MyTitle = React.createClass({
-  render () {
-    const style = {color: this.props.color}
-    return (
-      <div>
-        <h1 style={ style }>
-          {this.props.title}
-        </h1>
-      </div>
-    )
-  }
-})
+const MyTitle = props => {
+  const style = { color: props.color };
+  return (
+    <div>
+      <h1 style={style}>
+        {props.title}
+      </h1>
+    </div>
+  );
+};
 
-export default MyTitle
+export default MyTitle;
 ```
 
 We're using JSX finally! Make sure you're inserting those opening and closing parens around the component. It's just letting JS know you're going to put your expression on the next line (which we want to do for readability.)
 
-Notice the curly braces surrounding `this.props.title`. They're there to let JSX know I want his to be a JS expression. If they weren't there, it would literally put the string 'this.props.title'. Notice the double curly braces surrounding the style value. The exterior set of curly braces are the same as the one as before: they're letting JSX know you want a JS expression. The interior set of curly braces represent a JavaScript object, meaning you're passing in a object to the style attribute. A little strange to get used to seeing that.
+Since we're using JSX now, we're going to rename our files to MyTitle.jsx and ClientApp.jsx. You could leave it as .js (I tend to in personal projects) but the Airbnb config of ESLint requires it. Make sure you change the entry in `webpack.config.js` to reflect JSX as the entry point.
 
-Lastly, you may notice that I switched to an ES6 style here. This is synonymous with the function syntax; just a bit more terse. Feel free to write it in any syntax that fits your fancy; this is very readable to me but may not be to you. Basically, since it's an arrow function and lacks curly braces, the resulting component is implicitly returned automatically.
+Notice the curly braces surrounding `props.title`. They're there to let JSX know I want this to be a JS expression. If they weren't there, it would literally put the string 'props.title'. Notice the double curly braces surrounding the style value. The exterior set of curly braces are the same as the one as before: they're letting JSX know you want a JS expression. The interior set of curly braces represent a JavaScript object, meaning you're passing in a object to the style attribute. A little strange to get used to seeing that, but keep in mind that double curly braces themselves have no special meaning.
 
-Let's rewrite ClientApp.js.
+Lastly, you may notice that I switched to an ES6 style here. This is synonymous with the function syntax; just a bit more terse. Feel free to write it in any syntax that fits your fancy; this is very readable to me but may not be to you.
+
+Let's rewrite ClientApp.jsx.
 
 ```javascript
-const React = require('react')
-const ReactDOM = require('react-dom')
-const MyTitle = require('./MyTitle')
+import React from 'react';
+import ReactDOM from 'react-dom';
+import MyTitle from './MyTitle';
 
-const MyFirstComponent = React.createClass({
-  render () {
-    return (
-      <div>
-        <MyTitle title='Props are great!' color='rebeccapurple' />
-        <MyTitle title='Use props everywhere!' color='mediumaquamarine' />
-        <MyTitle title='Props are the best!' color='peru' />
-      </div>
-    )
-  }
-})
+const MyFirstComponent = () => {
+  return (
+    <div>
+      <MyTitle title="Props are great!" color="rebeccapurple" />
+      <MyTitle title="Use props everywhere!" color="mediumaquamarine" />
+      <MyTitle title="Props are the best!" color="peru" />
+    </div>
+  );
+};
 
-ReactDOM.render(<MyFirstComponent/>, document.getElementById('app'))
+ReactDOM.render(<MyFirstComponent />, document.getElementById('app'));
 ```
-
-Also make sure you update your webpack.config.js to point the JSX path of ClientApp.js on the entry line.
 
 Notice how we use our own components as if they were normal HTML tags. Neat, right? We define our own components and then we can throw anywhere since they're self contained! We even pass them props as if they were normal attributes.
 
-Also notice we're including React in both files but not directly manipulating it. This is okay since remember JSX is converting these tags to calls to React, so in reality it is using React (and thus we _do_ have to include it.) We dropped the createFactory business. No longer useful since JSX is totally fine to convert our JSX to the long-form function call. Overall a simplification I think!
+Also notice we're including React in both files but not directly manipulating it. This is okay since remember JSX is converting these tags to calls to React, so in reality it is using React (and thus we _do_ have to include it.) Overall a simplification I think!
 
 Something to make note of: the top level component has to be singular, or in other words, your top level component cannot be sibling to something else. This makes sense if you think about what JSX is transpiling to: function calls.
 
@@ -86,5 +80,7 @@ const ValidComponent = () => (
 ```
 
 Hence why you'll see a lot of wrapping divs in JSX; it's so the whole thing will compile. This is fine if you need to do this; an extra wrapping div does nothing of harm unless you have structurally sensitive CSS. Also notice that if you have just raw text to put into JSX, you can enter it just as if was normal HTML. It's only when you have JS expressions when you need to use the curly braces.
+
+Note this will change with React Fiber, which by the time you read this, may have been released. It's plan as shipping with React 16. Fiber is a total rewrite that's still API compatbile with React. With Fiber, you'll be able to render multiple top level components.
 
 [vimbox]: https://github.com/jordwalke/VimBox
