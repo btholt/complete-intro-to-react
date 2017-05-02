@@ -106,6 +106,37 @@ One bit of weirdness is the binding of context in the constructor. Yeah, I don't
 - You can use `create-react-class` (the package I referred to earlier.) This autobinds the context for you.
 - Use the [transform-class-properties][tcp] Babel transform. If I were doing a personal project I'd do this but probably not at my company. This leverages a stage 2 proposal of a feature to be added to JS: Public Class Fields. Instead of `handleSearchTermChange(event) { /* body */ }` you'd have `handleSearchTerm = () => { /* body * }`. I believe this feature will make the language, but until things reach stage 3 I'm uncomfortable adding it to a long-term-supported repo. Again, because it's an arrow function, the context will be correct.
 
+Let's go actually implement this using class properties. Since it's stage 2, it's may change but I extracted a promise from [*THE* James Kyle][tjk] that he'd write a codemod (a JS tool that will autorefactor code for you) for any changes that occur. Keep an eye on that. Add plugins as a top level property to your `.babelrc`.
+
+```json
+"plugins": [
+  "babel-plugin-transform-class-properties"
+],
+```
+
+Now go back to Search and let's use it.
+
+```javascript
+// Search.jsx
+// delete bind line in constructor
+handleSearchTermChange = (event) => {
+  this.setState({ searchTerm: event.target.value });
+}
+```
+
+We can also simplify our declaration of initial state too instead of having the clunky constructor. Delete the constructor method and put into the Search class:
+
+```javascript
+// delete constructor
+
+// add in Search class
+state = {
+  searchTerm: ''
+}
+```
+
+Now go back and make sure everything works. Voila!
+
 So go back now and change the brand to the correct title.
 
 Let's make the search actually _do_ something now. Since now we have our state being tracked, let's use it do a real time search on our titles.
@@ -133,3 +164,4 @@ If you're unfamiliar with filter, [check this out][filter]. If you're unfamiliar
 [classes]: http://2ality.com/2015/02/es6-classes-final.html
 [create-class]: http://2ality.com/2015/02/es6-classes-final.html
 [tcp]: https://babeljs.io/docs/plugins/transform-class-properties/
+[tjk]: https://twitter.com/thejameskyle/status/854725850826063872

@@ -90,7 +90,7 @@ Worth adding three things here:
 - We can use our fix trick this way: `yarn lint -- --fix`.
 - We're going to both JS and JSX.
 
-You can linting and fixing to your editor too but I'll leave that to you. It can be a bit finnicky to get going.
+You can linting and fixing to your editor too but I'll leave that to you. It can be a bit finnicky to get going. I'll be using [SublimeLinter][sl] and [sublimelinter-contrib-eslint][slce] (you need both.)
 
 [jlongster]: https://twitter.com/jlongster
 [prettier]: https://github.com/prettier/prettier
@@ -99,3 +99,5 @@ You can linting and fixing to your editor too but I'll leave that to you. It can
 [flow]: https://flow.org/
 [prettier-ide]: https://github.com/prettier/prettier#editor-integration
 [airbnb]: https://github.com/airbnb/javascript
+[sl]: http://sublimelinter.readthedocs.io/en/latest/
+[slce]: https://github.com/roadhump/SublimeLinter-eslint

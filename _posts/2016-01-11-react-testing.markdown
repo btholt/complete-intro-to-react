@@ -4,14 +4,14 @@ title: "Testing React with Jest, Snapshots, and Enzyme"
 
 **Note**: This is using Jest. If you want to see how to test React components using [Mocha][mocha], Chai, Sinon, and Enzyme, see the [v1 version][v1] of this workshop.
 
-Now that we have something worth testing, let's test it. We're going to be using Facebook's Jest (v19.0.2) to do it since it has some neat features. Go ahead and add the following to your npm scripts: `"test": "jest"`. Then go to your JS directory and create a file called Search.spec.js. I like to make my tests live right along side the files they test but I'm okay putting them in another directory: up to you. In either case Jest is smart enough to autodiscover them if you make the extension *.spec.js (or *.test.js if you prefer that.)
+Now that we have something worth testing, let's test it. We're going to be using Facebook's Jest (v19.0.2) to do it since it has some neat features. Go ahead and add the following to your npm scripts: `"test": "jest"`. Then go to your JS directory, create a folder called `__tests__` inside of js, and create a file called Search.spec.jsx. I like to make my tests live right along side the files they test but I'm okay putting them in another directory: up to you. In either case Jest is smart enough to autodiscover them if you make the extension \*.spec.jsx (or \*.test.jsx if you prefer that. Also .js is fine too, just not with Airbnb.) The `__tests__` convention is one Facebook uses and works well. Feel free to use your own sensibilities as nothing is really set in stone here.
 
 In Search.spec.js, put:
 
 ```javascript
 import React from 'react';
-import Search from './Search';
 import renderer from 'react-test-renderer';
+import Search from '../Search';
 
 test('Search renders correctly', () => {
   const component = renderer.create(<Search />);
@@ -19,6 +19,8 @@ test('Search renders correctly', () => {
   expect(tree).toMatchSnapshot();
 });
 ```
+
+Your linter is probably yelling at you by now. Add `"jest": true,` to the env config object. This will ESLint to not warn on Jest's top global variables.
 
 This is a snapshot test and it's a super cool new feature of Jest. Jest is going to render out the component you tell it to and dump the state of that to a file. It's basically a free unit test that the computer generates for you. If the markup changes in the future unexpectedly, your unit test will fail and you'll see why it failed.
 
@@ -57,8 +59,8 @@ So modifiy your test to read:
 
 ```javascript
 import React from 'react';
-import Search from './Search';
 import { shallow } from 'enzyme';
+import Search from '../Search';
 
 test('Search renders correctly', () => {
   const component = shallow(<Search />);
@@ -78,14 +80,14 @@ Run `yarn test` and you can see the difference. Instead of rendering out all the
 
 ```javascript
 // add two imports
-import ShowCard from './ShowCard'
-import preload from '../public/data.json'
+import ShowCard from '../ShowCard';
+import preload from '../../data.json';
 
 // add new test at the bottom
 test('Search should render correct amount of shows', () => {
-  const component = shallow(<Search />)
-  expect(preload.shows.length).toEqual(component.find(ShowCard).length)
-})
+  const component = shallow(<Search />);
+  expect(preload.shows.length).toEqual(component.find(ShowCard).length);
+});
 ```
 
 Enzyme gives us lots of useful features. In this case, we can use it to do jQuery-like selections from our app. We can actually ask it, "How many times does it use this React component". Logically, based on how our app works, it should have a ShowCard for each item in the preload data, so that's what we've checked here. Let's take it a step further and see if it searches correctly.
@@ -93,12 +95,12 @@ Enzyme gives us lots of useful features. In this case, we can use it to do jQuer
 ```javascript
 // underneath the last test
 test('Search should render correct amount of shows based on search', () => {
-  const searchWord = 'house'
-  const component = shallow(<Search />)
-  component.find('input').simulate('change',{target:{value: searchWord}})
-  const showCount = preload.shows.filter((show) => `${show.title.toUpperCase()} ${show.description.toUpperCase()}`.includes(searchWord.toUpperCase())).length
-  expect(showCount).toEqual(component.find(ShowCard).length)
-})
+  const searchWord = 'house';
+  const component = shallow(<Search />);
+  component.find('input').simulate('change',{target:{value: searchWord}});
+  const showCount = preload.shows.filter((show) => `${show.title.toUpperCase()} ${show.description.toUpperCase()}`.includes(searchWord.toUpperCase())).length;
+  expect(showCount).toEqual(component.find(ShowCard).length);
+});
 ```
 
 Here we're making sure that the UI displays the correct amount of ShowCards for how many shows it should match. If I were to take this a bit further, I would extract that filter function to a module, test that, and then import that same function into the production environment and the test environment. Here we're duplicating logic which isn't the best idea.
