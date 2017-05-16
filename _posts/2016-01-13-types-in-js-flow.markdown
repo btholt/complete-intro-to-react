@@ -10,7 +10,7 @@ What's magical about Flow is that most of this type checking is _free_. You don'
 
 So, let's get Flow into our code. First thing to do is run `yarn run flow -- init`. You can also install Flow globally and do that, but this is nice because it'll run flow from your dependencies. This will create a `.flowconfig` file for you which is often enough; often you don't need to customize that config at all. In my case today, styled-components is throwing errors that isn't useful so I'm going to add `<PROJECT_ROOT>/node_modules/styled-components/*` under `[ignore]`. Unlike ESLint, you do typically want to have Flow run on your dependencies to get those typings. However sometimes libraries ship broken types so you can just ignore them (like I did with styled-components.)
 
-Luckily for us, there's [flow-typed][ft]. flow-typed is a repo of pre-typed common libraries for you and styled-components has an entry in there. Just `yarn global add flow-typed` and then run `flow-typed install styled-components@1.4.6` (or whatever version you have.) This will create a flow-typed directory that Flow already knows how to read from. In fact, check out the various type available to you. You should be able to grab types for react-router and react-router-dom too. Flow already has typings for React and react-dom.
+Luckily for us, there's [flow-typed][ft]. flow-typed is a repo of pre-typed common libraries for you and styled-components has an entry in there. Just `yarn global add flow-typed` and then run `flow-typed install styled-components@1.4.6` (or whatever version you have.) This will create a flow-typed directory that Flow already knows how to read from. In fact, check out the various type available to you. You should be able to grab types for enzyme, jest, react-router and react-router-dom too. Flow already has typings for React and react-dom.
 
 Now you should be able to do `yarn run flow`. This likely isn't going to give you any errors back because we haven't opted-in any of our files to be type checked. Let's opt in Search.jsx. Add the [pragma][pragma] `// @flow` to the top of Search.jsx. Now run `yarn run flow` again. You should see an error that `handleSearchTermChange` is not annotated. Since Flow doesn't know how `handleSearchTermChange` is going to be invoked and with what parameters, it requires you to tell it beforehand. We do this by doing a type annotation.
 
@@ -29,6 +29,8 @@ What we've done here is add a type for the incoming parameter: a synthethic (Rea
 We've also made it so `handleSearchTerm` _must_ be called with a SyntheticKeyboardEvent item. If you try to invoke it without that being passed in, you'll fail when you run Flow. You can use [maybe types][maybe] to get around this.
 
 What's cool is that despite not adding a lot, we actually opted in a lot of behind-the-scenes checking for free. For example, Flow is smart enough to know that `searchTerm` is a string based on the initial `state` we provide for the class. Go ahead and try and setState for searchTerm to be a number. Flow will now fail since it was expecting a string there. If you need to accommodate both numbers and strings, you can use what's called a [union type][union].
+
+It also bears talking about [any types][any] as well. Any types are both horrible and wonderful. Bascially, anything you make an any type is opted out of type checking. This can be great if you're rapid prototyping something and you're not sure what the final API is going to look like and you don't want to be fiddling with types (however, I will say that fiddling with the types can yield great insights into what you're actually trying to do!) They can also be useful for migrating large codebases to Flow: make big things an any type until you can get around to typing that particular object. Anything that you import from npm that you don't have typings for will by default be an any type. Also note there are [mixed types][mixed] that are useful if you're not sure what sort of thing is being passed in. Use this when possible instead of an any type.
 
 At this point it's useful to see if your editor has integration with Flow. Sublime's is lackluster but you can at least get it show you where you have Flow errors in real time (using the same SublimeLinter we used for ESLint.) If you're going to double-down on Flow, you may investigate [Nuclide][nuclide]. It's a package for [Atom][atom] that integrates with all of Facebook's tooling like React, React Native, Hack, and Flow. For now I'll be using just the Sublime tools.
 
@@ -80,6 +82,8 @@ Now our whole project is typed! We'll continue using Flow for the rest of this p
 [pragma]: https://en.wikipedia.org/wiki/Directive_(programming)
 [maybe]: https://flow.org/en/docs/types/maybe/
 [union]: https://flow.org/en/docs/types/unions/
+[union]: https://flow.org/en/docs/types/any/
+[mixed]: https://flow.org/en/docs/types/mixed/
 [ft]: https://github.com/flowtype/flow-typed/tree/master/definitions/npm
 [nuclide]: https://nuclide.io/docs/languages/flow/
 [haskell]: https://www.haskell.org/
