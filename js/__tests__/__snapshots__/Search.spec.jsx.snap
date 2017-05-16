@@ -1,0 +1,291 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Search renders correctly 1`] = `
+<div
+  className="search"
+>
+  <header>
+    <h1>
+      svideo
+    </h1>
+    <input
+      onChange={[Function]}
+      placeholder="Search"
+      type="text"
+      value=""
+    />
+  </header>
+  <div>
+    <ShowCard
+      description="A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him."
+      id={0}
+      imdbID="tt1856010"
+      poster="hoc.jpg"
+      title="House of Cards"
+      trailer="NTzycsqxYJ0"
+      year="2013–"
+    />
+    <ShowCard
+      description="A blind lawyer with his other senses superhumanly enhanced fights crime as a costumed superhero."
+      id={1}
+      imdbID="tt3322312"
+      poster="dd.jpg"
+      title="Daredevil"
+      trailer="m5_A0Wx0jU4"
+      year="2015–"
+    />
+    <ShowCard
+      description="The story of Piper Chapman, a woman in her thirties who is sentenced to fifteen months in prison after being convicted of a decade-old crime of transporting money for her drug-dealing girlfriend."
+      id={2}
+      imdbID="tt2372162"
+      poster="oitnb.jpg"
+      title="Orange Is the New Black"
+      trailer="th8WT_pxGqg"
+      year="2013–"
+    />
+    <ShowCard
+      description="Level-headed son Michael Bluth takes over family affairs after his father is imprisoned. But the rest of his spoiled, dysfunctional family are making his job unbearable."
+      id={3}
+      imdbID="tt0367279"
+      poster="ad.jpg"
+      title="Arrested Development"
+      trailer="vzVhPCMAxWQ"
+      year="2003–"
+    />
+    <ShowCard
+      description="A woman is rescued from a doomsday cult and starts life over again in New York City."
+      id={4}
+      imdbID="tt3339966"
+      poster="uks.jpg"
+      title="Unbreakable Kimmy Schmidt"
+      trailer="ZBJHP2B4bjc"
+      year="2015–"
+    />
+    <ShowCard
+      description="In a world replete with greed, betrayal, sexual intrigue and rivalry, \\"Marco Polo\\" is based on the famed explorer's adventures in Kublai Khan's court in 13th century China."
+      id={5}
+      imdbID="tt2189461"
+      poster="mp.jpg"
+      title="Marco Polo"
+      trailer="CeUhXYmGKU4"
+      year="2014–"
+    />
+    <ShowCard
+      description="A family of adult siblings find that their secrets and scars are revealed when their black sheep of a brother returns home."
+      id={6}
+      imdbID="tt3520702"
+      poster="bl.jpg"
+      title="Bloodline"
+      trailer="tRnS8FkcXNk"
+      year="2015–"
+    />
+    <ShowCard
+      description="Meet the most beloved sitcom horse of the '90s - 20 years later. BoJack Horseman was the star of the hit TV show \\"Horsin' Around,\\" but today he's washed up, living in Hollywood, complaining about everything, and wearing colorful sweaters."
+      id={7}
+      imdbID="tt3398228"
+      poster="bh.jpg"
+      title="BoJack Horseman"
+      trailer="5sGsBoX6vUo"
+      year="2014–"
+    />
+    <ShowCard
+      description="A teenage girl is brutally murdered, sparking a hunt for her killer. But in a town where everyone hides a secret, will they find the monster among them?"
+      id={8}
+      imdbID="tt2309295"
+      poster="hg.jpg"
+      title="Hemlock Grove"
+      trailer="rlZUsPcChgI"
+      year="2013–"
+    />
+    <ShowCard
+      description="A police investigation, the saga of a grieving family, and a Seattle mayoral campaign all interlock after the body of 17-year-old Rosie Larsen is found in the trunk of a submerged car."
+      id={9}
+      imdbID="tt1637727"
+      poster="tk.jpg"
+      title="The Killing"
+      trailer="OkbfvPeH3G0"
+      year="2011–"
+    />
+    <ShowCard
+      description="A program that follows a couple who must navigate the exhilarations and humiliations of intimacy, commitment and other things they were hoping to avoid."
+      id={10}
+      imdbID="tt4061080"
+      poster="l.jpg"
+      title="Love"
+      trailer="Ym3LoSj9Xj8"
+      year="2016–"
+    />
+    <ShowCard
+      description="The personal and professional life of Dev, a 30-year-old actor in New York."
+      id={11}
+      imdbID="tt4635276"
+      poster="mon.jpg"
+      title="Master of None"
+      trailer="6bFvb3WKISk"
+      year="2015–"
+    />
+    <ShowCard
+      description="Will Arnett will star as a self-help guru who needs a decent amount of help himself."
+      id={12}
+      imdbID="tt4973548"
+      poster="f.jpg"
+      title="Flaked"
+      trailer="iKOpvm7BcOo"
+      year="2016–"
+    />
+    <ShowCard
+      description="A former superhero decides to reboot her life by becoming a private investigator."
+      id={13}
+      imdbID="tt2357547"
+      poster="jj.jpg"
+      title="Jessica Jones"
+      trailer="nWHUjuJ8zxE"
+      year="2015–"
+    />
+    <ShowCard
+      description="A chronicled look at the criminal exploits of Colombian drug lord Pablo Escobar."
+      id={14}
+      imdbID="tt2707408"
+      poster="n.jpg"
+      title="Narcos"
+      trailer="U7elNhHwgBU"
+      year="2015–"
+    />
+    <ShowCard
+      description="Follow the counselors and campers on their first day at Camp Firewood in the summer of 1981."
+      id={15}
+      imdbID="tt4341500"
+      poster="whas.jpg"
+      title="Wet Hot American Summer: First Day of Camp"
+      trailer="PLlMTn_Jzok"
+      year="2015–"
+    />
+    <ShowCard
+      description="When the patriarch of a prominent family dies, his heirs battle to determine who will gain control of his beloved soccer team: The Cuervos of Nuevo Toledo."
+      id={16}
+      imdbID="tt4680240"
+      poster="cdc.jpg"
+      title="Club de Cuervos"
+      trailer="TvUVBVRlCV8"
+      year="2015–"
+    />
+    <ShowCard
+      description="Filmed over a 10-year period, Making a Murderer is an unprecedented real-life thriller about Steven Avery, a DNA exoneree who, while in the midst of exposing corruption in local law enforcement, finds himself the prime suspect in a grisly new crime."
+      id={17}
+      imdbID="tt5189670"
+      poster="mam.jpg"
+      title="Making a Murderer"
+      trailer="qxgbdYaR_KQ"
+      year="2015–"
+    />
+    <ShowCard
+      description="A group of people around the world are suddenly linked mentally, and must find a way to survive being hunted by those who see them as a threat to the world's order."
+      id={18}
+      imdbID="tt2431438"
+      poster="s8.jpg"
+      title="Sense8"
+      trailer="riLgCIvE9aU"
+      year="2015–"
+    />
+    <ShowCard
+      description="D.J. Tanner-Fuller is a widow and mother of three. Things become too much to handle, so she asks for help from her sister Stephanie and her best friend Kimmy."
+      id={19}
+      imdbID="tt3986586"
+      poster="fh.jpg"
+      title="Fuller House"
+      trailer="CXuGLswn2l0"
+      year="2016–"
+    />
+    <ShowCard
+      description="After the loss of their parents in a mysterious fire, the three Baudelaire children face trials and tribulations attempting to uncover dark family secrets."
+      id={20}
+      imdbID="tt4834206"
+      poster="asoue.jpg"
+      title="A Series of Unfortunate Events"
+      trailer="Tup-5yOcJuM"
+      year="2017–"
+    />
+    <ShowCard
+      description="Given superstrength and durability by a sabotaged experiment, a wrongly accused man escapes prison to become a superhero for hire."
+      id={21}
+      imdbID="tt3322314"
+      poster="lc.jpg"
+      title="Luke Cage"
+      trailer="ytkjQvSk2VA"
+      year="2016–"
+    />
+    <ShowCard
+      description="A television anthology series that shows the dark side of life and technology."
+      id={22}
+      imdbID="tt2085059"
+      poster="bm.jpg"
+      title="Black Mirror"
+      trailer="jDiYGjp5iFg"
+      year="2011–"
+    />
+    <ShowCard
+      description="Having gone missing seven years ago, the previously blind Prairie returns home, now in her 20s with her sight restored. While many believe she is a miracle, others worry that she could be dangerous."
+      id={23}
+      imdbID="tt4635282"
+      poster="oa.jpg"
+      title="The OA"
+      trailer="DvHJtez2IlY"
+      year="2016–"
+    />
+    <ShowCard
+      description="When a young boy disappears, his mother, a police chief, and his friends must confront terrifying forces in order to get him back."
+      id={24}
+      imdbID="tt4574334"
+      poster="st.jpg"
+      title="Stranger Things"
+      trailer="9Egf5U8xLo8"
+      year="2016–"
+    />
+    <ShowCard
+      description="The early reign of Queen Elizabeth II of the United Kingdom is portrayed."
+      id={25}
+      imdbID="tt4786824"
+      poster="tc.jpg"
+      title="The Crown"
+      trailer="JWtnJjn6ng0"
+      year="2016–"
+    />
+    <ShowCard
+      description="Sheila and Joel are married real estate agents in Santa Clarita, California. When Sheila dies, their lives take a dark turn."
+      id={26}
+      imdbID="tt5580540"
+      poster="scd.jpg"
+      title="Santa Clarita Diet"
+      trailer="xjRnbOgoAUQ"
+      year="2017–"
+    />
+    <ShowCard
+      description="Set nearly a decade after the finale of the original series, this revival follows Lorelai, Rory and Emily Gilmore through four seasons of change."
+      id={27}
+      imdbID="tt5435008"
+      poster="gg.jpg"
+      title="Gilmore Girls: A Year in the Life"
+      trailer="kGGNNSmGDpU"
+      year="2016–"
+    />
+    <ShowCard
+      description="A thriller set in a world sharply divided between progress and devastation, where people are given the chance to make it to the \\"better side\\" but only 3% of the candidates succeed."
+      id={28}
+      imdbID="tt4922804"
+      poster="tp.jpg"
+      title="3%"
+      trailer="8yyzNQfaQR8"
+      year="2016–"
+    />
+    <ShowCard
+      description="Bob and David emerge from the time machine they entered sixteen years ago and are reunited with the cast of Mr. Show."
+      id={29}
+      imdbID="tt4574708"
+      poster="wbd.jpg"
+      title="w/ Bob & David"
+      trailer="QyZ9l8anS9I"
+      year="2016–"
+    />
+  </div>
+</div>
+`;

@@ -4,6 +4,7 @@ node_modules/
 coverage
 .nyc_output
 .DS_Store
+public/*bundle*
 *.map
 *.bundle.js
 _site/

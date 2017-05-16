@@ -1,0 +1,21 @@
+{
+  "presets": [
+    "react",
+    ["env", {
+      "targets": {
+        "browsers": "last 2 versions"
+      },
+      "loose": true,
+      "modules": false
+    }]
+  ],
+  "plugins": [
+    "react-hot-loader/babel",
+    "babel-plugin-transform-class-properties"
+  ],
+  "env": {
+    "test": {
+      "plugins": ["transform-es2015-modules-commonjs"]
+    }
+  }
+}
