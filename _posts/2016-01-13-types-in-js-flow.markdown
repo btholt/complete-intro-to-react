@@ -63,7 +63,7 @@ This is how you type functional components. Pretty cool, right? Now if you run F
 
 You should be able to `// @flow` to the top of Landing and App and make no changes.
 
-Add `// @flow` to the top of ClientApp.jsx. You'll start getting errors about module.hot which is a global variable given to you by Webpack. Right now (as of writing) flow-typed doesn't have types for Webpack's API but this can be a useful exercise in showing you how to define your own types. In your flow-typed folder, add a file called webpack.js (not in the npm directory.) Add the following:
+Add `// @flow` to the top of ClientApp.jsx. You'll start getting errors about module.hot which is a global variable given to you by Webpack. Right now (as of writing) flow-typed doesn't have types for Webpack's API but this can be a useful exercise in showing you how to define your own types. In your flow-typed folder, add a file called types.js (not in the npm directory.) Add the following:
 
 ```javascript
 // @flow

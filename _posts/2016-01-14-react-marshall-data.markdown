@@ -104,7 +104,7 @@ export type Show = {
 };
 ```
 
-It is a global type so it makes sense to need to do so. Do note with with Flow and ESLint integrations with editors, it can be slow to update. It can be frustrating when you think you fixed a problem and it hasn't resolved yet.
+Do note with with Flow and ESLint integrations with editors, it can be slow to update. It can be frustrating when you think you fixed a problem and it hasn't resolved yet.
 
 Now we're going to pass the correct show to the Details page. There's a bunch of ways to do this:
 

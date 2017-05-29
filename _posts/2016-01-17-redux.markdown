@@ -58,9 +58,12 @@ So like we said, each store starts with one reducer: the root reducer. This root
 1. You must have a default state.
 1. Redux by itself has no way of dealing with async actions. You need to pull in another library like redux-thunk. We'll use that later.
 
+We haven't opted into Flow yet. We will. I want to show you what Redux is doing at its core before we get clever.
+
 Okay make a new file called actions.js and put in there:
 
 ```javascript
+// @flow
 export const SET_SEARCH_TERM = 'SET_SEARCH_TERM';
 ```
 
@@ -69,14 +72,17 @@ This is going to give you an eslint error for prefer defaults exports when there
 Create a file called actionCreators.js:
 
 ```javascript
+// @flow
 import { SET_SEARCH_TERM } from './actions';
 
 export function setSearchTerm(searchTerm) {
-  return { type: SET_SEARCH_TERM, searchTerm };
+  return { type: SET_SEARCH_TERM, payload: searchTerm };
 }
 ```
 
 You'll see the same ESLint export error. Ignore for now.
+
+We're using the [flux standard action][fsa] shape of actions for our Redux actions. This isn't required. The idea here is that we all adhere to this standard, this actions can be easily ported amongst Redux, Flux, and other state management libraries with ease. In any case, it'll make working Flow easier, which is the real reason.
 
 Now back to reducers.js:
 
@@ -86,9 +92,7 @@ import { SET_SEARCH_TERM } from './actions';
 
 // new reducer above rootReducer
 const setSearchTerm = (state, action) => {
-  const newState = {};
-  Object.assign(newState, state, {searchTerm: action.searchTerm});
-  return newState;
+  return Object.assign({}, state, {searchTerm: action.payload});
 }
 
 // add new case before default inside rootReducer
@@ -260,7 +264,7 @@ export default Landing;
 
 Decorators are an amazing feature to augment functionality in a declarative fashion. The code you see here works precisely the same way the other code did, it's just a bit less dense (I'd say.) The `// $FlowFixMe` bit is so that Flow will ignore that line: it doesn't handle decorators yet so this suppresses that warning. The reason why the transform is considered "legacy" is because the proposal is a bit in flux, but in nearly any case this code won't have to change.
 
-We're going to revert back to using the `connect(…)(…)` notation for now though. Because the Flow parser doesn't support decorators (and won't until it's more stable) we can't use it since Prettier relies on the Flow parser. It works with the Babylon parser but then we can't use Flow. Make your own tradeoff there.
+We're going to revert back to using the `connect(…)(…)` notation for now though. Because the Flow parser doesn't support decorators (and won't until it's more stable) we can't use it since Prettier relies on the Flow parser. It works with the Babylon parser but then we can't use Flow. Make your own tradeoff there. You could put the `// prettier-ignore` comment to make it ignore the line too.
 
 Okay, so we're using a form to take care of when hits enter: this is good for accessibility and a good way to take care of submitting. Once a user hits enter, it calls goToSearch where we imperatively call the router to take us to search. This will preserve our Redux state; however Search.jsx is not yet reading from Redux. Let's go fix that.
 
@@ -319,7 +323,54 @@ export default connect(mapStateToProps, mapDispatchToProps)(Header);
 
 Since Header does care about modifying searchTerm we bring in that logic here. Otherwise not much changes!
 
+Okay, so now we want to type Redux. This is no trivial feat but I promise that it will save you bugs. And in the process we'll learn more about Flow too. 
+
+Open your types.js file in the flow-typed directory and let's add some new types.
+
+```javascript
+declare type ActionType = 'SET_SEARCH_TERM';
+
+declare type ActionT<A: ActionType, P> = {|
+  type: A,
+  payload: P
+|};
+
+export type Action = ActionT<'SET_SEARCH_TERM', string>;
+```
+
+Here we're creating an enumerated typed: ActionType. This type is saying anything that's an ActionType can only be that string. Any other string (or anything else) causes an error. This will catch if you spell the action types wrong, which is nice. We'll add another action type later so you can see how to add more.
+
+Below that, we're creating a generic action. It's saying the `type` (which we represent with A) will always an ActionType. It's then saying that there must be a payload type which is always going to exist. We can then define later what that type is going to be (which is what P represents.) We are not representing the full flux standard action here: it also accounts for metadata and errors, but we're keeping it simple here.
+
+Lastly, with the Action (which is the one we export, the other two are only for use in this file) is creating the actual useable action types. We only have one: SET_SEARCH_TERM. It then defines what those that action's payloads must look like: a string. For every action we create, we'll have to come back here to define their types. This seems burdensome but it makes your Redux ironclad. The ongoing mantainability here makes it worth it, I promise.
+
+Go back to reducers.js. We're going to refactor this a bit to make it play nicer with Flow as well as show you a cool way to write Redux: combineReducers.
+
+```javascript
+// @flow
+
+import { combineReducers } from 'redux';
+import { SET_SEARCH_TERM } from './actions';
+
+const searchTerm = (state = '', action: Action) => {
+  if (action.type === SET_SEARCH_TERM) {
+    return action.payload;
+  }
+  return state;
+};
+
+
+const rootReducer = combineReducers({ searchTerm });
+
+export default rootReducer;
+```
+
+combineReducers creates the root reducer for you. What's peculiar of how this works as opposed to writing our own is that it separates each reducer into its own silo. Before, when writing our own, each reducer got its own copy of the entire state tree and had to be careful to not overwrite anything else it didn't intend. With combineReducers, each reducer _only_ gets the part that it's worried about and nothing else. So, because in the combineReducers object we called the key `searchTerm`, the searchTerm method will only be supplied that bit of the state tree and nothing else. Thus, inside each reducer we handle its default state (for searchTerm the default value is empty string) and also have to provide for if the reducer does not recognize the action type. This is less performant but unless you're firing off _a lot_ of actions and/or have _a lot_ (read: dozens/hundreds) of action types, it'll make zero difference overall.
+
+So let's roll with this and move to making async actions now.
+
 [elm]: http://elm-lang.org/
 [flux]: https://facebook.github.io/flux/
 [redux]: http://redux.js.org/index.html
 [symbols]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol
+[fsa]: https://github.com/acdlite/flux-standard-action

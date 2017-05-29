@@ -71,7 +71,9 @@ if (this.state.apiData.rating) {
 {rating}
 ```
 
-We're requiring in [axios][axios] which is a great little promise-based AJAX client and using that to make requests to the Open Movie Database to find the IMDB ratings. If you go to your pages now you'll notice that the rating is showing up a little after the page renders. That's because it's being grabbed from the magical Internet tubes! As you can see, we did this componentDidMount so that the user could see UI before waiting on an AJAX request. Note that it won't get server-side rendered either because the server doesn't call componentDidMount.
+We used to use the open movie database to request ratings against but it went closed. Rather than make your signup, there's a tiny API server for you to run with `ratingsAPI.js`. Just run `node ratingsAPI.js` from the commandline and let it run in the background. Now you'll be able to make requests against it. Feel free to add a line to your scripts object in package.json: `"api": "node ratingsAPI.js"` so you can just run `yarn api` to run the server.
+
+We're requiring in [axios][axios] which is a great little promise-based AJAX client and using that to make requests to the our little API server to find the IMDB ratings. If you go to your pages now you'll notice that the rating is showing up a little after the page renders. As you can see, we did this componentDidMount so that the user could see UI before waiting on an AJAX request. Note that it won't get server-side rendered either because the server doesn't call componentDidMount.
 
 That's it! That's all you need to need know about AJAX with React as well as the lifecycle methods!
 
