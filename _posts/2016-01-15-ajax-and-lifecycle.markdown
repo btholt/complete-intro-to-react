@@ -12,7 +12,7 @@ Due to the structuring of our app, we haven't had to use React lifecycle methods
 1. __shouldComponentUpdate__ - This method returns a boolean letting React know if it should re-render the component. This is for performance purposes. If you have a component that will _never_ update (like a static logo or something) you can just return false here. Normally React is really fast at doing this diffs anyway so it's a good idea to only put in a shouldComponentUpdate method if it's actually a performance issue. Typically in the method body you would check the bare minimum of state that needs to have changed to warrant a re-render. We'll discuss this more in depth later.
 1. __componentWillUnmount__ - This method runs right before the component is taken off the DOM. Most common thing to do here is get rid of external event listeners or other things you need to clean up.
 
-Cool! So let's make our Details page check the IMDB rating! First let's make a nice loading spinner. Make a new file called Spinner.jsx and put this in there:
+Cool! So let's make our Details page get the details from a server! First let's make a nice loading spinner. Make a new file called Spinner.jsx and put this in there:
 
 ```javascript
 // @flow
@@ -49,20 +49,20 @@ imdbID: string
 
 // add state and componentDidMount to Details
  state = {
-  omdbData: { imdbRating: '' }
+  apiData: { imdbRating: '' }
 };
 componentDidMount() {
   axios
-    .get(`http://www.omdbapi.com/?i=${this.props.show.imdbID}`)
-    .then((response: { data: { imdbRating: string } }) => {
-      this.setState({ omdbData: response.data });
+    .get(`http://localhost:3000/${this.props.show.imdbID}`)
+    .then((response: { data: { rating: string } }) => {
+      this.setState({ apiData: response.data });
     });
 }
 
 // add to render before return
 let rating;
-if (this.state.omdbData.imdbRating) {
-  rating = <h3>{this.state.omdbData.imdbRating}</h3>;
+if (this.state.apiData.rating) {
+  rating = <h3>{this.state.apiData.rating}</h3>;
 } else {
   rating = <Spinner />;
 }

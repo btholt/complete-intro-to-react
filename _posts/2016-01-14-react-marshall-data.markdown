@@ -91,12 +91,17 @@ Cool. Now it should still work but Search no longer imports the data but merely 
 
 You'll also notice we created a Show type to match our show data. This is called a [type alias][ta] This is awesome because now we can refer to objects as Shows and get all the typing along with that. Our first use of it was specifying that the props passed down was going to be an array of Shows. The syntax with Array has to do with a concept called [generic types][gt] which you are welcome to read about but beyond the scope of this class. You can do really cool and clever things with types and it's worth a dive down the rabbit's hole.
 
-This Show type is going to be used across multiple files so it's worth it to make it a project-wide type like we did with Webpack's module. Go create a file called Show in flow-typed and move that type declaration in there (be sure to add `// @flow` at the top too.) Add `declare` before type so it says `declare type Show = { […]` so it's now a global. Remove it from Search.jsx. Everything should still work. You'll need to add this to your .eslintrc.json too:
+This Show type is going to be used across multiple files so it's worth it to make it a project-wide type like we did with Webpack's module. Go add to the types.js file in flow-typed. Add `declare` before type so it says `declare type Show = { […]` so it's now a global. Remove it from Search.jsx. Everything should still work. It should look like this: 
 
-```json
-"globals": {
-  "Show": true
-}
+```javascript
+export type Show = {
+  title: string,
+  description: string,
+  year: string,
+  imdbID: string,
+  poster: string,
+  trailer: string
+};
 ```
 
 It is a global type so it makes sense to need to do so. Do note with with Flow and ESLint integrations with editors, it can be slow to update. It can be frustrating when you think you fixed a problem and it hasn't resolved yet.
@@ -172,8 +177,6 @@ const Details = (props: { show: Show }) => {
 
 export default Details;
 ```
-
-// TODO START HERE
 
 Now you should have some nice looking UI.
 
@@ -333,6 +336,24 @@ color: black;
 ```
 
 Now each of the cards should be clickable through to the details page and styled correctly!
+
+But now we've messed up Search's tests. If you remember, Enzyme's testing library only shallowly renders the components. Since we moved the Header logic from inside Search into Header, this is going to mess up the existing snapshot (which we can just fix easily) and we won't be able to directly interact with the input inside of Header without some additional code.
+
+We also changed the contract of Search since it now requires the shows to passed in. Modify the three `<Search />` to be `<Search shows={preload.shows} />`.
+
+First, run `yarn test:update` to fix your snapshot. Your third test will still fail but the first one will update.
+
+Next, open Search.spec.jsx and add this:
+
+```javascript
+// last import
+import Header from '../Header';
+
+// modify the simulation line
+component.find(Header).dive().find('input').simulate('change', { target: { value: searchWord } });
+```
+
+By finding and "diving" on the Header component, we're telling Enzyme to also render that Header so that we can interact with it. Run your tests again and now they should pass!
 
 
 [ryflo]: https://twitter.com/ryanflorence
