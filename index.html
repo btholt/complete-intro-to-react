@@ -1,13 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Vidflix</title>
-  <link rel="stylesheet" href="/public/normalize.css" />
-  <link rel="stylesheet" href="/public/style.css" />
-</head>
-<body>
-  <div id="app"><%= body %></div>
-  <script src="/public/bundle.js"></script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React Intro</title>
+  </head>
+  <body>
+    <div id="app">React has not yet rendered</div>
+    <script src="node_modules/react/dist/react.js"></script>
+    <script src="node_modules/react-dom/dist/react-dom.js"></script>
+    <script>
+      var MyFirstComponent = React.createClass({
+        render: function () {
+          return (
+            React.DOM.div(null,
+              React.DOM.h1(null, 'This is my first component!')
+            )
+          )
+        }
+      })
+
+      ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
+    </script>
+  </body>
 </html>
