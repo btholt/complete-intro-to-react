@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">Complete Intro to React</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">styled-components 💅</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>You can do normal CSS (as we have doing so far) but there's been a recent interest in CSS-in-JS. There are several great approaches to this but we're going to use styled-components. The advantage of this is similar to what we see of doing JSX/React over separated templates and controllers: we get to mush together concerns for single components. If we do use CSS-in-JS, it means everything for a single component lives in a single place: we don't have to worry about including the right style sheets for the right components. It means if you include a component on a page, you get the markup, behavior, and style, guaranteed.</p>
+<p>Let's talk about why this may be less than ideal. We have decades of browsers optimizing how to download, parse, and apply external style sheets. This way has been well thought out. I'm not saying we can't figure out how to optimize this path too; we just haven't yet. It's slower. This might be important to the performance of your app; it might not. You're also doubling your parse cost: we have to parse it as JS first, and then as CSS the second time. I think there's more around the tooling here: we can have our cake and eat it too. This is a relatively nascent idea: we'll figure it out if it pans out to be a good idea.</p>
+<p>So the approach that styled-components takes is using ES6 tagged template literals. If this is your first encounter with them, you're not alone! It's outside the scope of this class to explore what they can do in-depth but as is customary, here's the <a href="http://2ality.com/2016/11/computing-tag-functions.html">2ality article</a> on it. Suffice to say that tagged template literals is a peculiar way of invoking normal functions. In our case, we give a CSS string to a styled-component function, it does some processing based on that, and spits out a valid React component. We instead of using a {div,h1,img,input,span,etc.} use the React component. Whatever normal attributes you would have given to that HTML element, you give to the styled component and it works great! Let's style our ShowCard.</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { string } <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span>;
+<span class="hljs-keyword">import</span> styled <span class="hljs-keyword">from</span> <span class="hljs-string">'styled-components'</span>;
+
+<span class="hljs-keyword">const</span> Wrapper = styled.div<span class="hljs-string">`
+  width: 32%;
+  border: 2px solid #333;
+  border-radius: 4px;
+  margin-bottom: 25px;
+  padding-right: 10px;
+  overflow: hidden;
+`</span>;
+
+<span class="hljs-keyword">const</span> Image = styled.img<span class="hljs-string">`
+  width: 46%;
+  float: left;
+  margin-right: 10px;
+`</span>;
+
+<span class="hljs-keyword">const</span> ShowCard = <span class="hljs-function"><span class="hljs-params">props</span> =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Wrapper</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Image</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">{</span>`${<span class="hljs-attr">props.title</span>} <span class="hljs-attr">Show</span> <span class="hljs-attr">Poster</span>`} <span class="hljs-attr">src</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">public</span>/<span class="hljs-attr">img</span>/<span class="hljs-attr">posters</span>/${<span class="hljs-attr">props.poster</span>}`} /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{props.title}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>({props.year})<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{props.description}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Wrapper</span>&gt;</span>
+);
+
+ShowCard.propTypes = {
+  poster: string.isRequired,
+  title: string.isRequired,
+  year: string.isRequired,
+  description: string.isRequired
+};
+
+export default ShowCard;
+</span></code></pre>
+<p>Notice we created two different elements here: a div which we turned into Wrapper, and a img which we turned into Image. We associated some CSS with these two HTML elements and used them in our JSX. That's what styled-components are! You replace HTML elements with styled ones! Pretty cool, right? We won't do this for every component in our app since I want to focus more on the JS than I do on the CSS but I wanted to show you how to do it. It's fun to play with. If you were going to do some sort of CSS-in-JS solution, you'd probably want to be all-in on it.</p>
+<p>We'll do some on the Details page but for now, let's go back to React-y stuff.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; Complete Intro to React
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+</body>
+</html>

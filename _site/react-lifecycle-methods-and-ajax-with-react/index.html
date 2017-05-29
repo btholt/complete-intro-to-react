@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <title>My Reptar Title</title>
-  <meta name="description" content="Your website's description goes here.
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
 ">
   <meta name="keywords" content="" />
 
@@ -14,7 +14,10 @@
 
   <link rel="shortcut icon" href="/favicon.ico">
 
-  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
 </head>
 <body class="post-template">
 
@@ -22,7 +25,7 @@
     <div class="vertical">
       <div class="main-header-content">
         <h1 class="page-title">
-          <a href="/">My Reptar Title</a>
+          <a href="/">Complete Intro to React</a>
         </h1>
       </div>
     </div>
@@ -44,47 +47,69 @@
   <section class="post-content">
     <p>Due to the structuring of our app, we haven't had to use React lifecycle methods despite the fact they're fairly common to use and thus important to know. One of the most compelling reasons to use lifecycle methods is to do AJAX. Once a component gets mounted to the page then we want to be able request data from the server. First let's discuss the lifecycle of a React component.</p>
 <ol>
-<li><strong>constructor/getInitialState</strong> - This is where set up your components initial state. The former is for ES6 classes (that you'll see how to do at the end) and the latter is for the React.createClass method (that we've been using.)</li>
-<li><strong>componentWillMount</strong> - This method runs right <em>before</em> the component gets mounted. This one is not too common to use, but you will want to use it any time you want code to run both in node and in the browser.</li>
+<li><strong>constructor/getInitialState</strong> - This is where set up your components initial state. The former is for ES6 classes (which is what we've been doing) and the latter is for the React.createClass method (which is deprecated as of 15.5.)</li>
+<li><strong>getDefaultProps</strong> - Often you want to give your components default props if the parent doesn't provide them. Have a button that you want to be able to be a variety of colors but want default to green? That's what you would put in here. In ES6 classes, this can just be static property that's an object of the default props.</li>
+<li><strong>componentWillMount</strong> - This method runs right <em>before</em> the component gets mounted. This one is not too common to use, but you will want to use it any time you want to ensure code to run both in node and in the browser.</li>
 <li><strong>componentDidMount</strong> - This method runs right <em>after</em> your component gets put into the DOM. This method <em>will not get run in node but will in the browser</em>. This makes it so your component can render first <em>then</em> you can go get the data you need. In your component you can throw up a loader if you need to. Also if you need to interact with the DOM (like if you were wrapping D3 or a jQuery plugin) this would be the place to do it.</li>
+<li><strong>componentWillReceiveProps</strong> - This method runs every time the React component receives new/different props from the parent. If some of the state you keep in your component is derived from the parent props, this is where you would take care of that. What if you keep a list of actors in a movie as state that you request from an API? If your parent passes you a new movie, you need to react to that and get new actors for the new movie. This would be an example of where to use this method.</li>
+<li><strong>shouldComponentUpdate</strong> - This method returns a boolean letting React know if it should re-render the component. This is for performance purposes. If you have a component that will <em>never</em> update (like a static logo or something) you can just return false here. Normally React is really fast at doing this diffs anyway so it's a good idea to only put in a shouldComponentUpdate method if it's actually a performance issue. Typically in the method body you would check the bare minimum of state that needs to have changed to warrant a re-render. We'll discuss this more in depth later.</li>
 <li><strong>componentWillUnmount</strong> - This method runs right before the component is taken off the DOM. Most common thing to do here is get rid of external event listeners or other things you need to clean up.</li>
 </ol>
-<p>Cool! So let's make our Details page check the IMDB rating! Open Details.js.</p>
+<p>Cool! So let's make our Details page get the details from a server! First let's make a nice loading spinner. Make a new file called Spinner.jsx and put this in there:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> styled, { keyframes } <span class="hljs-keyword">from</span> <span class="hljs-string">'styled-components'</span>;
+
+<span class="hljs-keyword">const</span> spin = keyframes<span class="hljs-string">`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`</span>;
+
+<span class="hljs-keyword">const</span> Image = styled.img<span class="hljs-string">`
+  animation: <span class="hljs-subst">${spin}</span> 4s infinite linear;
+  background-image: url(/public/img/loading.png);
+`</span>;
+
+<span class="hljs-keyword">const</span> Spinner = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &lt;Image src=<span class="hljs-string">"/public/img/loading.png"</span> alt=<span class="hljs-string">"loading indicator"</span> /&gt;;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Spinner;
+</code></pre>
+<p>This is how you do keyframe animations with styled-components. It's really cool because you'll get scoped animation and not have to worry about some polluted global namespace.</p>
 <pre><code class="language-javascript"><span class="hljs-comment">// import in axios</span>
 <span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>
 
 <span class="hljs-comment">// add propType inside show</span>
 imdbID: string
 
-<span class="hljs-comment">// add getInitialState and componentDidMount to Details</span>
-getInitialState () {
-  <span class="hljs-keyword">return</span> {
-    <span class="hljs-attr">omdbData</span>: {}
-  }
-},
-componentDidMount () {
-  axios.get(<span class="hljs-string">`http://www.omdbapi.com/?i=<span class="hljs-subst">${<span class="hljs-keyword">this</span>.props.show.imdbID}</span>`</span>)
-    .then(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> {
-      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'response'</span>, response)
-      <span class="hljs-keyword">this</span>.setState({<span class="hljs-attr">omdbData</span>: response.data})
-    })
-    .catch(<span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> {
-      <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'axios error'</span>, error)
-    })
-},
+<span class="hljs-comment">// add state and componentDidMount to Details</span>
+ state = {
+  <span class="hljs-attr">apiData</span>: { <span class="hljs-attr">imdbRating</span>: <span class="hljs-string">''</span> }
+};
+componentDidMount() {
+  axios
+    .get(<span class="hljs-string">`http://localhost:3000/<span class="hljs-subst">${<span class="hljs-keyword">this</span>.props.show.imdbID}</span>`</span>)
+    .then(<span class="hljs-function">(<span class="hljs-params">response: { data: { rating: string } }</span>) =&gt;</span> {
+      <span class="hljs-keyword">this</span>.setState({ <span class="hljs-attr">apiData</span>: response.data });
+    });
+}
 
 <span class="hljs-comment">// add to render before return</span>
-<span class="hljs-keyword">let</span> rating
-<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.omdbData.imdbRating) {
-  rating = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{this.state.omdbData.imdbRating}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span>
+<span class="hljs-keyword">let</span> rating;
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.state.apiData.rating) {
+  rating = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{this.state.apiData.rating}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span>;
 } <span class="hljs-keyword">else</span> {
-  rating = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">src</span>=<span class="hljs-string">'/public/img/loading.png'</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">'loading indicator'</span> /&gt;</span>
+  rating = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Spinner</span> /&gt;</span>;
 }
 
 // add between year and poster
 {rating}
 </span></code></pre>
-<p>We're requiring in <a href="https://github.com/mzabriskie/axios">axios</a> which is a great little promise-based AJAX client and using that to make requests to the Open Movie Database to find the IMDB ratings. If you go to your pages now you'll notice that the rating is showing up a little after the page renders. That's because it's being grabbed from the magical Internet tubes! As you can see, we did this componentDidMount so that the user could see UI before waiting on an AJAX request. Note that it won't get server-side rendered either because the server doesn't call componentDidMount.</p>
+<p>We used to use the open movie database to request ratings against but it went closed. Rather than make your signup, there's a tiny API server for you to run with <code>ratingsAPI.js</code>. Just run <code>node ratingsAPI.js</code> from the commandline and let it run in the background. Now you'll be able to make requests against it. Feel free to add a line to your scripts object in package.json: <code>&quot;api&quot;: &quot;node ratingsAPI.js&quot;</code> so you can just run <code>yarn api</code> to run the server.</p>
+<p>We're requiring in <a href="https://github.com/mzabriskie/axios">axios</a> which is a great little promise-based AJAX client and using that to make requests to the our little API server to find the IMDB ratings. If you go to your pages now you'll notice that the rating is showing up a little after the page renders. As you can see, we did this componentDidMount so that the user could see UI before waiting on an AJAX request. Note that it won't get server-side rendered either because the server doesn't call componentDidMount.</p>
 <p>That's it! That's all you need to need know about AJAX with React as well as the lifecycle methods!</p>
 
   </section>
@@ -101,13 +126,12 @@ componentDidMount () {
 
   <footer class="site-footer clearfix">
     <p class="footer-description">
-      &copy; My Reptar Title
+      &copy; Complete Intro to React
     </p>
     <p class="footer-published">
       joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
     </p>
   </footer>
 
-  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
 </body>
 </html>

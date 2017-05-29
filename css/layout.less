@@ -1,3 +1,5 @@
+@import "variables.less";
+
 body > header,
 body > main,
 body > footer,
@@ -66,4 +68,21 @@ body > header {
   .footer-published {
     float: right;
   }
+}
+
+.post-content td, .post-content th {
+  padding: 0;
+  border: 1px solid black;
+  width: 25%;
+  text-align: center;
+  padding: 5px;
+}
+
+.post-content tr:nth-child(2n) {
+  background-color: #ddd;
+}
+
+.post-content thead {
+  background-color: @color-blueLight;
+  color: #fafafa;
 }

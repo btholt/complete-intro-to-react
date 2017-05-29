@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">Complete Intro to React</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Tooling – Prettier and npm</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Before we can introduce JSX to React, we are going to have to send it through a compilation step. So we are going to take a brief repose from React here to start working on our tooling a bit.</p>
+<h2>Prettier</h2>
+<p><a href="https://github.com/prettier/prettier">Prettier</a> is an amazing tool from the brain of <a href="https://twitter.com/jlongster">James Long</a>. James, like many of us, was sick of having to constantly worried about the style of his code: where to stick indents, how many, when to break lines, etc etc. Coming from languages like Go, Reason, or Elm where all that is just taken care of by the tooling for the language, this quickly wears. James did something about it and made a tool to take care of it: Prettier.</p>
+<p>Prettier is a really fancy pretty printer. It takes the code you write, breaks it down in to an abstract syntax tree (AST) which is just a representation of your code. It then takes that AST, throws away all of your code style you made and prints it back out using a predefined style. While this sounds a little scary, it's actually really cool. Since you no longer have control of the style of your code, you no longer have to think at all about it. Your code is always consistent, as is the code from the rest of your team. No more bikeshedding!! As I like to put it: if your brain is a processor, you get to free up the thread of your brain that worries about code styles and readability: it just happens for you. Don't like semicolons? Don't write them! It puts them in for you. I <em>love</em> Prettier.</p>
+<p>Need to tool around a bit with it before you trust it? <a href="https://prettier.github.io/prettier/">Go here</a>. You can see how it works.</p>
+<p>Let's go integrate this into our project. It's pretty easy (lol.)</p>
+<p>Either install Prettier globally <code>yarn global add prettier</code> (I'm using v0.22 as of writing) or replace when I run <code>prettier</code> with (from the root of your project) <code>./node_modules/.bin/prettier</code>. From there, run <code>prettier script.js</code>. This will output the formatted version of your file. If you want to actually write the file, run <code>prettier --write script.js</code>. Go check script.js and see it has been reformatted a bit. I will say for non-JSX React, prettier makes your code less readable. Luckily Prettier supports JSX! We'll get to that shortly.</p>
+<p>Prettier has a few configurations but it's mostly meant to be a tool everyone uses and doesn't argue/bikeshed about the various code style rules. <a href="https://github.com/prettier/prettier#api">Here they are</a>. I'm going to use a print-width of 120 and single quotes because I like that better but you're welcome to leave it as-is too. Prettier also can understand <a href="https://flow.org/">flow</a> if you switch the parser but we're not going to worry about that. TypeScript support is coming.</p>
+<h2>npm/Yarn scripts</h2>
+<p>So it can be painful to try to remember the various CLI commands to run on your project, especially with Prettier because it doesn't have a config object yet (they're making one.) npm/Yarn scripts to the rescue! You can put CLI commands into it and then run the name of the tag and it'll run that script. Let's go see how that works. Put the following into your package.json.</p>
+<pre><code class="language-json">"scripts": {
+	"format": "prettier --list-different --single-quote --print-width=120 \"js/**/*.{js,jsx}\"",
+},
+</code></pre>
+<p>Now you can run <code>yarn format</code> or <code>npm run format</code> and it will run that command. This means we don't have to remember that mess of a command and just have to remember format. Nice, right? We'll be leaning on this a lot during this course.</p>
+<h2>Editor Integration</h2>
+<p>This is all fun, but it's very manual. Let's go make this run automatically on save. This makes the whole process super seamless. For your editor's instructions, <a href="https://github.com/prettier/prettier#editor-integration">go here</a>. Once you've enabled it and put it run on autosave then we're good to go! Here's the config I used for Sublime:</p>
+<pre><code class="language-json">{
+	<span class="hljs-attr">"prettier_cli_path"</span>: <span class="hljs-string">"/Users/brholt/.nvm/versions/node/v6.9.5/bin/prettier"</span>,
+	<span class="hljs-attr">"node_path"</span>: <span class="hljs-string">"/Users/brholt/.nvm/versions/node/v6.9.5/bin/node"</span>,
+	<span class="hljs-attr">"auto_format_on_save"</span>: <span class="hljs-literal">true</span>
+	<span class="hljs-string">"prettier_options"</span>: {
+		<span class="hljs-attr">"parser"</span>: <span class="hljs-string">"babylon"</span>,
+		<span class="hljs-attr">"singleQuote"</span>: <span class="hljs-literal">true</span>,
+		<span class="hljs-attr">"printWidth"</span>: <span class="hljs-number">120</span>,
+	}
+}
+</code></pre>
+<h2>ESLint</h2>
+<p>On top of Prettier which takes of all the formatting, you may want to enforce some code styles which pertain more to usage: for example you may want to force people never use <code>with</code> which is valid JS but illadvised to use. ESLint comes into play here. It will lint for this problems. There are dozens of present configs for ESLint and you're welcome to use any one of them. The Airbnb config is very popular, as is the standard config (which I teach in previous versions of this class.) We're going to use the Airbnb one since it's likely the most popular one. Let's create an <code>.eslintrc.json</code> file to start linting our project.</p>
+<p>Create this file called <code>.eslintrc.json</code>.</p>
+<pre><code class="language-json">{
+  <span class="hljs-attr">"extends"</span>: [
+    <span class="hljs-string">"airbnb"</span>,
+    <span class="hljs-string">"prettier"</span>,
+    <span class="hljs-string">"prettier/react"</span>
+  ],
+  <span class="hljs-attr">"plugins"</span>: [
+    <span class="hljs-string">"prettier"</span>
+  ],
+  <span class="hljs-attr">"parserOptions"</span>: {
+    <span class="hljs-attr">"ecmaVersion"</span>: <span class="hljs-number">2016</span>,
+    <span class="hljs-attr">"sourceType"</span>: <span class="hljs-string">"module"</span>,
+    <span class="hljs-attr">"ecmaFeatures"</span>: {
+      <span class="hljs-attr">"jsx"</span>: <span class="hljs-literal">true</span>
+    }
+  },
+  <span class="hljs-attr">"env"</span>: {
+    <span class="hljs-attr">"es6"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"browser"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"node"</span>: <span class="hljs-literal">true</span>
+  }
+}
+</code></pre>
+<p>This is a combination of the recommended configs of Airbnb and Prettier. This will lint for both normal JS stuff as well as JSX stuff. Run <code>eslint script.js</code> now and you should see we have a few errors. Run it again with the <code>--fix</code> flag and see it will fix some of it for us! Go fix the rest of your errors and come back. Let's go add this to our npm scripts. If you haven't checked out <a href="https://github.com/airbnb/javascript">Airbnb's style guide</a> it's worth a read.</p>
+<pre><code class="language-json">lint": "eslint **/*.{js,jsx} --quiet"
+</code></pre>
+<p>Worth adding three things here:</p>
+<ul>
+<li>With npm scripts, you can pass additional parameters to the command if you want. Just add a <code>--</code> and then put whatever else you want to tack on after that. For example, if I wanted to get the debug output from ESLint, I could run <code>yarn lint -- --debug</code> which would translate to <code>eslint **/*.js --debug</code>.</li>
+<li>We can use our fix trick this way: <code>yarn lint -- --fix</code>.</li>
+<li>We're going to both JS and JSX.</li>
+</ul>
+<p>You can linting and fixing to your editor too but I'll leave that to you. It can be a bit finnicky to get going. I'll be using <a href="http://sublimelinter.readthedocs.io/en/latest/">SublimeLinter</a> and <a href="https://github.com/roadhump/SublimeLinter-eslint">sublimelinter-contrib-eslint</a> (you need both.)</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; Complete Intro to React
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+</body>
+</html>

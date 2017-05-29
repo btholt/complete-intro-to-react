@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <title>My Reptar Title</title>
-  <meta name="description" content="Your website's description goes here.
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
 ">
   <meta name="keywords" content="" />
 
@@ -14,7 +14,10 @@
 
   <link rel="shortcut icon" href="/favicon.ico">
 
-  <link rel="stylesheet" type="text/css" href="/css/main-9048261e4d.css" />
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
 </head>
 <body class="post-template">
 
@@ -22,7 +25,7 @@
     <div class="vertical">
       <div class="main-header-content">
         <h1 class="page-title">
-          <a href="/">My Reptar Title</a>
+          <a href="/">Complete Intro to React</a>
         </h1>
       </div>
     </div>
@@ -44,9 +47,112 @@
   <section class="post-content">
     <p>So webpack has a nifty ability to do what's called hot module reload (HMR.) If you've ever used LiveReload's CSS injection, this will sound familiar. HMR will take your code, compile it on the fly, and then inject it into your live-running code. Pretty cool tech.</p>
 <p>If you're working a dropdown that requires three different clicks to get there, it's pretty neat to be able to change the code and watch the UI change without having to reload and get the UI back into a state where you can see the effects of your change.</p>
-<p>But we're not going to do it today. For one, HMR does not work with our stateless functional components at all. It also just requires a lot of setup that can be finicky at times. The author himself says <a href="https://medium.com/@dan_abramov/the-death-of-react-hot-loader-765fa791d7c4#.80xafsv2d">the tech is a (great) hack</a>.</p>
-<p>So suffice to say, I want you to be aware of its existence and continuing evolution but I feel like our time is better off investigating other parts of the React ecosystem.</p>
-<p>These problems are soon going to be resolved with <a href="https://github.com/gaearon/react-hot-loader/pull/240">react-hot-loader v3</a>. However, it's still in beta and not totally working and it wouldn't be a great idea to talk about here. Feel free to checkout the newest version and if it's landed then try it out!</p>
+<p>While this is not exclusive to React, the React component architecture lends itself very well to hot module reload. Dan Abramov, creator of Redux, React Drag-and-Drop, and other great stuff also wrote the code for this. He's a magician.</p>
+<p>How does it work? Seems magical. Well, since we're using ES6 modules, it means the dependency graph of our app is static. Think of it as a big tree with branches. If one branch changes, it means we can tear off the branch (the old code) and graft on a new one (the new code that Webpack just compiled) without stopping the rest of the code from running</p>
+<pre><code>    Landing
+   /
+<span class="hljs-keyword">App</span>
+   \
+    <span class="hljs-keyword">Search</span> — ShowCard
+</code></pre>
+<p>That's our app as it stands in terms of dependencies. App imports Search which imports ShowCard. If Landing changes, we can leave App, Search, and ShowCard running as is and just graft on a new Landing. If Search changes, we have to graft on a whole new Search which includes new ShowCards.</p>
+<p>This is accomplished with some black magic from Webpack and Babel. Babel when it transforms your code from JSX to JS and from ES6+ to ES5 will also instrument your modules with the ability to be replaced. We'll then insert a small client into our code that will receive small JSON packages via websockets and insert those into our running code. None of these details are important: mostly it's just for your information. react-hot-loader, Webpack, and Babel largely abstract these away from you.</p>
+<p>Let's start with your .babelrc file. Add this as a top level property:</p>
+<pre><code class="language-json">"plugins": [
+  "react-hot-loader/babel"
+],
+</code></pre>
+<p>This is what instruments the code with the ability to be replaced. Refactor your webpack.config.js to look like this:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);
+<span class="hljs-keyword">const</span> webpack = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack'</span>);
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">context</span>: __dirname,
+  <span class="hljs-attr">entry</span>: [
+    <span class="hljs-string">'react-hot-loader/patch'</span>,
+    <span class="hljs-string">'webpack-dev-server/client?http://localhost:8080'</span>,
+    <span class="hljs-string">'webpack/hot/only-dev-server'</span>,
+    <span class="hljs-string">'./js/ClientApp.jsx'</span>
+  ],
+  <span class="hljs-attr">devtool</span>: <span class="hljs-string">'cheap-eval-source-map'</span>,
+  <span class="hljs-attr">output</span>: {
+    <span class="hljs-attr">path</span>: path.resolve(__dirname, <span class="hljs-string">'public'</span>),
+    <span class="hljs-attr">filename</span>: <span class="hljs-string">'bundle.js'</span>,
+    <span class="hljs-attr">publicPath</span>: <span class="hljs-string">'/public/'</span>
+  },
+  <span class="hljs-attr">devServer</span>: {
+    <span class="hljs-attr">hot</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">publicPath</span>: <span class="hljs-string">'/public/'</span>,
+    <span class="hljs-attr">historyApiFallback</span>: <span class="hljs-literal">true</span>
+  },
+  <span class="hljs-attr">resolve</span>: {
+    <span class="hljs-attr">extensions</span>: [<span class="hljs-string">'.js'</span>, <span class="hljs-string">'.jsx'</span>, <span class="hljs-string">'.json'</span>]
+  },
+  <span class="hljs-attr">stats</span>: {
+    <span class="hljs-attr">colors</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">reasons</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">chunks</span>: <span class="hljs-literal">false</span>
+  },
+  <span class="hljs-attr">plugins</span>: [<span class="hljs-keyword">new</span> webpack.HotModuleReplacementPlugin(), <span class="hljs-keyword">new</span> webpack.NamedModulesPlugin()],
+  <span class="hljs-attr">module</span>: {
+    <span class="hljs-attr">rules</span>: [
+      {
+        <span class="hljs-attr">enforce</span>: <span class="hljs-string">'pre'</span>,
+        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.jsx?$/</span>,
+        <span class="hljs-attr">loader</span>: <span class="hljs-string">'eslint-loader'</span>,
+        <span class="hljs-attr">exclude</span>: <span class="hljs-regexp">/node_modules/</span>
+      },
+      {
+        <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.jsx?$/</span>,
+        <span class="hljs-attr">loader</span>: <span class="hljs-string">'babel-loader'</span>
+      }
+    ]
+  }
+};
+</code></pre>
+<ul>
+<li>We required Webpack. We need to pull some plugins off of it.</li>
+<li>We added some additional files to be packed into app via the entry property. The order here <em>is</em> important.</li>
+<li>We gave the output a publicPath so it can know where the bundle.js file is since that's where it'll pull new bundles.</li>
+<li>We told the dev server to run in hot reload mode.</li>
+<li>We gave Webpack two plugins to work with. These affect the internals of Webpack. The second one is optional but it's helpful because it'll print the name of the files being hot reloaded.</li>
+</ul>
+<p>From here we need to split the App component out of ClientApp. We need to give hot module reload the ability to split the root component away from what actually renders the component to the page. Turns out we would have had to do this anyway for server-side rendering anyway so it's fine for us to tackle this now.</p>
+<p>Create a new file called App.jsx and put this in there:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { BrowserRouter, Route } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;
+<span class="hljs-keyword">import</span> Landing <span class="hljs-keyword">from</span> <span class="hljs-string">'./Landing'</span>;
+<span class="hljs-keyword">import</span> Search <span class="hljs-keyword">from</span> <span class="hljs-string">'./Search'</span>;
+
+<span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
+  &lt;BrowserRouter&gt;
+    &lt;div className="app"&gt;
+      &lt;Route exact path="/" component={Landing} /&gt;
+      &lt;Route path="/search" component={Search} /&gt;
+    &lt;/div&gt;
+  &lt;/BrowserRouter&gt;
+);
+
+export default App;
+</code></pre>
+<p>Then from here, make your ClientApp.jsx look like this:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+<span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">'./App'</span>;
+
+<span class="hljs-keyword">const</span> renderApp = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById('app'));
+};
+renderApp();
+
+if (module.hot) {
+  module.hot.accept('./App', () =&gt; {
+    renderApp();
+  });
+}
+</span></code></pre>
+<p>The first thing I always here is &quot;Am I shipping that module.hot stuff down in prod!?&quot; Yes, you are, and no, it doesn't matter. It's an if statement that gets runs once. You'll be fine. If you're so worried, use something like <a href="https://github.com/Couto/groundskeeper">groundskeeper</a>.</p>
+<p>Okay, so we made renderApp a function so that we can render the App each time App itself changes. The rest of the modules will take care of themselves: this is all you need to hook up to get hot module reload to work! Also, when you build for production, all of the hot module reload code and transformations will be stripped out, meaning you're not making your package any larger (other than the if statement in ClientApp). Go give it a shot! Open your console (so you can see the debug statements) and go change something in your app. You should see the UI change without a full page reload. Pretty cool!</p>
 
   </section>
 
@@ -62,13 +168,12 @@
 
   <footer class="site-footer clearfix">
     <p class="footer-description">
-      &copy; My Reptar Title
+      &copy; Complete Intro to React
     </p>
     <p class="footer-published">
       joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
     </p>
   </footer>
 
-  <script type="text/javascript" src="/js/main-c614ff7b24.js"></script>
 </body>
 </html>

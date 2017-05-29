@@ -20,6 +20,10 @@ const config = {
         values: { template: 'page', permalink: '/:title/' }
       },
       {
+        scope: { path: './_pages' },
+        values: { template: 'page', permalink: '/page/:title/' }
+      },
+      {
         scope: { path: './_posts' },
         values: { template: 'post', permalink: '/:title/' }
       },
@@ -28,7 +32,6 @@ const config = {
         values: { template: 'draft' }
       }
     ]
-    // filters: { metadata: { draft: true }, future_date: { key: "date" } }
   },
   collections: {
     post: {
@@ -46,15 +49,14 @@ const config = {
       permalink: { index: '/tag/:metadata/', page: '/tag/:metadata/:page/' }
     }
   },
-  // theme: 'citr',
-  cleanDestination: false,
+  cleanDestination: true,
   slug: { lower: true },
   markdown: {
     extensions: ['markdown', 'mkdown', 'mkdn', 'mkd', 'md'],
-    options: { preset: 'commonmark', highlight: true }
+    options: { preset: 'default', highlight: true }
   },
   server: { port: 8010, host: '127.0.0.1', baseurl: '' },
-  incremental: true,
+  incremental: false,
   newFilePermalink: '/_posts/:date|YYYY-:date|MM-:date|D-:title.md'
 };
 
