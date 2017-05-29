@@ -1,27 +1,37 @@
 // @flow
 
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import type { Match } from 'react-router-dom';
-import Landing from './Landing';
-import Search from './Search';
-import Details from './Details';
+import AsyncRoute from './AsyncRoute';
+import store from './store';
 import preload from '../data.json';
 
 const App = () => (
-  <BrowserRouter>
+  <Provider store={store}>
     <div className="app">
-      <Route exact path="/" component={Landing} />
-      <Route path="/search" component={props => <Search shows={preload.shows} {...props} />} />
+      <Route exact path="/" component={props => <AsyncRoute props={props} loadingPromise={import('./Landing')} />} />
+      <Route
+        path="/search"
+        component={props => (
+          <AsyncRoute loadingPromise={import('./Search')} props={Object.assign({ shows: preload.shows }, props)} />
+        )}
+      />
       <Route
         path="/details/:id"
         component={(props: { match: Match }) => {
           const selectedShow = preload.shows.find((show: Show) => props.match.params.id === show.imdbID);
-          return <Details show={selectedShow} {...props} />;
+          return (
+            <AsyncRoute
+              loadingPromise={import('./Details')}
+              props={Object.assign({ show: selectedShow, match: {} }, props)}
+            />
+          );
         }}
       />
     </div>
-  </BrowserRouter>
+  </Provider>
 );
 
 export default App;

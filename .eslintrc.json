@@ -24,6 +24,6 @@
     "node": true
   },
   "globals": {
-    "Show": true
+    "DEBUG": false
   }
 }

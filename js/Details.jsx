@@ -1,29 +1,27 @@
 // @flow
 
 import React from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import Header from './Header';
 import Spinner from './Spinner';
+import { getAPIDetails } from './actionCreators';
 
 class Details extends React.Component {
-  state = {
-    omdbData: { imdbRating: '' }
-  };
   componentDidMount() {
-    axios
-      .get(`http://www.omdbapi.com/?i=${this.props.show.imdbID}`)
-      .then((response: { data: { imdbRating: string } }) => {
-        this.setState({ omdbData: response.data });
-      });
+    if (!this.props.rating) {
+      this.props.getAPIData();
+    }
   }
   props: {
+    rating: string,
+    getAPIData: Function,
     show: Show
   };
   render() {
     const { title, description, year, poster, trailer } = this.props.show;
     let rating;
-    if (this.state.omdbData.imdbRating) {
-      rating = <h3>{this.state.omdbData.imdbRating}</h3>;
+    if (this.props.rating) {
+      rating = <h3>{this.props.rating}</h3>;
     } else {
       rating = <Spinner />;
     }
@@ -39,6 +37,7 @@ class Details extends React.Component {
         </section>
         <div>
           <iframe
+            title="YouTube Video Frame"
             src={`https://www.youtube-nocookie.com/embed/${trailer}?rel=0&amp;controls=0&amp;showinfo=0`}
             frameBorder="0"
             allowFullScreen
@@ -49,4 +48,17 @@ class Details extends React.Component {
   }
 }
 
-export default Details;
+const mapStateToProps = (state, ownProps) => {
+  const apiData = state.apiData[ownProps.show.imdbID] ? state.apiData[ownProps.show.imdbID] : {};
+  return {
+    rating: apiData.rating
+  };
+};
+
+const mapDispatchToProps = (dispatch: Function, ownProps) => ({
+  getAPIData() {
+    dispatch(getAPIDetails(ownProps.show.imdbID));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Details);
