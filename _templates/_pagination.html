@@ -1,0 +1,13 @@
+{% if pagination %}
+<nav class="pagination" role="navigation">
+  {% if pagination.prev %}
+    <a class="newer-posts" href="{{pagination.prev_link}}">&larr; Newer Posts</a>
+  {% endif %}
+
+  <span class="page-number">{{pagination.page}} of {{pagination.total_pages}}</span>
+
+  {% if pagination.next %}
+    <a class="older-posts" href="{{pagination.next_link}}">Older Posts &rarr;</a>
+  {% endif %}
+</nav>
+{% endif %}

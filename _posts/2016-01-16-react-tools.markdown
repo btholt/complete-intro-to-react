@@ -15,7 +15,7 @@ Find the Dev Tools in Firefox by opening the dev tools and the last tab (along s
 Feel free to poke around a bit here to familiarize yourself with what the React Dev Tools can do. Here are a couple of tricks for you:
 
 - If you right-click -> Inspect Element on something and then click the React tab, it will take you straight to that element in the virtual DOM.
-- Select something in the virtual DOM in the React tab. Now go to the Console tab and type <code>$r</code>. It should be a reference to the element you have selected in the virtual DOM and you can manipulate it.
-- As a side note, you can do the above trick with the normal DOM explorer with <code>$0</code>, <code>$1</code>, <code>$2</code>, <code>$3</code>, and <code>$4</code> instead where 0 is the last one you selected, 1 is the penultimate, etc. This is true in both Chrome and Firefox
+- Select something in the virtual DOM in the React tab. Now go to the Console tab and type `$r`. It should be a reference to the element you have selected in the virtual DOM and you can manipulate it.
+- As a side note, you can do the above trick with the normal DOM explorer with `$0`, `$1`, `$2`, `$3`, and `$4` instead where 0 is the last one you selected, 1 is the penultimate, etc. This is true in both Chrome and Firefox
 - iframes and Chrome/Firefox extensions don't work with React Dev Tools as of writing.
 - react-router v4 has _a lot_ of nesting.

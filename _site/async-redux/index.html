@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">Complete Intro to React</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Async Redux</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Redux by default has no mechanism for handling asynchronous actions. This means you either need handle everything async in your React (gross) or we have to augment Redux to handle async code. The former is really a non-starter: the point of Redux is centralize state manipulation and not having the ability to do async is just silly. We're building interfaces and interfaces are inherently asynchronous.</p>
+<p>Okay, so we've decided to augment Redux. How do we do that? Well, luckily, Redux has the ability to have middlewares, just like your server can. What we can do is add a middleware that can handle more than just action objects. There are a myriad of popular ones but we're going with the most popular, the simplest, and the easiest: redux-thunk. I'll venture to say that if you build any Redux app, rarely are you not going to include redux-thunk, even if you include one of the other async Redux middlewares. It's frequently useful, even beyond it's async applications.</p>
+<p>So let's unpack the word thunk: it's a weird computer science term that seems more difficult than it actually is. Imagine you need to write a line of code that calculates the conversion from USD to EUR. You could write it:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> dollars = <span class="hljs-number">10</span>
+<span class="hljs-keyword">const</span> conversionRate = <span class="hljs-number">1.1</span>
+<span class="hljs-keyword">const</span> euros = dollars * conversionRate
+</code></pre>
+<p>This code is a bit weak because we've statically defined the conversionRate. It would be better if we didn't have to define this value statically but instead could be determined whenever you accessed conversionRate (since currency exchange rates flucuate constantly.) What if we did:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">const</span> dollars = <span class="hljs-number">10</span>
+<span class="hljs-keyword">const</span> conversionRate = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{ <span class="hljs-keyword">return</span> <span class="hljs-number">1.1</span> }
+<span class="hljs-keyword">const</span> euros = dollars * conversionRate()
+</code></pre>
+<p>Now we've wrapped conversionRate in a function. Even though the answer is unchanged, conversion is now a black box that we can swap out that 1.1 whenever. The value of the return of conversionRate isn't set until that function is actually called. conversionRate is now a <strong>thunk</strong>. It's a function wrapping a value.</p>
+<p>The above is a silly example, but it with Redux this becomes a powerfuly feature. Instead of determining what action object you're going to dispatch at write time, you can determine what you're going dispatch conditionally or asynchronously. redux-thunk even let's you dispatch multiple actions! This can be useful if you have one action that leads to multiple, cascading changes. Super useful. So let's go change the Details page to use redux-thunk instead of local state. First, let's go include the redux-thunk middleware. Go store.js:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+<span class="hljs-keyword">import</span> { createStore, compose, applyMiddleware } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux'</span>; <span class="hljs-comment">// add applyMiddleware</span>
+<span class="hljs-keyword">import</span> thunk <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-thunk'</span>; <span class="hljs-comment">// import</span>
+<span class="hljs-keyword">import</span> rootReducer <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers'</span>;
+
+<span class="hljs-keyword">const</span> store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(thunk), <span class="hljs-comment">// middleware</span>
+    <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span> === <span class="hljs-string">'object'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span>.devToolsExtension !== <span class="hljs-string">'undefined'</span> ? <span class="hljs-built_in">window</span>.devToolsExtension() : <span class="hljs-function"><span class="hljs-params">f</span> =&gt;</span> f
+  )
+);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store;
+</code></pre>
+<p>This is how you add more middlewares! Okay, so let's go add the <em>sync</em> action to make it so we can store omdbData in our data store. This is a good distinction to make: you still will only modify your state via reducers, and reducers are only kicked off via dispatching action <em>synchronously</em> to your root reducer. Always. So what we're doing is kicking off an async action which when it finishes will dispatch a sync action to the root reducer. We're just adding another step. So let's do our sync action. Go to actions.js:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> ADD_API_DATA = <span class="hljs-string">'ADD_API_DATA'</span>;
+</code></pre>
+<p>Go to types.js</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// new action type</span>
+declare type ActionType = <span class="hljs-string">'SET_SEARCH_TERM'</span> | <span class="hljs-string">'ADD_API_DATA'</span>;
+
+<span class="hljs-comment">// new action</span>
+<span class="hljs-keyword">export</span> type Action = ActionT&lt;<span class="hljs-string">'SET_SEARCH_TERM'</span>, string&gt; | ActionT&lt;<span class="hljs-string">'ADD_API_DATA'</span>, Show&gt;;
+</code></pre>
+<p>We're expanding how many different types of actions we can have.</p>
+<p>Now go to reducers.js:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// at top</span>
+<span class="hljs-keyword">import</span> { SET_SEARCH_TERM, ADD_API_DATA } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>;
+
+<span class="hljs-keyword">const</span> DEFAULT_STATE = {
+  <span class="hljs-attr">searchTerm</span>: <span class="hljs-string">''</span>,
+  <span class="hljs-attr">apiData</span>: {}
+};
+
+<span class="hljs-comment">// add new reducer</span>
+<span class="hljs-keyword">const</span> apiData = <span class="hljs-function">(<span class="hljs-params">state = {}, action: Action</span>) =&gt;</span> {
+  <span class="hljs-keyword">if</span> (action.type === ADD_API_DATA) {
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.assign({}, state, { [action.payload.imdbID]: action.payload });
+  }
+  <span class="hljs-keyword">return</span> state;
+};
+
+<span class="hljs-comment">// add new reducer</span>
+<span class="hljs-keyword">const</span> rootReducer = combineReducers({ searchTerm, apiData });
+</code></pre>
+<p>Doing some deep merging, but really nothing new here.</p>
+<p>You can can totally do this with the other style of reducers we were doing but as you can see you get really clean code this way. We should also talk about type refinement at this point and <em>why</em> we went with the combineReducers style of writing Redux. There, where we check to see if action.type is ADD_API_DATA is called a type refinement in the eyes of Flow. As soon as we enter the body of that if statement, we are <strong>positive</strong> that the payload of that action is a Show and we're free to access all the data that a Show should have. We're positive because that's what our types dictate that to us. If we try to access <code>action.payload.imdbID</code> outside of that if statement, you'll get a Flow error because we are not yet certain of its type. It's a bit burdensome to get to this point but that assurance of the types is going to save you a bunch of run time errors.</p>
+<p>Go to actionCreators.js:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+
+<span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">'axios'</span>;
+<span class="hljs-keyword">import</span> { SET_SEARCH_TERM, ADD_API_DATA } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actions'</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setSearchTerm</span>(<span class="hljs-params">searchTerm: string</span>) </span>{
+  <span class="hljs-keyword">return</span> { <span class="hljs-attr">type</span>: SET_SEARCH_TERM, <span class="hljs-attr">payload</span>: searchTerm };
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addAPIData</span>(<span class="hljs-params">apiData: Show</span>) </span>{
+  <span class="hljs-keyword">return</span> { <span class="hljs-attr">type</span>: ADD_API_DATA, <span class="hljs-attr">payload</span>: apiData };
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getAPIDetails</span>(<span class="hljs-params">imdbID: string</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function">(<span class="hljs-params">dispatch: <span class="hljs-built_in">Function</span></span>) =&gt;</span> {
+    axios
+      .get(<span class="hljs-string">`http://localhost:3000/<span class="hljs-subst">${imdbID}</span>`</span>)
+      .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> {
+        dispatch(addAPIData(response.data));
+      })
+      .catch(<span class="hljs-function"><span class="hljs-params">error</span> =&gt;</span> {
+        <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'axios error'</span>, error); <span class="hljs-comment">// eslint-disable-line no-console</span>
+      });
+  };
+}
+</code></pre>
+<p>First we add an action creator for our sync action, addAPIData. This is personal preference but I always make action creators that dispatch object a separate function. I could have done this directly inside of getOMDBDetails (and many people do) but I like keeping it separate for code organization and reuseability.</p>
+<p>So let's unpack getAPIDetails. First this is to notice that it's a function that returns a function, a thunk. Redux will call this returned function (you call the outer one and pass that to dipatch) and pass into this returned function a dispatch function and a getState function. We don't need getState, but if your actionCreator needs to refer to the state of the Redux store, you'd call this function.</p>
+<p>Inside of the returned function, we make our AJAX call and then dispatch an action via the addAPIData action creator with the new data. That's it! This is a pretty simple (and common) application of thunk, but you can get much more robust with it. Since you have a dispatch function, you're free to dispatch multiple actions, or not dispatch any at all, or conditionally dispatch one/many/none. Okay, so now head to Details.jsx to integrate it.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// new imports</span>
+<span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-redux'</span>;
+<span class="hljs-keyword">import</span> { getOMDBDetails } <span class="hljs-keyword">from</span> <span class="hljs-string">'./actionCreators'</span>;
+
+<span class="hljs-comment">// delete axios import</span>
+
+<span class="hljs-comment">// more propTypes (outside of show)</span>
+props: {
+  <span class="hljs-attr">rating</span>: string,
+  <span class="hljs-attr">getAPIData</span>: <span class="hljs-built_in">Function</span>,
+  <span class="hljs-attr">show</span>: Show
+};
+
+<span class="hljs-comment">// replace componentDidMount</span>
+componentDidMount() {
+  <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">this</span>.props.rating) {
+    <span class="hljs-keyword">this</span>.props.getAPIData();
+  }
+}
+
+<span class="hljs-comment">// change state to props in render</span>
+<span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.props.rating) {
+      rating = <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{this.props.rating}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span></span>
+
+<span class="hljs-comment">// replace export at bottom</span>
+<span class="hljs-keyword">const</span> mapStateToProps = <span class="hljs-function">(<span class="hljs-params">state, ownProps</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> apiData = state.apiData[ownProps.show.imdbID] ? state.apiData[ownProps.show.imdbID] : {};
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">rating</span>: apiData.rating
+  };
+};
+
+<span class="hljs-keyword">const</span> mapDispatchToProps = <span class="hljs-function">(<span class="hljs-params">dispatch: <span class="hljs-built_in">Function</span>, ownProps</span>) =&gt;</span> ({
+  getAPIData() {
+    dispatch(getAPIDetails(ownProps.show.imdbID));
+  }
+});
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> connect(mapStateToProps, mapDispatchToProps)(Details);
+</code></pre>
+<p>Okay, so now we have an interesting side effect of moving from React to Redux: when we were in React whenever we navigated away from a Details page, we lost the data we requested from the API and we'd have to re-request it anew every time we navigated to the page. Now since we've centralized to Redux, this data will survive page transitions. This means we need to be smart and only request data when we actually don't have it, hence the conditional in the componentDidMount method. If we already have data, no need to dispatch the action!</p>
+<p>In the mapStateToProps, we're including the ownProps parameter. This is the props being passed down from its parent component which we need to select the correct show to pass in as props. It also has the benefit of making connect subscribe to props change so that mapStateToProps will change as the props change. If we suddenly switched the imdbID being passed in, this would still work just fine.</p>
+<p>That's it! That's async Redux, or at least the simplest form of it. Like I alluded to earlier, there are several other ways of accomplishing async Redux. The other popular options include redux-promise where you dispatch promises, redux-observable where you dispatch observables, and redux-sagas where dispatch generators.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; Complete Intro to React
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+</body>
+</html>

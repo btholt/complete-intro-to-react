@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">Complete Intro to React</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Universal Rendering</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Universal rendering, or the artist formerly known as isomorphic rendering. The idea here is that you server-side prerender your code so that when it gets down to the client, your browser can <strong>instantly</strong> show the markup while your app bootstraps in the background. It makes everything feel very instantaneous.</p>
+<p>With just vanilla React, universal rendering is a cinch. Check out the <a href="https://github.com/btholt/es6-react-pres/blob/master/completed/app.js">whole node file from another one of my workshops</a>. It does server-side rendering in just a few lines.</p>
+<p>It's not quite so simple now that we have routing involved. We don't want to have to duplicate all of our routing info that we wrote for react-router. Rather, if possible, we just want to reuse the routes we already built for react-router. So let's do that (with some refactoring.)</p>
+<p>First thing you typically need to do when getting ready to implements server-side rendering (SSR) is split browser concerns and app concerns. The key is anything in the <em>initial render path</em> cannot reference anything in the DOM or window. We can't make AJAX calls, reference the window, or anything else browser specific. All the browser specific code has to live in ClientApp.jsx (which won't get included in Node,) componentDidMount (which doesn't get called,) or behind some sort of <code>if (window)</code> conditional.</p>
+<p>We're pretty close to good as is. The only thing we need to do is move BrowserRouter from App to ClientApp. In Node we'll use a ServerRouter so we need the Browser one to only to get included client-side. So remove BrowserRouter from App altogether and wrap the <code>&lt;App /&gt;</code> in the render call in ClientApp with <code>&lt;BrowserRouter&gt;&lt;/BrowserRouter&gt;</code> (after importing it.)</p>
+<p>That should be enough. ClientApp should look like:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+<span class="hljs-keyword">import</span> { BrowserRouter } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;
+<span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">'./App'</span>;
+
+<span class="hljs-keyword">const</span> renderApp = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  render(
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">BrowserRouter</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">BrowserRouter</span>&gt;</span></span>,
+    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'app'</span>)
+  );
+};
+renderApp();
+
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">module</span>.hot) {
+  <span class="hljs-built_in">module</span>.hot.accept(<span class="hljs-string">'./App'</span>, () =&gt; {
+    renderApp();
+  });
+}
+</code></pre>
+<p>You may still have the Perf stuff in there. At this point you should take it out.</p>
+<p>Now all browser concerns lie in ClientApp and the general app has been split out and is ready to be server renderered. We'll use a special ServerRouter for server rendering so that's why we put the BrowserRouter inside of ClientApp.</p>
+<p>Okay, now we need to go make it so that index.html can be used as a template. There <code>Number.POSITIVE_INFINITY</code> ways of doing this, I'm just going to show you one (hopefully easy) way of doing it: with Lodash. First go add the <code>&lt;%= body %&gt;</code> template tag to index.html inside of <code>#app</code> like so:</p>
+<pre><code class="language-javascript">&lt;!DOCTYPE html&gt;
+<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>svideo<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"/public/style.css"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"app"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">%=</span> <span class="hljs-attr">body</span> %&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">&amp;NegativeMediumSpace;script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"/public/bundle.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
+</span></code></pre>
+<p>This is <a href="https://lodash.com/docs#template">Lodash-specific templating</a>. We'll use it as we server-side render.</p>
+<p>Go to .babelrc and add env, for server. For now it'll be the same as test (since we need Babel to make the modules to CommonJS here too) but we don't want to tie those together.</p>
+<pre><code class="language-json">{
+  <span class="hljs-attr">"presets"</span>: [
+    <span class="hljs-string">"react"</span>,
+    [<span class="hljs-string">"env"</span>, {
+      <span class="hljs-attr">"targets"</span>: {
+        <span class="hljs-attr">"browsers"</span>: <span class="hljs-string">"last 2 versions"</span>
+      },
+      <span class="hljs-attr">"loose"</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">"modules"</span>: <span class="hljs-literal">false</span>
+    }]
+  ],
+  <span class="hljs-attr">"plugins"</span>: [
+    <span class="hljs-string">"react-hot-loader/babel"</span>,
+    <span class="hljs-string">"babel-plugin-transform-decorators-legacy"</span>,
+    <span class="hljs-string">"babel-plugin-transform-class-properties"</span>
+  ],
+  <span class="hljs-attr">"env"</span>: {
+    <span class="hljs-attr">"server"</span>: {
+      <span class="hljs-attr">"plugins"</span>: [<span class="hljs-string">"transform-es2015-modules-commonjs"</span>]
+    },
+    <span class="hljs-attr">"test"</span>: {
+      <span class="hljs-attr">"plugins"</span>: [<span class="hljs-string">"transform-es2015-modules-commonjs"</span>]
+    }
+  }
+}
+</code></pre>
+<p>Okay, let's create a server now! Create a server.js <em>outside</em> the js folder and put it just in the root directory of your project. Put:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">/* eslint no-console:0 */</span>
+<span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-register'</span>);
+
+<span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);
+<span class="hljs-keyword">const</span> React = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react'</span>);
+<span class="hljs-keyword">const</span> ReactDOMServer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react-dom/server'</span>);
+<span class="hljs-keyword">const</span> ReactRouter = <span class="hljs-built_in">require</span>(<span class="hljs-string">'react-router-dom'</span>);
+<span class="hljs-keyword">const</span> _ = <span class="hljs-built_in">require</span>(<span class="hljs-string">'lodash'</span>);
+<span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);
+<span class="hljs-keyword">const</span> App = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./js/App'</span>).default;
+
+<span class="hljs-keyword">const</span> StaticRouter = ReactRouter.StaticRouter;
+<span class="hljs-keyword">const</span> port = <span class="hljs-number">8080</span>;
+<span class="hljs-keyword">const</span> baseTemplate = fs.readFileSync(<span class="hljs-string">'./index.html'</span>);
+<span class="hljs-keyword">const</span> template = _.template(baseTemplate);
+
+<span class="hljs-keyword">const</span> server = express();
+
+server.use(<span class="hljs-string">'/public'</span>, express.static(<span class="hljs-string">'./public'</span>));
+
+server.use(<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> context = {};
+  <span class="hljs-keyword">const</span> body = ReactDOMServer.renderToString(
+    React.createElement(StaticRouter, { <span class="hljs-attr">location</span>: req.url, context }, React.createElement(App))
+  );
+
+  <span class="hljs-keyword">if</span> (context.url) {
+    res.redirect(context.url);
+  }
+
+  res.write(template({ body }));
+  res.end();
+});
+
+<span class="hljs-built_in">console</span>.log(<span class="hljs-string">`listening on <span class="hljs-subst">${port}</span>`</span>);
+server.listen(port);
+</code></pre>
+<p>We're switching back to CommonJS here to work with Node; Node doesn't natively understand ES6 modules so we need to use CommonJS. We require in a bunch of stuff. We're using Lodash templates but that's a detail; I just did it since it's an easy way to template. There's ten billion other ways to do it. We do some static serving for our CSS and bundled JS. And then we do the magic of server side rendering.</p>
+<p>The context object we're feeding into the StaticRouter is to handle the 404 and redirect cases.</p>
+<p>babel-register at the top lets us require modules that need transpilation.</p>
+<p>Okay. Let's run the app. Run in your CLI <code>npm run build</code> (to build your bundle) then run <code>NODE_ENV=server node server.js</code>. Make sure you re-run build because the webpack-dev-server doesn't necessarily re-write out the bundle.js. Okay, so now try going to localhost:5050. While you won't necessarily notice it loading quicker since you were developing locally, check out view source. You should see it ships with a bunch of markup which means your page will load <em>much</em> quicker on a slower connection since markup will start rendering before the JS is done downloading.</p>
+<p>Congrats! You've done server-side rendering! Now, we messed up hot module reload. It'd be great if we didn't have to choose between SSR and HMR. And we don't! Let's go include that too. First go to your webpack config and let's change just one thing:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// replace the entry:</span>
+entry: [<span class="hljs-string">'webpack-hot-middleware/client?path=/__webpack_hmr&amp;timeout=20000'</span>, <span class="hljs-string">'./js/ClientApp.jsx'</span>],
+</code></pre>
+<p>We need webpack to look for the webpack middleware instead of the dev server. After doing this, the dev server will not work and you can only use the server version. So let's go make the server work as well.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// more includes</span>
+<span class="hljs-keyword">const</span> webpackDevMiddleware = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack-dev-middleware'</span>);
+<span class="hljs-keyword">const</span> webpackHotMiddleware = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack-hot-middleware'</span>);
+<span class="hljs-keyword">const</span> webpack = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack'</span>);
+<span class="hljs-keyword">const</span> config = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./webpack.config'</span>);
+
+
+<span class="hljs-comment">// after the creation of server, before server.use('public' …)</span>
+<span class="hljs-keyword">const</span> compiler = webpack(config);
+server.use(
+  webpackDevMiddleware(compiler, {
+    <span class="hljs-attr">publicPath</span>: config.output.publicPath
+  })
+);
+server.use(webpackHotMiddleware(compiler));
+</code></pre>
+<p>Now you should be able to run <code>NODE_ENV=server node server.js</code> (or however you set environment variables in your shell, this works for bash) and get SSR and HMR! Let's go modify our dev command in package.json to use our server instead of webpack-dev-server.</p>
+<pre><code class="language-json">"dev": "NODE_ENV=server nodemon server.js",
+</code></pre>
+<p><a href="https://github.com/remy/nodemon">Nodemon</a> is a dev helper tool that will automatically restart the server that we make changes to server.js. Shouldn't need it now but it's useful once you want to start changing server.js. So now try <code>yarn dev</code> and see if it works (make sure your webpack-dev-server is not running.) You should see everything working as expected.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; Complete Intro to React
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+</body>
+</html>

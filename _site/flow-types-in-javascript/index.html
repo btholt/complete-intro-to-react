@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">Complete Intro to React</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Flow: Types in JavaScript</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>Welcome to the wild and mystical world of types in JavaScript. Types seem intimidating to many people but with a few basic concepts under our belt we can take advantage of 80% of the benefits. In other words, most of the beneftis of a type checker come from doing the most basic things. You can next-level crazy with types (see <a href="https://www.haskell.org/">Haskell</a> and <a href="https://www.idris-lang.org/">Idris</a>) but here we're just, you know, going with the flow.</p>
+<p>So what is a type? JavaScript has a few basic types that it uses: Number, String, Object, Array, Function, and a few others. Because an item is a String, there's certain things you know about it: you can always call <code>substr</code> on a String and it won't cause an error. However, if you try to call <code>substr</code> on a Number, you're going to get an error. At the most basic level, that's what a type checker like Flow is going to get for you. It's going to prevent those sorts of errors by informing you that you have a type mismatch.</p>
+<p>What's magical about Flow is that most of this type checking is <em>free</em>. You don't have to do anything to get it. You don't have to declare the type! It just knows what type is should by how you initialize it. If I say <code>const x = 'string here'</code> it knows that x is a string; you don't need to tell it that. Only in certain situations do you need to inform Flow of the types.</p>
+<p>So, let's get Flow into our code. First thing to do is run <code>yarn run flow -- init</code>. You can also install Flow globally and do that, but this is nice because it'll run flow from your dependencies. This will create a <code>.flowconfig</code> file for you which is often enough; often you don't need to customize that config at all. In my case today, styled-components is throwing errors that isn't useful so I'm going to add <code>&lt;PROJECT_ROOT&gt;/node_modules/styled-components/*</code> under <code>[ignore]</code>. Unlike ESLint, you do typically want to have Flow run on your dependencies to get those typings. However sometimes libraries ship broken types so you can just ignore them (like I did with styled-components.)</p>
+<p>Luckily for us, there's <a href="https://github.com/flowtype/flow-typed/tree/master/definitions/npm">flow-typed</a>. flow-typed is a repo of pre-typed common libraries for you and styled-components has an entry in there. Just <code>yarn global add flow-typed</code> and then run <code>flow-typed install styled-components@1.4.6</code> (or whatever version you have.) This will create a flow-typed directory that Flow already knows how to read from. In fact, check out the various type available to you. You should be able to grab types for enzyme, jest, react-router and react-router-dom too. Flow already has typings for React and react-dom.</p>
+<p>Now you should be able to do <code>yarn run flow</code>. This likely isn't going to give you any errors back because we haven't opted-in any of our files to be type checked. Let's opt in Search.jsx. Add the <a href="https://en.wikipedia.org/wiki/Directive_(programming)">pragma</a> <code>// @flow</code> to the top of Search.jsx. Now run <code>yarn run flow</code> again. You should see an error that <code>handleSearchTermChange</code> is not annotated. Since Flow doesn't know how <code>handleSearchTermChange</code> is going to be invoked and with what parameters, it requires you to tell it beforehand. We do this by doing a type annotation.</p>
+<p>Since we're including the Babel preset for React, we actually already are getting the Flow plugin. If we hadn't included <code>babel-preset-react</code> We'd have to go include the Flow plugin to do annotations. But it's there already.</p>
+<p>So change in Search.jsx:</p>
+<pre><code class="language-javascript">handleSearchTermChange = <span class="hljs-function">(<span class="hljs-params">event: SyntheticKeyboardEvent &amp;  { target: HTMLInputElement }</span>) =&gt;</span> {
+  <span class="hljs-keyword">this</span>.setState({ <span class="hljs-attr">searchTerm</span>: event.target.value });
+}
+</code></pre>
+<p>What we've done here is add a type for the incoming parameter: a synthethic (React) keyboard event. This type is already built into Flow so we don't have to do anything more with it. Specifically we're interested win the <code>target</code> portion of it, so we identify that as well (target can technically be things other than an HTML input element.) By doing this we're ensuring we'll be ensuring this method is used properly. Run <code>yarn run flow</code> again and you should see <code>No errors!</code>. Congrats!</p>
+<p>We've also made it so <code>handleSearchTerm</code> <em>must</em> be called with a SyntheticKeyboardEvent item. If you try to invoke it without that being passed in, you'll fail when you run Flow. You can use <a href="https://flow.org/en/docs/types/maybe/">maybe types</a> to get around this.</p>
+<p>What's cool is that despite not adding a lot, we actually opted in a lot of behind-the-scenes checking for free. For example, Flow is smart enough to know that <code>searchTerm</code> is a string based on the initial <code>state</code> we provide for the class. Go ahead and try and setState for searchTerm to be a number. Flow will now fail since it was expecting a string there. If you need to accommodate both numbers and strings, you can use what's called a <a href="https://flow.org/en/docs/types/unions/">union type</a>.</p>
+<p>It also bears talking about [any types][any] as well. Any types are both horrible and wonderful. Bascially, anything you make an any type is opted out of type checking. This can be great if you're rapid prototyping something and you're not sure what the final API is going to look like and you don't want to be fiddling with types (however, I will say that fiddling with the types can yield great insights into what you're actually trying to do!) They can also be useful for migrating large codebases to Flow: make big things an any type until you can get around to typing that particular object. Anything that you import from npm that you don't have typings for will by default be an any type. Also note there are <a href="https://flow.org/en/docs/types/mixed/">mixed types</a> that are useful if you're not sure what sort of thing is being passed in. Use this when possible instead of an any type.</p>
+<p>At this point it's useful to see if your editor has integration with Flow. Sublime's is lackluster but you can at least get it show you where you have Flow errors in real time (using the same SublimeLinter we used for ESLint.) If you're going to double-down on Flow, you may investigate <a href="https://nuclide.io/docs/languages/flow/">Nuclide</a>. It's a package for [Atom][atom] that integrates with all of Facebook's tooling like React, React Native, Hack, and Flow. For now I'll be using just the Sublime tools.</p>
+<p>Let's go opt-in ShowCard.jsx too! Add the <code>// @flow</code> pragma to the top. Here we've added propTypes from the prop-types library and with Flow those no longer serve a purpose: these types are known at compile time and thus don't need to be checked <em>again</em> at run time. Thus let's modify ShowCard like so:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// delete prop-types import</span>
+
+<span class="hljs-comment">// replace ShowCard</span>
+<span class="hljs-keyword">const</span> ShowCard = (
+  props: {
+    <span class="hljs-attr">poster</span>: string,
+    <span class="hljs-attr">title</span>: string,
+    <span class="hljs-attr">year</span>: string,
+    <span class="hljs-attr">description</span>: string
+  }
+) =&gt; (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Wrapper</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Image</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">{</span>`${<span class="hljs-attr">props.title</span>} <span class="hljs-attr">Show</span> <span class="hljs-attr">Poster</span>`} <span class="hljs-attr">src</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">public</span>/<span class="hljs-attr">img</span>/<span class="hljs-attr">posters</span>/${<span class="hljs-attr">props.poster</span>}`} /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{props.title}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>({props.year})<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{props.description}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Wrapper</span>&gt;</span>
+);
+</span></code></pre>
+<p>This is how you type functional components. Pretty cool, right? Now if you run Flow again you shouldn't see any issues. On a tangent, imagine showing that code to yourself pre-ES6. Doesn't even look like (old) JavaScript! But's powerful, expressive, and readable (in my opinion.)</p>
+<p>You should be able to <code>// @flow</code> to the top of Landing and App and make no changes.</p>
+<p>Add <code>// @flow</code> to the top of ClientApp.jsx. You'll start getting errors about module.hot which is a global variable given to you by Webpack. Right now (as of writing) flow-typed doesn't have types for Webpack's API but this can be a useful exercise in showing you how to define your own types. In your flow-typed folder, add a file called types.js (not in the npm directory.) Add the following:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+
+declare <span class="hljs-keyword">var</span> <span class="hljs-built_in">module</span>: {
+  <span class="hljs-attr">hot</span>: {
+    accept(path: string, <span class="hljs-attr">callback</span>: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">void</span>): <span class="hljs-keyword">void</span>
+  }
+};
+</code></pre>
+<p>Here we've declared a global variable called module which is an object that has a method called accept. accept takes two parameters: a string called path and a function called callback which returns undefined. accept itself returns undefined. There are several things you can put into these type definition files but I'll let you explore that on your own time!</p>
+<p>Now our whole project is typed! We'll continue using Flow for the rest of this project but by no means are types required for React or any sort of JavaScript. It is extremely useful to have; you'll see here as you write code it's very useful to have the instant feedback that something is wrong with your code; once you start getting that it's hard to go back. But yeah, again, this is just one tool you could use to write React. It's not required.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; Complete Intro to React
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+</body>
+</html>

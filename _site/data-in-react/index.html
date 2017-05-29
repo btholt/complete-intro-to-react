@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">Complete Intro to React</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Data in React</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So now we want to add a third page: a page where we can watch the trailer. This is going to be an application of what we know already.</p>
+<p>Create a new file in js/ called Details.jsx. In Details put:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+
+<span class="hljs-keyword">const</span> Details = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"details"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>lolhi<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Details;
+</code></pre>
+<p>In App.jsx, put your new route:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// require your new route</span>
+<span class="hljs-keyword">import</span> Details <span class="hljs-keyword">from</span> <span class="hljs-string">'./Details'</span>
+
+<span class="hljs-comment">// add as last route in the nested routes</span>
+&lt;Match pattern=<span class="hljs-string">'/details/:id'</span> component={Details} /&gt;
+</code></pre>
+<p>Here we've added a URL parameter using the colon. Now as a prop to Details you'll get whatever :id was. So now try to manually change the anchor on your url to be <code>http://localhost:8080/#/details/1</code>. You should see your new component here.</p>
+<p>If you see a blank page and a 404 error in your console, chances are you need to add a leading slash to your script and link tags in your index.html file for the paths, <code>&lt;&amp;NegativeMediumSpace;script src=&quot;/public/bundle.js&quot;&gt;&lt;/script&gt;</code> and <code>&lt;&amp;NegativeMediumSpace;link rel=&quot;stylesheet&quot; href=&quot;/public/style.css&quot; /&gt;</code>.</p>
+<p>Let's show you a neat debugging tip I totally stole from <a href="https://twitter.com/ryanflorence">Ryan Florence</a>. replace that h1 with this:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// instead of the h1 in render</span>
+<span class="hljs-string">``</span><span class="hljs-string">`javascript
+const Details = props =&gt; (
+  &lt;div className="details"&gt;
+    &lt;pre&gt;
+      &lt;code&gt;
+        {JSON.stringify(props, null, 4)}
+      &lt;/code&gt;
+    &lt;/pre&gt;
+  &lt;/div&gt;
+);
+</span></code></pre>
+<p>This is a useful way to dump your params to the page to see what react-router is giving you. This is <strong>awesome</strong> for state too; it shows you in real time what your state looks like. We'll dig into React Tools here in a sec for even better debugging but for now let's keep trucking with our Details.jsx.</p>
+<p>We're going to show all the details of a show on this page and be able to play the trailer. There's a <em>big</em> problem here that we don't have that data on this page though; it's available in the Search route. We <em>could</em> require in data.json here given that our data is available that way but that typically isn't the case: we typically get this data from the server. If that's the case, you don't want to make two AJAX requests to get the same data. In other words, we need to share this state between components. The way you do this is by pushing up the state to the highest common ancestor component. In this case, that'd be the router in App. So let's first refactor Search to still work while it pulls in that data from Search.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// in App.jsx</span>
+<span class="hljs-comment">// another import</span>
+<span class="hljs-keyword">import</span> preload <span class="hljs-keyword">from</span> <span class="hljs-string">'../data.json'</span>
+
+<span class="hljs-comment">// modify the existing route</span>
+&lt;Route path=<span class="hljs-string">"/search"</span> component={props =&gt; <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Search</span> <span class="hljs-attr">shows</span>=<span class="hljs-string">{preload.shows}</span> {<span class="hljs-attr">...props</span>} /&gt;</span>} /&gt;
+</span></code></pre>
+<p>Now make Search use it</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// delete import preload from '../data.json'</span>
+
+<span class="hljs-comment">// below imports, above class Search</span>
+
+type Show = {
+  <span class="hljs-attr">title</span>: string,
+  <span class="hljs-attr">description</span>: string,
+  <span class="hljs-attr">year</span>: string,
+  <span class="hljs-attr">imdbID</span>: string,
+  <span class="hljs-attr">poster</span>: string,
+  <span class="hljs-attr">trailer</span>: string
+};
+
+<span class="hljs-comment">// add propTypes inside Search</span>
+props: {
+  <span class="hljs-attr">shows</span>: <span class="hljs-built_in">Array</span>&lt;Show&gt;
+};
+
+<span class="hljs-comment">// change the map call instead of {preload.shows</span>
+{<span class="hljs-keyword">this</span>.props.route.shows
+</code></pre>
+<p>Cool. Now it should still work but Search no longer imports the data but merely receives it as props. Now we can share this data with Details. Notice that Search has a function instead of a React component, but if you think about it a function that returns markup <em>is</em> a React component, so this works. This allows us to pass in the shows as a parameter to Search. You'll see this pattern often with react-router v4.</p>
+<p>You'll also notice we created a Show type to match our show data. This is called a <a href="https://flow.org/en/docs/types/aliases/">type alias</a> This is awesome because now we can refer to objects as Shows and get all the typing along with that. Our first use of it was specifying that the props passed down was going to be an array of Shows. The syntax with Array has to do with a concept called <a href="https://flow.org/en/docs/types/generics/">generic types</a> which you are welcome to read about but beyond the scope of this class. You can do really cool and clever things with types and it's worth a dive down the rabbit's hole.</p>
+<p>This Show type is going to be used across multiple files so it's worth it to make it a project-wide type like we did with Webpack's module. Go add to the types.js file in flow-typed. Add <code>declare</code> before type so it says <code>declare type Show = { […]</code> so it's now a global. Remove it from Search.jsx. Everything should still work. It should look like this:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">export</span> type Show = {
+  <span class="hljs-attr">title</span>: string,
+  <span class="hljs-attr">description</span>: string,
+  <span class="hljs-attr">year</span>: string,
+  <span class="hljs-attr">imdbID</span>: string,
+  <span class="hljs-attr">poster</span>: string,
+  <span class="hljs-attr">trailer</span>: string
+};
+</code></pre>
+<p>Do note with with Flow and ESLint integrations with editors, it can be slow to update. It can be frustrating when you think you fixed a problem and it hasn't resolved yet.</p>
+<p>Now we're going to pass the correct show to the Details page. There's a bunch of ways to do this:</p>
+<ul>
+<li>We could pass all the shows and let Details select the correct show. This isn't great because Details is given an additional concern it doesn't need to have.</li>
+<li>We could create a callback in App that it passes to Details that Details calls with the correct ID and ClientApp hands back the correct show. This is slightly better but it's an odd API for getting data. Ideally we just hand down props and not a callback, especially since this isn't async.</li>
+<li>Or we could hook into react-router's ability to pass props down through stateless functions like we did with Search and just pass down the correct show. This is the best approach.</li>
+</ul>
+<p>Add the following to App:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add at the imports at the top</span>
+<span class="hljs-keyword">import</span> type { Match } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;
+
+<span class="hljs-comment">// replace Details Match component</span>
+&lt;Route
+  path=<span class="hljs-string">"/details/:id"</span>
+  component={(props: { <span class="hljs-attr">match</span>: Match }) =&gt; {
+    <span class="hljs-keyword">const</span> selectedShow = preload.shows.find(<span class="hljs-function">(<span class="hljs-params">show: Show</span>) =&gt;</span> props.params.id === show.imdbID);
+    <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Details</span> <span class="hljs-attr">show</span>=<span class="hljs-string">{selectedShow}</span> {<span class="hljs-attr">...props</span>} /&gt;</span>;
+  }}
+/&gt;
+</span></code></pre>
+<p>At the top we're importing types from types from the flow-typed file for react-router-dom. We'll use this type to refer to the match attribute of the props. This is how you import types if you need to in the future. In case it's apparent to you, this a Flow-specific feature; this import line of code gets stripped out by the Babel transform. In the code, we're finding the correct show and passing that to Search.</p>
+<p>If you run flow, you'll notice we broke our tests. Here is yet another benefit of Flow: it'd be easy to forget how modifying the API for Search would break the tests. Flow is quick to get that. It derives that fact because we changed what props are being passed to Search. Clever!</p>
+<p>This should put the correct show as one of the props that App passes down to Details. If you refresh the page, you should see it now. (You have to have a valid URL for a details page, like <code>&lt;your localhost&gt;/details/tt4574334</code>).</p>
+<p>As an aside, I've found the <em>best</em> way to organize React method component is the following</p>
+<ol>
+<li>props / defaultProps/ props</li>
+<li>constructor</li>
+<li>Other lifecycle methods like componentDidUpdate (we'll talk about those in a sec)</li>
+<li>Your methods you create (like assignShow)</li>
+<li>render</li>
+</ol>
+<p>Makes it easier to find things when you look for them.</p>
+<p>So let's actually display some cool stuff:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+
+<span class="hljs-keyword">const</span> Details = <span class="hljs-function">(<span class="hljs-params">props: { show: Show }</span>) =&gt;</span> {
+  <span class="hljs-keyword">const</span> { title, description, year, poster, trailer } = props.show;
+  <span class="hljs-keyword">return</span> (
+    &lt;div className="details"&gt;
+      &lt;header&gt;
+        &lt;h1&gt;svideo&lt;/h1&gt;
+      &lt;/header&gt;
+      &lt;section&gt;
+        &lt;h1&gt;{title}&lt;/h1&gt;
+        &lt;h2&gt;({year})&lt;/h2&gt;
+        &lt;img src={`/public/img/posters/${poster}`} alt={`Poster for ${title}`} /&gt;
+        &lt;p&gt;{description}&lt;/p&gt;
+      &lt;/section&gt;
+      &lt;div&gt;
+        &lt;iframe
+          src={`https://www.youtube-nocookie.com/embed/${trailer}?rel=0&amp;amp;controls=0&amp;amp;showinfo=0`}
+          frameBorder="0"
+          allowFullScreen
+        /&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  );
+};
+
+export default Details;
+</code></pre>
+<p>Now you should have some nice looking UI.</p>
+<p>Well, now we have a header in two places. That's a <strong>strong</strong> indicator that you should make it's its own component. Let's abstract that in a component and use that in both places. Create a new file called Header.jsx and put this in there:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { Link } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;
+
+<span class="hljs-keyword">const</span> Header = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/"</span>&gt;</span>
+        svideo
+      <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span></span>
+);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Header;
+</code></pre>
+<p>We're even going to throw in a link back to the home page for fun. Now open Details.jsx and put:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add to the top</span>
+<span class="hljs-keyword">import</span> Header <span class="hljs-keyword">from</span> <span class="hljs-string">'./Header'</span>
+
+<span class="hljs-comment">// replace &lt;header&gt;...&lt;/header&gt;</span>
+&lt;Header /&gt;
+</code></pre>
+<p>Let's put a back button on the Header so you can get back to Search after you reach it.</p>
+<pre><code class="language-javascript">// after the h1 inside .header
+&lt;h2&gt;
+  &lt;Link to='/search'&gt;
+    Back
+  &lt;/Link&gt;
+&lt;/h2&gt;
+</code></pre>
+<p>So let's integrate this to Search. But it's not so simple since on Search we want the header to have a search input and on Details we want a back button. So let's see how to do that. In Header.jsx put:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { Link } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;
+
+<span class="hljs-keyword">const</span> Header = <span class="hljs-function">(<span class="hljs-params">props: { showSearch?: boolean, handleSearchTermChange?: <span class="hljs-built_in">Function</span>, searchTerm?: string }</span>) =&gt;</span> {
+  <span class="hljs-keyword">let</span> utilSpace;
+  <span class="hljs-keyword">if</span> (props.showSearch) {
+    utilSpace = (
+      <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"Search"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{props.searchTerm}</span> <span class="hljs-attr">onChange</span>=<span class="hljs-string">{props.handleSearchTermChange}</span> /&gt;</span>
+    );
+  } else {
+    utilSpace = (
+      <span class="hljs-tag">&lt;<span class="hljs-name">h2</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"header-back"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/search"</span>&gt;</span>
+          Back
+        <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+    );
+  }
+  return (
+    <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">"/"</span>&gt;</span>
+          svideo
+        <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      {utilSpace}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+  );
+};
+
+Header.defaultProps = {
+  showSearch: false,
+  handleSearchTermChange: function noop() {},
+  searchTerm: ''
+};
+
+export default Header;
+</span></code></pre>
+<p>In Search.jsx:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add to requires</span>
+<span class="hljs-keyword">import</span> Header <span class="hljs-keyword">from</span> <span class="hljs-string">'./Header'</span>;
+
+<span class="hljs-comment">// replace &lt;header&gt;&lt;/header&gt;</span>
+&lt;Header handleSearchTermChange={<span class="hljs-keyword">this</span>.handleSearchTermChange} showSearch searchTerm={<span class="hljs-keyword">this</span>.state.searchTerm} /&gt;
+</code></pre>
+<p>This is how you have a child component modify a parent's state: you pass down the callback and let it call the parent to let the parent modify the state. This also demonstrates how to conditionally show one component and not another.</p>
+<p>Lastly let's make our show cards clickable.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// @flow</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> styled <span class="hljs-keyword">from</span> <span class="hljs-string">'styled-components'</span>;
+<span class="hljs-keyword">import</span> { Link } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-router-dom'</span>;
+
+<span class="hljs-keyword">const</span> Wrapper = styled.div<span class="hljs-string">`
+  width: 32%;
+  border: 2px solid #333;
+  border-radius: 4px;
+  margin-bottom: 25px;
+  padding-right: 10px;
+  overflow: hidden;
+`</span>;
+
+<span class="hljs-keyword">const</span> Image = styled.img<span class="hljs-string">`
+  width: 46%;
+  float: left;
+  margin-right: 10px;
+`</span>;
+
+<span class="hljs-keyword">const</span> ShowCard = (
+  props: {
+    <span class="hljs-attr">poster</span>: string,
+    <span class="hljs-attr">title</span>: string,
+    <span class="hljs-attr">year</span>: string,
+    <span class="hljs-attr">description</span>: string,
+    <span class="hljs-attr">imdbID</span>: string
+  }
+) =&gt; (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">details</span>/${<span class="hljs-attr">props.imdbID</span>}`}&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">Wrapper</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">Image</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">{</span>`${<span class="hljs-attr">props.title</span>} <span class="hljs-attr">Show</span> <span class="hljs-attr">Poster</span>`} <span class="hljs-attr">src</span>=<span class="hljs-string">{</span>`/<span class="hljs-attr">public</span>/<span class="hljs-attr">img</span>/<span class="hljs-attr">posters</span>/${<span class="hljs-attr">props.poster</span>}`} /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span>{props.title}<span class="hljs-tag">&lt;/<span class="hljs-name">h3</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>({props.year})<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{props.description}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Wrapper</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Link</span>&gt;</span>
+);
+
+export default ShowCard;
+</span></code></pre>
+<p>Oh 💩! We messed up our styles. The reason is that the way Link works is that it outputs an <code>&lt;a&gt;</code> tag. Luckily, we can even style that too! Try this:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// replace styled.div with styled(Link)</span>
+<span class="hljs-keyword">const</span> Wrapper = styled(Link)<span class="hljs-string">`
+
+// add two lines to Wrapper's CSS, otherwise you'll get blue text styles
+text-decoration: none;
+color: black;
+</span></code></pre>
+<p>Now each of the cards should be clickable through to the details page and styled correctly!</p>
+<p>But now we've messed up Search's tests. If you remember, Enzyme's testing library only shallowly renders the components. Since we moved the Header logic from inside Search into Header, this is going to mess up the existing snapshot (which we can just fix easily) and we won't be able to directly interact with the input inside of Header without some additional code.</p>
+<p>We also changed the contract of Search since it now requires the shows to passed in. Modify the three <code>&lt;Search /&gt;</code> to be <code>&lt;Search shows={preload.shows} /&gt;</code>.</p>
+<p>First, run <code>yarn test:update</code> to fix your snapshot. Your third test will still fail but the first one will update.</p>
+<p>Next, open Search.spec.jsx and add this:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// last import</span>
+<span class="hljs-keyword">import</span> Header <span class="hljs-keyword">from</span> <span class="hljs-string">'../Header'</span>;
+
+<span class="hljs-comment">// modify the simulation line</span>
+component.find(Header).dive().find(<span class="hljs-string">'input'</span>).simulate(<span class="hljs-string">'change'</span>, { <span class="hljs-attr">target</span>: { <span class="hljs-attr">value</span>: searchWord } });
+</code></pre>
+<p>By finding and &quot;diving&quot; on the Header component, we're telling Enzyme to also render that Header so that we can interact with it. Run your tests again and now they should pass!</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; Complete Intro to React
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+</body>
+</html>

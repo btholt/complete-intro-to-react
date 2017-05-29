@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Complete Intro to React</title>
+  <meta name="description" content="A Complete Intro to React, as taught for FrontendMasters.com
+">
+  <meta name="keywords" content="" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="shortcut icon" href="/favicon.ico">
+
+  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/css/elements.css" />
+  <link rel="stylesheet" type="text/css" href="/css/layout.css" />
+  <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+</head>
+<body class="post-template">
+
+  <header class="main-header">
+    <div class="vertical">
+      <div class="main-header-content">
+        <h1 class="page-title">
+          <a href="/">Complete Intro to React</a>
+        </h1>
+      </div>
+    </div>
+  </header>
+
+  <main id="content" class="content" role="main">
+    
+
+<article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">More React</h1>
+    <section class="post-meta">
+      <time class="post-date" datetime=""></time>
+      <span>&middot; </span>
+    </section>
+  </header>
+
+  <section class="post-content">
+    <p>So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. Over the next few chapters we are going to be talking about Redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.</p>
+<p>Rather our toys we've made so far to demonstrate how to make React components, let's actually start building our web app. We are going to make our home page. The home page is going to have a sweet background image, our logo, a text input to search for a specific show, and another button to just browse all videos.</p>
+<p>I have predone most of the CSS for you for this particular course for you. Later in the course we're actually going to explore using styled-components but for now let's just import the CSS I wrote for you and tackle styled-components later. Follow the structure of the HTML and class names and you'll be golden. If at any time your styles look broken as compared to mine, chances are you misnamed a class or misstructured the tags.</p>
+<p>We are going to add a link tag to our HTML. Typically you wouldn't have both external CSS <em>and</em> styled-components but believe me I'm going to save you a bunch of typing by limiting how much CSS I'm going to have you write. This is not a CSS course, haha.</p>
+<p>Add this to index.html: <code>&lt;link rel=&quot;stylesheet&quot; href=&quot;/public/style.css&quot; /&gt;</code>. From here on out we'll have to use a webserver or else you'll have to mess with the paths to get the CSS to display correctly.</p>
+<p>Let's start building our app. You can delete MyTitle.jsx if you desire; you can also leave it. We're not going to be using it any further. Go ahead and clear out most ClientApp.jsx and let's start putting our new app in here.</p>
+<p>Oh, and you also have to name your video service. I named mine svideo but name your app whatever you want!</p>
+<p>Right now it's going to be pretty simple. Drop in this:</p>
+<pre><code class="language-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
+<span class="hljs-keyword">import</span> { render } <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
+
+<span class="hljs-keyword">const</span> App = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"app"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">className</span>=<span class="hljs-string">"landing"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>svideo<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"Search"</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span>&gt;</span>or Browse All<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+);
+
+render(<span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById('app'));
+</span></code></pre>
+<p>Just in case you're not familiar, notice that we have no curly braces and only parens around our JSX. This means there's an implicit return and it's required by the Airbnb rules. If this is confusing for you, I recommend the <a href="http://2ality.com/2012/04/arrow-functions.html">2ality post on it</a>.</p>
+<p>Save and run <code>npm run build</code>. If you followed the CSS naming and HTML structure, you should see a nice looking landing page. Also a good time to make sure if your code is still lint-compliant.</p>
+<p>So, another tooling detour here: I'm getting pretty sick of having to hit the terminal every single time to see run build. Furthermore, build for webpack is pretty slow despite how small our code is. So let's take advantage of webpack's watch feature. This will watch for every time you save rebuild automatically. Additionally it will keep the unchanged bits (like the React library) in memory so it doesn't have to rebuild it every time. Try running <code>webpack --watch</code> in your terminal. It will use the same config we already made. See how much faster it is after running? Let's add a new npm script.</p>
+<pre><code class="language-json">// in package.json in scripts
+"watch": "webpack --watch",
+</code></pre>
+<p>Great, right? So, another part that's been bothering me is that it's such a pain to have to re-run ESLint every time. Either that or you'll get a bunch of errors all at once when you run it before you commit. Luckily we can have Webpack run ESLint each time it compiles. It will then notify you when you have errors.</p>
+<p>Just like we're using the babel-loader to transpile our code, we're going to use the eslint-loader to run our linting for us. eslint-loader is similar to babel-loader, except it won't change our code: just warn us of linting errors.</p>
+<p>Let's change our webpack config to use our new eslint-loader. eslint will automatically use our .eslintrc.json, regardless is called via the CLI or programmatically via webpack.</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// inside rules, before babel-loader</span>
+{
+  <span class="hljs-attr">enforce</span>: <span class="hljs-string">"pre"</span>,
+  <span class="hljs-attr">test</span>: <span class="hljs-regexp">/\.js$/</span>,
+  <span class="hljs-attr">loader</span>: <span class="hljs-string">"eslint-loader"</span>,
+  <span class="hljs-attr">exclude</span>: <span class="hljs-regexp">/node_modules/</span>
+}
+</code></pre>
+<p>If you were already running <code>yarn watch</code>, stop and start it again.</p>
+<p>Nice! Any time you save now using <code>yarn watch</code> it will both compile your code <em>and</em> lint it. Pretty slick. And it all runs so much faster. We're going to get to how to make your code reloads <em>even faster</em>. We do the <code>enforce: pre</code> part to make sure that the lint part is loaded before the build step, ensuring our uncompiled code (and not the intermediary) is always the one being linted.</p>
+<p>Now let's switch to the Webpack dev server which makes things just that much easier. The Webpack dev server speeds up development by letting you run a local server and serve all your content from the dev server. It watches and keeps everything in memory so rebuilds go faster. Add the following to your server to get it to serve your statics correctly:</p>
+<pre><code class="language-javascript"><span class="hljs-comment">// add as a top level config item</span>
+devServer: {
+  <span class="hljs-attr">publicPath</span>: <span class="hljs-string">'/public/'</span>
+},
+</code></pre>
+<p>Now try running this from the directory of your project: <code>./node_modules/webpack-dev-server/bin/webpack-dev-server.js</code>. You could install this globally but we'll use npm's cli to make this easy. You should see in your CLI a bunch output from the build and probably some linter errors. Feel free to fix your errors but now you should be able to go <code>http://localhost:8080</code> to see your project running. You should also see the build output in the console of the browser. Cool! Add the following line to your npm scripts: <code>&quot;dev&quot;: &quot;webpack-dev-server&quot;,</code>. Now you can do <code>yarn dev</code> and your code will start building and serving right away!</p>
+<p>But first let's keep going with our app. Our landing is pretty much done for now. We want to start working on the browse all page, but we need to move onto the router to do that real quick.</p>
+
+  </section>
+
+  <footer class="post-footer">
+  </footer>
+
+</article>
+
+
+
+    
+  </main>
+
+  <footer class="site-footer clearfix">
+    <p class="footer-description">
+      &copy; Complete Intro to React
+    </p>
+    <p class="footer-published">
+      joyfully published by <a href="https://github.com/reptar/reptar">reptar</a>
+    </p>
+  </footer>
+
+</body>
+</html>

@@ -1,46 +1,52 @@
 ---
-title: "redux"
+title: "Redux"
 ---
 
 The next thing we want to do with our app is make the front page's search work so that when you type in a search query and hit enter it will automatically have searched for that on the Search page. Right now you have all the necessary tools to do that via state. You could just push the query term up to the ClientApp level and then pass that down to the Search and you'd be done. And that's the way you _should_ do it given how small our app is.
 
-But when these demo apps all the fun is in over engineering it and that's precisely what we're going to do: we're going to add redux. redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture.
+But when these demo apps all the fun is in over engineering it and that's precisely what we're going to do: we're going to add Redux. Redux is a _fantastic_ tool and a cool blending of the ideas of Facebook's [Flux][flux] and the [Elm][elm] architecture.
 
 As a side-note, there are some super rad new tools out there like [Mobx][mobx] that you can check out, but we're sticking to Redux. Mobx is incredible but with more power comes more complexity. If you learn Redux then learn Mobx (and reactive programming) you'll really appreciate and/or fear the power that comes from Mobx.
 
 So what is Redux? [Redux is a predictable state container for JavaScript apps.][redux] The best part about it while the concept is at first hard, I'd argue it's also very simple and elegant. Redux is great because it will run both client and server side, it's easy to test, and easy to debug. While Redux does not __not__ follow the Flux pattern, you can easily see the similarities and once you've done one the other isn't hard to adapt to.
 
-With Redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie <code>tree.prop = 'foo'</code> doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
+With Redux you a single store which stores your entire app state in a single tree. This is not like Flux where you'll have many stores for many different parts of your app; all data lives in a single store. You cannot directly modify the tree of data stored in this tree by typical assignment (ie `tree.prop = 'foo'` doesn't work.) Rather, every time you want to modify the tree, you emit an __action__. Your action then kicks off what's called a __reducer__. A reducer is a special function that take a tree and parameter(s) and returns a new tree after applying whatever transformations it deems fit. The way it gets away with just one store is when you need more data you just add more branches to your data tree. Like React? You only have one tree of components and when you need more you just add more nodes (branches) to your components.
 
 So let's do the most basic addition of Redux to our app and convert the Search to use Redux. Again, this is using a sledgehammer to solve a tiny nail problem: huge overkill.
 
 Create a reducers.js, put this in there:
 
-{% highlight javascript %}
+```javascript
 const DEFAULT_STATE = {
-  searchTerm: ''
-}
+  searchTerm: '',
+};
 
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default rootReducer
-{% endhighlight %}
+export default rootReducer;
+```
 
 Create a store.js and put this:
 
-{% highlight javascript %}
-import { createStore } from 'redux'
-import rootReducer from './reducers'
+```javascript
+const DEFAULT_STATE = {
+  searchTerm: '',
+};
 
-const store = createStore(rootReducer)
+const rootReducer = (state = DEFAULT_STATE, action) => {
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
 
-export default store
-{% endhighlight %}
+export default rootReducer;
+```
 
 This is about as bare bones as Redux gets: we boot strapped a Redux store with a single top-level reducer and exported that. One thing you're going to find with Redux is there's a long path to follow to follow how your state changes. A very predicatble and consistent path, but it's still way longer than it used to be when we were just dealing with React state. This will often not be worth it. Evaluate this yourself on a per-project basis.
 
@@ -52,203 +58,319 @@ So like we said, each store starts with one reducer: the root reducer. This root
 1. You must have a default state.
 1. Redux by itself has no way of dealing with async actions. You need to pull in another library like redux-thunk. We'll use that later.
 
+We haven't opted into Flow yet. We will. I want to show you what Redux is doing at its core before we get clever.
+
 Okay make a new file called actions.js and put in there:
 
-{% highlight javascript %}
-export const SET_SEARCH_TERM = 'SET_SEARCH_TERM'
-{% endhighlight %}
+```javascript
+// @flow
+export const SET_SEARCH_TERM = 'SET_SEARCH_TERM';
+```
+
+This is going to give you an eslint error for prefer defaults exports when there's only one export. Generally this is a good idea but we're going to be adding more exports here momentarily.
 
 Create a file called actionCreators.js:
 
-{% highlight javascript %}
-import { SET_SEARCH_TERM } from './actions'
+```javascript
+// @flow
+import { SET_SEARCH_TERM } from './actions';
 
-export function setSearchTerm (searchTerm) {
-  return { type: SET_SEARCH_TERM, searchTerm }
+export function setSearchTerm(searchTerm) {
+  return { type: SET_SEARCH_TERM, payload: searchTerm };
 }
-{% endhighlight %}
+```
+
+You'll see the same ESLint export error. Ignore for now.
+
+We're using the [flux standard action][fsa] shape of actions for our Redux actions. This isn't required. The idea here is that we all adhere to this standard, this actions can be easily ported amongst Redux, Flux, and other state management libraries with ease. In any case, it'll make working Flow easier, which is the real reason.
 
 Now back to reducers.js:
 
-{% highlight javascript %}
+```javascript
 // import at top
-import { SET_SEARCH_TERM } from './actions'
+import { SET_SEARCH_TERM } from './actions';
 
 // new reducer above rootReducer
 const setSearchTerm = (state, action) => {
-  const newState = {}
-  Object.assign(newState, state, {searchTerm: action.searchTerm})
-  return newState
+  return Object.assign({}, state, {searchTerm: action.payload});
 }
 
 // add new case before default inside rootReducer
 case SET_SEARCH_TERM:
-  return setSearchTerm(state, action)
-{% endhighlight %}
+  return setSearchTerm(state, action);
+```
 
 More files! This should be it for our simple project. Actions is just going to a bunch of exporting of constants. Why do we do this? The way Redux's root reducer decides to dispatch it to one of various reducers is by the action type. Thus it needs to match in both the action creator and the reducer. Rather than having magic strings, we have one central source of truth both file read from. Makes refactoring easy too.
 
+I often get asked why we do make the actions strings and not [symbols][symbols]. While it does work, the dev tools are unable to serialize symbols and thus we makes it much harder to debug. Maybe some day. We'll look at the dev tools in a bit.
+
 The actionCreator is what the UI is actually going to interact with to make changes to the Redux store. In other words, your UI never directly interacts with the store nor the reducers. It _only_ interacts with action creators which then are handled in the reducers which then change the store which then inform the UI of the changes. One way data flow!
 
-If you haven't seen the syntax <code>const x = { searchTerm }</code> it just means <code>const x = { searchTerm: searchTerm }</code>. It's just a shortcut.
+If you haven't seen the syntax `const x = { searchTerm }` it just means `const x = { searchTerm: searchTerm }`. It's just a shortcut.
 
 The rootReducer uses the same SET_SEARCH_TERM constant to hinge in the rootReducer. Also note we return a new object every time when we make a new object. This lets Redux know to inform any subscribers (in this case your React app) that changes happened.
 
-Okay, so let's go make landing interact with the store. But first we need to connect Redux to React via the react-redux package. Go to ClientApp.js.
+Okay, so let's go make landing interact with the store. But first we need to connect Redux to React via the react-redux package. Go to App.jsx.
 
-{% highlight javascript %}
+```javascript
 // import react-redux and your new store
-import { Provider } from 'react-redux'
-import store from './store'
+import { Provider } from 'react-redux';
+import store from './store';
 
 // wrap everything in router in provider
 render () {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Provider store={store}>
         […]
       </Provider>
-    </HashRouter>
+    </BrowserRouter>
   )
 }
-{% endhighlight %}
+```
 
-Provider connects React to Redux for you. Now you can magically use a connect function (also provided from react-redux) that allows you to pull in the pieces of state you need in each component. Let's got make Landing.js read and write to Redux.
+Provider connects React to Redux for you. Now you can magically use a connect function (also provided from react-redux) that allows you to pull in the pieces of state you need in each component. Let's got make Landing.jsx read and write to Redux.
 
-{% highlight javascript %}
-// imports at the top
-import { connect } from 'react-redux'
-const { string } = React.PropTypes
+```javascript
+// @flow
 
-// add propType
-propTypes: {
-  searchTerm: string
-},
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-// replace input
-<input value={this.props.searchTerm} type='text' placeholder='Search' />
+const Landing = (props: { searchTerm: string }) => (
+  <div className="landing">
+    <h1>svideo</h1>
+    <input value={props.searchTerm} type="text" placeholder="Search" />
+    <Link to="/search">or Browse All</Link>
+  </div>
+);
 
-// at the bottom
-const mapStateToProps = (state) => {
-  return {
-    searchTerm: state.searchTerm
-  }
-}
+const mapStateToProps = state => ({
+  searchTerm: state.searchTerm
+});
 
-export default connect(mapStateToProps)(Landing)
-{% endhighlight %}
+export default connect(mapStateToProps)(Landing);
+```
 
 Connect is a function that allows your component to tap into the Redux store's state. The mapStateToProps allows you to select which pieces of state are passed into your component which helps keep thing clean. At the bottom we export a connected version of the component. Now if you reload the page the input doesn't work for the same reason it didn't with React previously: we are never sending the typed text to Redux to update its state. Let's do that now.
 
-{% highlight javascript %}
+```javascript
 // at top
-import { connect } from 'react-redux'
 import { setSearchTerm } from './actionCreators'
 
-// inside React.createClass
-propTypes: {
-  searchTerm: string,
-  dispatch: func
-},
-handleSearchTermChange (event) {
-  this.props.dispatch(setSearchTerm(event.target.value))
-},
+// add type for function
+const Landing = (props: { searchTerm: string, handleSearchTermChange: Function }) => (
 
 // change input
-<input onChange={this.handleSearchTermChange} value={this.props.searchTerm} type='text' placeholder='Search' />
+<input onChange={props.handleSearchTermChange} value={props.searchTerm} type="text" placeholder="Search" />
 
 // at the bottom
-const mapStateToProps = (state) => {
-  return {
-    searchTerm: state.searchTerm
+const mapDispatchToProps = (dispatch: Function) => ({
+  handleSearchTermChange(event) {
+    dispatch(setSearchTerm(event.target.value));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Landing);
+```
+
+We're import the action creator so that we can dispense well-formed actions to Redux. Technically you could form the action here inside of the dispatch function but it's a good idea to separate that logic so that it can be re-used and individually tested.
+
+In addition to adding the state to the props via mapStateToProps, we also want to inject a function which can dispatch actions to your reducers. We do this via a mapDispatchToProps function which achieves a similar end.
+
+At the end, make sure you add that to the connection function.
+
+After this, we want to be able to send the user to the search page once they hit enter. We'll do this via interacting with react-router imperatively.
+
+Since we'll be introducing some methods, we also should refactor this into ES6 class component. It'll make it easier to follow. We've outgrown the component function.
+
+```javascript
+// @flow
+
+import React from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import type { RouterHistory } from 'react-router-dom';
+import { object } from 'prop-types';
+import { setSearchTerm } from './actionCreators';
+
+class Landing extends React.Component {
+  static contextTypes = {
+    history: object
+  };
+  props: {
+    searchTerm: string,
+    handleSearchTermChange: Function,
+    history: RouterHistory
+  };
+  goToSearch = (event: SyntheticEvent) => {
+    event.preventDefault();
+    this.props.history.push('/search');
+  };
+  render() {
+    return (
+      <div className="landing">
+        <h1>svideo</h1>
+        <form onSubmit={this.goToSearch}>
+          <input
+            onChange={this.props.handleSearchTermChange}
+            value={this.props.searchTerm}
+            type="text"
+            placeholder="Search"
+          />
+        </form>
+        <Link to="/search">or Browse All</Link>
+      </div>
+    );
   }
 }
 
-export default connect(mapStateToProps)(Landing)
-{% endhighlight %}
+const mapStateToProps = state => ({
+  searchTerm: state.searchTerm
+});
 
-We're importing the actionCreator we created to be able to dispatch the correct action. We're then tying the input to a change handler and the prop that's going to be passed in. At the bottom we're connecting this component to Redux via connect. mapStateToProps takes in the whole state tree via the state param and returns which props you want passed into the component. Connect makes that magic happen and also passes in a dispatch function which allows to dispatch actions to Redux via our actionCreators. Inside the change handler we do just that: call this.props.dispatch and call the actionCreator here. While this seems like a weird contract to deal with, it's worth it. The contract is that you can _always_ pass dispatch the result of a actionCreator. For normal, synchronous actions like this it's a little convuluted but once we start dealing with async actions this contract helps a lot to simplify your UI code and contain the chaos to your actionCreators. Let's make it actually transition to Search.js once you hit enter.
+const mapDispatchToProps = (dispatch: Function) => ({
+  handleSearchTermChange(event) {
+    dispatch(setSearchTerm(event.target.value));
+  }
+});
 
-{% highlight javascript %}
-// add contextTypes
-contextTypes: {
-  router: object
-},
+export default connect(mapStateToProps, mapDispatchToProps)(Landing);
+```
 
-// add method to Landing
-goToSearch (event) {
-  event.preventDefault()
-  this.context.router.transitionTo('/search')
-},
-
-// surround input with form
-<form onSubmit={this.goToSearch}>
-  <input onChange={this.handleSearchTermChange} value={this.props.searchTerm} type='text' placeholder='Search' />
-</form>
-{% endhighlight %}
-
-So we're introducing a new concept here from React: context. This is a dangerous tool and I will tell you I personally have never _put_ anything on context. I've only consumed things from context that libraries like react-router and react-redux (which both do use context) put on there. Use at your own peril.
+So we're introducing a new concept here from React: context. This is a dangerous tool and I will tell you I personally have never _put_ anything on context. I've only consumed things from context that libraries like react-router and react-redux (which both do use context) put on there. Use at your own peril. It will cause more harm than solve.
 
 Context is basically global state: anywhere inside a React app can read and write to state. If this sounds nightmarish to you then you have good sense: it defeats a lot of the benefits to React. However, with something like react-router it's very useful because the whole app does care about routing, as it does about Redux.
 
-Notice the contextTypes are like propTypes. However, contextTypes are even more important to React than propTypes: if you don't have them the object you're looking for won't be there. In other words, you must identify in contextTypes the properties the component cares about or they will not be available on context.
+Notice the contextTypes are like propTypes. However, contextTypes are even more important to React than propTypes: if you don't have them the object you're looking for won't be there. In other words, you must identify in contextTypes the properties the component cares about or they will not be available on context. This ongoing debate on how this will work in the future since prop types have been removed from the React package itself.
 
-Okay, so we're using a form to take care of when hits enter: this is good for accessibility and a good way to take care of submitting. Once a user hits enter, it calls goToSearch where we imperatively call the router to take us to search. This will preserve our Redux state; however Search.js is not yet reading from Redux. Let's go fix that.
+Also note that contextTypes property is static. This is important so that React can read the types off the class instead of off the instance.
 
-{% highlight javascript %}
-// import at top
-import { connect } from 'react-redux'
+Okay, so now I want to show you a neat experimental feature: decorators. This is 1000% optional. What we have works and you are welcome to stick with it. I just think they're fun to use and make the code a bit nicer to read. Add the plugin `"babel-plugin-transform-decorators-legacy"` to your .babelrc **before** the class-properties one. The order is important.
 
-// add propType not inside shows
-searchTerm: string
+```javascript
+// in Landing.jsx
 
-// change header
-<Header showSearch />
+// move mapStateToProps and mapStateToDispatch to above the class
 
-// change state to props inside of filter
-.filter((show) => `${show.title} ${show.description}`.toUpperCase().indexOf(this.props.searchTerm.toUpperCase()) >= 0)
+// add above the class
+// $FlowFixMe
+@connect(mapStateToProps, mapDispatchToProps)
 
-// add at bottom, replace export
-const mapStateToProps = (state) => {
-  return {
-    searchTerm: state.searchTerm
-  }
-}
+// change the export
+export default Landing;
+```
 
-export default connect(mapStateToProps)(Search)
-{% endhighlight %}
+Decorators are an amazing feature to augment functionality in a declarative fashion. The code you see here works precisely the same way the other code did, it's just a bit less dense (I'd say.) The `// $FlowFixMe` bit is so that Flow will ignore that line: it doesn't handle decorators yet so this suppresses that warning. The reason why the transform is considered "legacy" is because the proposal is a bit in flux, but in nearly any case this code won't have to change.
 
-Notice we got to delete a lot of code. Always feels good! We're externalizing our state management so that'll happen more as well. Also notice that Search no longer cares about modifying searchTerm since it itself doesn't need to. This is cool; having concerns live where they happen is a really positive thing. Otherwise not much new here. This will work now if you go to Landing and submit a search term from there. However we've broke the header. Let's go fix that.
+We're going to revert back to using the `connect(…)(…)` notation for now though. Because the Flow parser doesn't support decorators (and won't until it's more stable) we can't use it since Prettier relies on the Flow parser. It works with the Babylon parser but then we can't use Flow. Make your own tradeoff there. You could put the `// prettier-ignore` comment to make it ignore the line too.
 
-{% highlight javascript %}
+Okay, so we're using a form to take care of when hits enter: this is good for accessibility and a good way to take care of submitting. Once a user hits enter, it calls goToSearch where we imperatively call the router to take us to search. This will preserve our Redux state; however Search.jsx is not yet reading from Redux. Let's go fix that.
+
+```javascript
+// @flow
+
+import React from 'react';
+import { connect } from 'react-redux';
+import ShowCard from './ShowCard';
+import Header from './Header';
+
+const Search = (props: {
+  searchTerm: string, // eslint-disable-line react/no-unused-prop-types
+  shows: Array<Show>
+}) => (
+  <div className="search">
+    <Header showSearch />
+    <div>
+      {props.shows
+        .filter(show => `${show.title} ${show.description}`.toUpperCase().indexOf(props.searchTerm.toUpperCase()) >= 0)
+        .map((show, index) => <ShowCard {...show} key={show.imdbID} id={index} />)}
+    </div>
+  </div>
+);
+
+const mapStateToProps = state => ({
+  searchTerm: state.searchTerm
+});
+
+export default connect(mapStateToProps)(Search);
+```
+
+Notice we got to delete a lot of code. Always feels good! We're externalizing our state management so that'll happen more as well. Also notice that Search no longer cares about modifying searchTerm since it itself doesn't need to. This is cool; having concerns live where they happen is a really positive thing. Otherwise not much new here. This will work now if you go to Landing and submit a search term from there.
+
+We do have to add that ESLint ignore since ESLint is not perfect. It wasn't able to track the props being used that deeply in the function. This a rare occurrence. 
+
+We broke the header. Let's go fix that.
+
+```javascript
 // import at top
 import { connect } from 'react-redux'
 import { setSearchTerm } from './actionCreators'
 
-// delete handleSearchTerm propType
-// add to propTypes
-dispatch: func
-
-// add method to Header
-handleSearchTermChange (event) {
-  this.props.dispatch(setSearchTerm(event.target.value))
-},
-
-// change input to not call this.props.handleSearchTermChange but this.handleSearchTermChange (not on the state object)
-utilSpace = <input type='text' placeholder='Search' value={this.props.searchTerm} onChange={this.handleSearchTermChange} />
+// delete searchTerm and handleSearchTerm from defaultProps
 
 // at the bottom
-const mapStateToProps = (state) => {
-  return {
-    searchTerm: state.searchTerm
+const mapStateToProps = state => ({ searchTerm: state.searchTerm });
+const mapDispatchToProps = (dispatch: Function) => ({
+  handleSearchTermChange(event) {
+    dispatch(setSearchTerm(event.target.value));
   }
-}
+});
 
-export default connect(mapStateToProps)(Header)
-{% endhighlight %}
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
+```
 
 Since Header does care about modifying searchTerm we bring in that logic here. Otherwise not much changes!
+
+Okay, so now we want to type Redux. This is no trivial feat but I promise that it will save you bugs. And in the process we'll learn more about Flow too. 
+
+Open your types.js file in the flow-typed directory and let's add some new types.
+
+```javascript
+declare type ActionType = 'SET_SEARCH_TERM';
+
+declare type ActionT<A: ActionType, P> = {|
+  type: A,
+  payload: P
+|};
+
+export type Action = ActionT<'SET_SEARCH_TERM', string>;
+```
+
+Here we're creating an enumerated typed: ActionType. This type is saying anything that's an ActionType can only be that string. Any other string (or anything else) causes an error. This will catch if you spell the action types wrong, which is nice. We'll add another action type later so you can see how to add more.
+
+Below that, we're creating a generic action. It's saying the `type` (which we represent with A) will always an ActionType. It's then saying that there must be a payload type which is always going to exist. We can then define later what that type is going to be (which is what P represents.) We are not representing the full flux standard action here: it also accounts for metadata and errors, but we're keeping it simple here.
+
+Lastly, with the Action (which is the one we export, the other two are only for use in this file) is creating the actual useable action types. We only have one: SET_SEARCH_TERM. It then defines what those that action's payloads must look like: a string. For every action we create, we'll have to come back here to define their types. This seems burdensome but it makes your Redux ironclad. The ongoing mantainability here makes it worth it, I promise.
+
+Go back to reducers.js. We're going to refactor this a bit to make it play nicer with Flow as well as show you a cool way to write Redux: combineReducers.
+
+```javascript
+// @flow
+
+import { combineReducers } from 'redux';
+import { SET_SEARCH_TERM } from './actions';
+
+const searchTerm = (state = '', action: Action) => {
+  if (action.type === SET_SEARCH_TERM) {
+    return action.payload;
+  }
+  return state;
+};
+
+
+const rootReducer = combineReducers({ searchTerm });
+
+export default rootReducer;
+```
+
+combineReducers creates the root reducer for you. What's peculiar of how this works as opposed to writing our own is that it separates each reducer into its own silo. Before, when writing our own, each reducer got its own copy of the entire state tree and had to be careful to not overwrite anything else it didn't intend. With combineReducers, each reducer _only_ gets the part that it's worried about and nothing else. So, because in the combineReducers object we called the key `searchTerm`, the searchTerm method will only be supplied that bit of the state tree and nothing else. Thus, inside each reducer we handle its default state (for searchTerm the default value is empty string) and also have to provide for if the reducer does not recognize the action type. This is less performant but unless you're firing off _a lot_ of actions and/or have _a lot_ (read: dozens/hundreds) of action types, it'll make zero difference overall.
+
+So let's roll with this and move to making async actions now.
 
 [elm]: http://elm-lang.org/
 [flux]: https://facebook.github.io/flux/
 [redux]: http://redux.js.org/index.html
+[symbols]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol
+[fsa]: https://github.com/acdlite/flux-standard-action

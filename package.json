@@ -1,0 +1,17 @@
+{
+  "name": "complete-intro-to-react",
+  "version": "3.0.0",
+  "description": "Complete Intro to React",
+  "main": "index.js",
+  "author": "Brian Holt <btholt@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "dependencies": {
+    "reptar-excerpt": "^0.8.0",
+    "reptar-html-minifier": "^0.7.0",
+    "reptar-theme-thread": "^0.3.3"
+  }
+}
