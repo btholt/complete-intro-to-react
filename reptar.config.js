@@ -17,15 +17,15 @@ const config = {
     defaults: [
       {
         scope: { path: './' },
-        values: { template: 'page', permalink: '/:title/' }
+        values: { template: 'page', permalink: ':title/' }
       },
       {
         scope: { path: './_pages' },
-        values: { template: 'page', permalink: '/page/:title/' }
+        values: { template: 'page', permalink: 'page/:title/' }
       },
       {
         scope: { path: './_posts' },
-        values: { template: 'post', permalink: '/:title/' }
+        values: { template: 'post', permalink: ':title' }
       },
       {
         scope: { metadata: { draft: true } },

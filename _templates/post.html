@@ -11,7 +11,7 @@
     <section class="post-meta">
       <time class="post-date" datetime="{{file.date | date('YYYY-MM-DD')}}">{{file.date | date('D MMMM YYYY')}}</time>
       <span>&middot; {% for tag in file.tags %}
-        <a href="/tag/{{tag}}/">{{tag}}</a>
+        <a href="tag/{{tag}}/">{{tag}}</a>
       {% endfor%}</span>
     </section>
   </header>
