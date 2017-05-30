@@ -16,5 +16,5 @@ Questions? Feel free to [tweet at me][twitter]. Corrections or concerns about th
 
 [twitter]: https://twitter.com/holtbt
 [repo]: https://github.com/btholt/complete-intro-to-react
-[landing]: /page/landing/
+[landing]: page/landing/
 [fem]: https://frontendmasters.com/

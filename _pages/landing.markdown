@@ -39,5 +39,5 @@ If you're here from [Frontend Masters][fem], make sure you consult the title of 
 
 [v1]: https://btholt.github.io/complete-intro-to-react-v1/
 [v2]: https://btholt.github.io/complete-intro-to-react-v2/all.html
-[v3]: /
+[v3]: ../../
 [fem]: https://frontendmasters.com/
