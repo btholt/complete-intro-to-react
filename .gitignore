@@ -1,9 +1,10 @@
 public/bundle.js
 node_modules/
 .eslintcache
-coverage
+coverage/
 .nyc_output
 .DS_Store
+public/*bundle*
 *.map
 *.bundle.js
 _site/

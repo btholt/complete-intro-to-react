@@ -1,10 +1,15 @@
-import { createStore, compose, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-import rootReducer from './reducers'
+// @flow
 
-const store = createStore(rootReducer, compose(
-  applyMiddleware(thunk),
-  typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : (f) => f
-))
+import { createStore, compose, applyMiddleware } from 'redux'; // add applyMiddleware
+import thunk from 'redux-thunk'; // import
+import rootReducer from './reducers';
 
-export default store
+const store = createStore(
+  rootReducer,
+  compose(
+    applyMiddleware(thunk), // middleware
+    typeof window === 'object' && typeof window.devToolsExtension !== 'undefined' ? window.devToolsExtension() : f => f
+  )
+);
+
+export default store;
