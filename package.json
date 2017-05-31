@@ -11,7 +11,9 @@
     "watch": "webpack --watch"
   },
   "jest": {
-    "snapshotSerializers": ["jest-serializer-enzyme"]
+    "snapshotSerializers": [
+      "jest-serializer-enzyme"
+    ]
   },
   "dependencies": {
     "axios": "0.16.1",
@@ -32,7 +34,7 @@
     "react-router-dom": "4.1.1",
     "redux": "3.6.0",
     "redux-thunk": "2.2.0",
-    "styled-components": "2.0.0",
+    "styled-components": "^2.0.0",
     "webpack": "2.6.1",
     "webpack-dev-middleware": "1.10.2",
     "webpack-hot-middleware": "2.18.0"
