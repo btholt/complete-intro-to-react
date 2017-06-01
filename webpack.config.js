@@ -21,7 +21,11 @@ const config = {
     historyApiFallback: true
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json']
+    extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      react: 'preact-compat',
+      'react-dom': 'preact-compat'
+    }
   },
   stats: {
     colors: true,
@@ -39,7 +43,8 @@ const config = {
       },
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        include: [path.resolve('js'), path.resolve('node_modules/preact-compat/src')]
       }
     ]
   }
