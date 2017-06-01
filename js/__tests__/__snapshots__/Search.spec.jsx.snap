@@ -4,17 +4,9 @@ exports[`Search renders correctly 1`] = `
 <div
   className="search"
 >
-  <header>
-    <h1>
-      svideo
-    </h1>
-    <input
-      onChange={[Function]}
-      placeholder="Search"
-      type="text"
-      value=""
-    />
-  </header>
+  <Connect(Header)
+    showSearch={true}
+  />
   <div>
     <ShowCard
       description="Two cousins, with different views on art versus commerce, on their way up through the Atlanta rap scene; \\"Earnest 'Earn' Marks,\\" an ambitious college drop-out and his estranged cousin, who suddenly becomes a star."
