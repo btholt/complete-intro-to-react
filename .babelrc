@@ -8,5 +8,8 @@
       "modules": false,
       "loose": false
     }]
+  ],
+  "plugins": [
+    "transform-class-properties"
   ]
 }
