@@ -1,13 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { HashRouter, Route, Switch } from 'react-router-dom';
+import Landing from './Landing';
+
+const FourOhFour = () => <h1>404</h1>;
 
 const App = () =>
-  <div className="app">
-    <div className="landing">
-      <h1>svideo</h1>
-      <input type="text" placeholder="Search" />
-      <a>or Browse All</a>
+  <HashRouter>
+    <div className="app">
+      <Switch>
+        <Route exact path="/" component={Landing} />
+        <Route default component={FourOhFour} />
+      </Switch>
     </div>
-  </div>;
+  </HashRouter>;
 
 render(React.createElement(App), document.getElementById('app'));
