@@ -1,11 +1,10 @@
 import React from 'react';
 import { string } from 'prop-types';
+import Header from './Header';
 
 const Details = props =>
   <div className="details">
-    <header>
-      <h1>svideo</h1>
-    </header>
+    <Header />
     <section>
       <h1>{props.title}</h1>
       <h2>({props.year})</h2>
