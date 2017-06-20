@@ -5,7 +5,15 @@
     "dev": "webpack-dev-server",
     "format": "prettier --write --single-quote --print-width=120 \"src/**/*.{js,jsx,css}\" ratingsAPI.js",
     "lint": "eslint **/*.{js,jsx} --quiet",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:update": "jest -u",
     "watch": "webpack -d --watch"
+  },
+  "jest": {
+    "snapshotSerializers": [
+      "jest-serializer-enzyme"
+    ]
   },
   "dependencies": {
     "axios": "0.16.1",
