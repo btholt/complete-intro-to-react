@@ -1,6 +1,7 @@
 import React from 'react';
-import { string } from 'prop-types';
-import axios from 'axios';
+import { string, func } from 'prop-types';
+import { connect } from 'react-redux';
+import { getAPIDetails } from './actionCreators';
 import Header from './Header';
 import Spinner from './Spinner';
 
@@ -11,31 +12,30 @@ class Details extends React.Component {
     poster: string.isRequired,
     trailer: string.isRequired,
     year: string.isRequired,
-    imdbID: string.isRequired
-  };
-  state = {
-    apiData: {}
+    imdbID: string.isRequired, // eslint-disable-line react/no-unused-prop-types
+    rating: string.isRequired,
+    getAPIData: func.isRequired
   };
   componentDidMount() {
-    axios.get(`http://localhost:3000/${this.props.imdbID}`).then(response => {
-      this.setState({ apiData: response.data });
-    });
+    if (!this.props.rating) {
+      this.props.getAPIData();
+    }
   }
   render() {
-    let rating;
-    if (this.state.apiData.rating) {
-      rating = <h3>{this.state.apiData.rating}</h3>;
+    const { title, year, poster, description, trailer, rating } = this.props;
+    let ratingDisplay;
+    if (rating) {
+      ratingDisplay = <h3>{rating}</h3>;
     } else {
-      rating = <Spinner />;
+      ratingDisplay = <Spinner />;
     }
-    const { title, year, poster, description, trailer } = this.props;
     return (
       <div className="details">
         <Header />
         <section>
           <h1>{title}</h1>
           <h2>({year})</h2>
-          {rating}
+          {ratingDisplay}
           <img src={`/public/img/posters/${poster}`} alt={`Poster for ${title}`} />
           <p>{description}</p>
         </section>
@@ -52,4 +52,15 @@ class Details extends React.Component {
   }
 }
 
-export default Details;
+const mapStateToProps = (state, ownProps) => {
+  const rating = state.apiData[ownProps.imdbID] ? state.apiData[ownProps.imdbID].rating : '';
+  return { rating };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  getAPIData() {
+    dispatch(getAPIDetails(ownProps.imdbID));
+  }
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Details);
