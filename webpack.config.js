@@ -2,8 +2,8 @@ const path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: path.join(__dirname, 'src/App.jsx'),
-  devtool: 'cheap-eval-source-map',
+  entry: path.join(__dirname, 'src/ClientApp.jsx'),
+  // devtool: 'cheap-eval-source-map',
   output: {
     path: path.join(__dirname, 'public'),
     filename: 'bundle.js'
@@ -13,7 +13,11 @@ module.exports = {
     historyApiFallback: true
   },
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    alias: {
+      react: 'preact-compat',
+      'react-dom': 'preact-compat'
+    }
   },
   stats: {
     colors: true,
