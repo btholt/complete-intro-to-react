@@ -1,7 +1,7 @@
 import { SET_SEARCH_TERM } from './actions';
 
 const DEFAULT_STATE = {
-  searchTerm: ''
+  searchTerm: 'something else'
 };
 
 const setSearchTerm = (state, action) => Object.assign({}, state, { searchTerm: action.payload });
