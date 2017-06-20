@@ -1,20 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { string, func } from 'prop-types';
+import { string, func, object } from 'prop-types';
 import { setSearchTerm } from './actionCreators';
 
-const Landing = props =>
-  <div className="landing">
-    <h1>svideo</h1>
-    <input onChange={props.handleSearchTermChange} value={props.searchTerm} type="text" placeholder="Search" />
-    <Link to="/search">or Browse All</Link>
-  </div>;
-
-Landing.propTypes = {
-  searchTerm: string.isRequired,
-  handleSearchTermChange: func.isRequired
-};
+class Landing extends React.Component {
+  static propTypes = {
+    searchTerm: string.isRequired,
+    handleSearchTermChange: func.isRequired,
+    history: object.isRequired // eslint-disable-line react/forbid-prop-types
+  };
+  goToSearch = event => {
+    event.preventDefault();
+    this.props.history.push('/search');
+  };
+  render() {
+    return (
+      <div className="landing">
+        <h1>svideo</h1>
+        <form onSubmit={this.goToSearch}>
+          <input
+            onChange={this.props.handleSearchTermChange}
+            value={this.props.searchTerm}
+            type="text"
+            placeholder="Search"
+          />
+        </form>
+        <Link to="/search">or Browse All</Link>
+      </div>
+    );
+  }
+}
 
 const mapStateToProps = state => ({ searchTerm: state.searchTerm });
 
