@@ -4,14 +4,14 @@ import ShowCard from './ShowCard';
 import Header from './Header';
 
 class Search extends React.Component {
-  propTypes = {
+  static propTypes = {
     shows: arrayOf(
       shape({
         title: string,
         description: string,
         imdbID: string
       })
-    )
+    ).isRequired
   };
   state = {
     searchTerm: ''
