@@ -2,11 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>svideo</title>
+    <title>Carlo Video</title>
     <link rel="stylesheet" href="/public/style.css" />
 </head>
 <body>
-    <div id="app"><%= body %></div>
-    <script src="/public/bundle.js"></script>
+    <div id="app"></div>
+    <!-- <script src="/public/bundle.js"></script> -->
+    <script src="node_modules/react/dist/react.js"></script>
+    <script src="node_modules/react-dom/dist/react-dom.js"></script>
+    <script>
+
+      const ce = React.createElement
+
+    const MyTitle = function(props) {
+      return(
+        ce('div', null,
+          ce('h1', {style: {color: props.color} }, props.title)
+        )
+      )
+    }
+      const MyFirstComponent = function() {
+        return ce('div', {id: 'my-first-component'},
+          ce('h1', null, 'This is my first component!'),
+          ce(MyTitle, {title: 'Game of Thrones', color: 'YellowGreen'}),
+          ce(MyTitle, {title: 'Rick and Morty', color:'GreenYellow'}),
+          ce(MyTitle, {title: 'Silicon Valley', color: 'peru'})
+        )
+      }
+
+      ReactDOM.render(
+        ce(MyFirstComponent),
+        document.getElementById('app')
+      )
+    </script>
+
 </body>
 </html>
