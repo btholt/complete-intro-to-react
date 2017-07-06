@@ -3,10 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>svideo</title>
-    <link rel="stylesheet" href="/public/style.css" />
+    <!-- <link rel="stylesheet" href="/public/style.css" /> -->
 </head>
 <body>
-    <div id="app"><%= body %></div>
-    <script src="/public/bundle.js"></script>
+    <div id="app"></div>
+    <script src="node_modules/react/dist/react.js"></script>
+    <script src="node_modules/react-dom/dist/react-dom.js"></script>
+    <script>
+      const ce = React.createElement
+
+      const MyTitle = function(props){
+        return(
+          ce('div', null,
+            ce('h1', {style: { color:props.color }}, props.title)
+          )
+        )
+
+      }
+      const MyFirstComponent = function(){
+        return ce('div', null,
+          ce(MyTitle, {title: 'Game of Throne', color: 'Blue'}),
+          ce(MyTitle, {title: 'Rick and Morty', color: 'YellowGreen'}),
+          ce(MyTitle, {title: 'Stranger Things', color: '#baddad'}),
+          ce(MyTitle, {title: 'Parks and Rec', color: 'Green'})
+        )
+      }
+      ReactDOM.render(
+          ce(MyFirstComponent),
+          document.getElementById('app')
+        )
+    </script>
 </body>
 </html>
