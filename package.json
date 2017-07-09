@@ -9,6 +9,9 @@
     "test:update": "jest -u",
     "watch": "webpack --watch"
   },
+  "jest": {
+    "snapshotSerializers": ["jest-serializer-enzyme"]
+  },
   "dependencies": {
     "axios": "0.16.1",
     "babel-plugin-dynamic-import-webpack": "1.0.1",
