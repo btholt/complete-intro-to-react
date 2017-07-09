@@ -1,0 +1,9 @@
+[ignore]
+<PROJECT_ROOT>/node_modules/styled-components/*
+<PROJECT_ROOT>/node_modules/ternjs/*
+
+[include]
+
+[libs]
+
+[options]
