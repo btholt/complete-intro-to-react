@@ -1,24 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-const ce = React.createElement;
+const App = () => (
+  <div className="app">
+    <div className="landing">
+      <h1>carlo video</h1>
+      <input type="text" placeholder="Search" />
+      <a>or Browse All</a>
+    </div>
+  </div>
+);
 
-const MyTitle = function(props) {
-  return ce(
-    'div',
-    null,
-    ce('h1', { style: { color: props.color } }, props.title)
-  );
-};
-const MyFirstComponent = function() {
-  return ce(
-    'div',
-    { id: 'my-first-component' },
-    ce('h1', null, 'This is my first component!'),
-    ce(MyTitle, { title: 'Game of Thrones', color: 'YellowGreen' }),
-    ce(MyTitle, { title: 'Rick and Morty', color: 'GreenYellow' }),
-    ce(MyTitle, { title: 'Silicon Valley', color: 'peru' })
-  );
-};
-
-render(ce(MyFirstComponent), document.getElementById('app'));
+render(<App />, document.getElementById('app'));
