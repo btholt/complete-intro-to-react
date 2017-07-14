@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`addAPIData 1`] = `
+Object {
+  "payload": Object {
+    "description": "When a young boy disappears, his mother, a police chief, and his friends must confront terrifying forces in order to get him back.",
+    "imdbID": "tt4574334",
+    "poster": "st.jpg",
+    "rating": "8.6",
+    "title": "Stranger Things",
+    "trailer": "9Egf5U8xLo8",
+    "year": "2016–",
+  },
+  "type": "ADD_API_DATA",
+}
+`;
+
+exports[`setSearchTerm 1`] = `
+Object {
+  "payload": "New York",
+  "type": "SET_SEARCH_TERM",
+}
+`;
