@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,5 +8,41 @@
 <body>
     <div id="app"><%= body %></div>
     <script src="/public/bundle.js"></script>
+</body>
+</html>
+ -->
+
+ <!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>svideo</title>
+</head>
+<body>
+	<div id="app"></div>
+	<script src="node_modules/react/dist/react.js"></script>
+	<script src="node_modules/react-dom/dist/react-dom.js"></script>
+	<script>
+		const MyTitle = function () {
+			return (
+				React.createElement('div', null,
+					React.createElement('h1', null, 'My second component')
+				)
+			)
+		}
+
+		const MyFirstComponent = function () {
+			return React.createElement('div', null,
+				React.createElement(MyTitle),
+				React.createElement(MyTitle),
+				React.createElement(MyTitle)
+			)
+		}
+
+		ReactDOM.render(
+			React.createElement(MyFirstComponent),
+			document.getElementById('app')
+		)
+	</script>
 </body>
 </html>
