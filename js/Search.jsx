@@ -8,7 +8,7 @@ import Header from './Header';
 const Search = (props: {
   searchTerm: string, // eslint-disable-line react/no-unused-prop-types
   shows: Array<Show>
-}) =>
+}) => (
   <div className="search">
     <Header showSearch />
     <div>
@@ -16,7 +16,8 @@ const Search = (props: {
         .filter(show => `${show.title} ${show.description}`.toUpperCase().indexOf(props.searchTerm.toUpperCase()) >= 0)
         .map((show, index) => <ShowCard {...show} key={show.imdbID} id={index} />)}
     </div>
-  </div>;
+  </div>
+);
 
 const mapStateToProps = state => ({
   searchTerm: state.searchTerm
