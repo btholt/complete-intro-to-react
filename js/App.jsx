@@ -8,15 +8,14 @@ import AsyncRoute from './AsyncRoute';
 import store from './store';
 import preload from '../data.json';
 
-const App = () => (
+const App = () =>
   <Provider store={store}>
     <div className="app">
       <Route exact path="/" component={props => <AsyncRoute props={props} loadingPromise={import('./Landing')} />} />
       <Route
         path="/search"
-        component={props => (
-          <AsyncRoute loadingPromise={import('./Search')} props={Object.assign({ shows: preload.shows }, props)} />
-        )}
+        component={props =>
+          <AsyncRoute loadingPromise={import('./Search')} props={Object.assign({ shows: preload.shows }, props)} />}
       />
       <Route
         path="/details/:id"
@@ -31,7 +30,6 @@ const App = () => (
         }}
       />
     </div>
-  </Provider>
-);
+  </Provider>;
 
 export default App;

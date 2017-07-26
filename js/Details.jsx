@@ -21,7 +21,11 @@ class Details extends React.Component {
     const { title, description, year, poster, trailer } = this.props.show;
     let rating;
     if (this.props.rating) {
-      rating = <h3>{this.props.rating}</h3>;
+      rating = (
+        <h3>
+          {this.props.rating}
+        </h3>
+      );
     } else {
       rating = <Spinner />;
     }
@@ -29,11 +33,17 @@ class Details extends React.Component {
       <div className="details">
         <Header />
         <section>
-          <h1>{title}</h1>
-          <h2>({year})</h2>
+          <h1>
+            {title}
+          </h1>
+          <h2>
+            ({year})
+          </h2>
           {rating}
           <img src={`/public/img/posters/${poster}`} alt={`Poster for ${title}`} />
-          <p>{description}</p>
+          <p>
+            {description}
+          </p>
         </section>
         <div>
           <iframe
