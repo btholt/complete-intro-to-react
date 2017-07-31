@@ -9,28 +9,32 @@
     <script src="node_modules/react/dist/react.js"></script>
     <script src="node_modules/react-dom/dist/react-dom.js"></script>
     <script>
-var MyTitle = function () {
-  return (
-    React.createElement('div', null,
-      React.createElement('h1', null, 'Check out this component!')
-    )
-  );
-};
 
-var MyFirstComponent = function () {
-  return (
-    React.createElement('div', null,
-      React.createElement(MyTitle, null),
-      React.createElement(MyTitle, null),
-      React.createElement(MyTitle, null)
-    )
-  );
-};
+		const ce = React.createElement
 
-ReactDOM.render(
-  React.createElement(MyFirstComponent),
-  document.getElementById("app")
-);
+
+		var MyTitle = function (props) {
+		  return (
+		    ce('div', null,
+				ce('h1', {style: {color: props.color}}, props.title)
+		    )
+		  );
+		};
+
+		var MyFirstComponent = function () {
+		  return (
+		    ce('div', null,
+				ce(MyTitle, {color: 'rebeccapurple', title: 'House of Cards'}),
+				ce(MyTitle, {color: 'peru', title: 'Orange is the New Black'}),
+				ce(MyTitle, {color: 'burlywood', title: 'Stranger Things'})
+		    )
+		  );
+		};
+
+		ReactDOM.render(
+		  ce(MyFirstComponent),
+		  document.getElementById("app")
+		);
     </script>
 </body>
 </html>
