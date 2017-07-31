@@ -1,0 +1,24 @@
+{
+  "name": "undefsafe",
+  "version": "0.0.3",
+  "description": "Undefined safe way of extracting object properties",
+  "main": "lib/undefsafe.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node_modules/mocha/bin/_mocha --ui bdd test/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/remy/undefsafe.git"
+  },
+  "keywords": [
+    "undefined"
+  ],
+  "author": "Remy Sharp",
+  "license": "MIT / http://rem.mit-license.org",
+  "devDependencies": {
+    "mocha": "~1.16.2"
+  }
+}

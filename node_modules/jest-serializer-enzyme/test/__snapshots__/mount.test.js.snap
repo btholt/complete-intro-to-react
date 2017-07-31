@@ -1,0 +1,32 @@
+exports[`test Serializes components 1`] = `
+<Foo>
+  <div>
+    <span>
+      Hello
+    </span>
+    <Bar
+      text="some text">
+      <h1>
+        some text
+      </h1>
+    </Bar>
+  </div>
+</Foo>
+`;
+
+exports[`test Serializes components that render null 1`] = `<NullComponent />`;
+
+exports[`test Serializes components when using find() 1`] = `
+<span>
+  Hello
+</span>
+`;
+
+exports[`test Serializes components when using find() 2`] = `
+<Bar
+  text="some text">
+  <h1>
+    some text
+  </h1>
+</Bar>
+`;

@@ -1,0 +1,48 @@
+{
+  "name": "ps-tree",
+  "version": "1.1.0",
+  "description": "Get all children of a pid",
+  "homepage": "http://github.com/indexzero/ps-tree",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/indexzero/ps-tree.git"
+  },
+  "dependencies": {
+    "event-stream": "~3.3.0"
+  },
+  "license": "MIT",
+  "author": "Charlie Robbins <charlie.robbins@gmail.com>",
+  "contributors": [
+    {
+      "name": "Zhuohuan LI",
+      "url": "https://github.com/zixia",
+      "email": "zixia@zixia.net"
+    }
+  ],
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "_comment": "https://github.com/gotwarlost/istanbul#usage-on-windows",
+    "test": "istanbul cover node_modules/tape/bin/tape test/test.js test/direct.js",
+    "coverage": "npm test && istanbul check-coverage --statements 100 --functions 100 --lines 100 --branches 100",
+    "codeclimate": "cross-env CODECLIMATE_REPO_TOKEN=84436b4f13c70ace9c62e7f04928bf23c234eb212c0232d39d7fb1535beb2da5 codeclimate < coverage/lcov.info"
+  },
+  "devDependencies": {
+    "chalk": "^1.0.0",
+    "codeclimate-test-reporter": "0.0.4",
+    "cross-env": "^1.0.8",
+    "istanbul": "^0.3.20",
+    "pre-commit": "0.0.9",
+    "precommit": "^1.1.5",
+    "tape": "^3.0.3",
+    "tree-kill": "^1.1.0"
+  },
+  "pre-commit": [
+    "coverage",
+    "codeclimate"
+  ],
+  "engines": {
+    "node": ">= 0.10"
+  }
+}
