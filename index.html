@@ -1,17 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>svideo</title>
-    <link rel="stylesheet" href="/public/style.css" />
-</head>
-<body>
-    <div id="app"><%= body %></div>
-    <script src="/public/bundle.js"></script>
-</body>
-</html>
- -->
-
  <!DOCTYPE html>
 <html>
 <head>
@@ -20,32 +6,9 @@
 </head>
 <body>
 	<div id="app"></div>
-	<script src="node_modules/react/dist/react.js"></script>
-	<script src="node_modules/react-dom/dist/react-dom.js"></script>
+	<script src="/public/bundle.js"></script>
 	<script>
 	
 	</script>
 </body>
 </html>
-const ce = React.createElement
-
-		const MyTitle = function (props) {
-			return (
-				ce('div', null,
-					ce('h1', { style: { color: props.color }}, props.title )
-				)
-			)
-		}
-
-		const MyFirstComponent = function () {
-			return ce('div', null,
-				ce(MyTitle, {title: 'Game of Thrones', color: 'YellowGreen' }),
-				ce(MyTitle, {title: 'Stranger Things', color: 'peru' }),
-				ce(MyTitle, {title: 'Silicon Valley', color: 'LimeGreen' })
-			)
-		}
-
-		ReactDOM.render(
-			ce(MyFirstComponent),
-			document.getElementById('app')
-		)
