@@ -8,33 +8,6 @@
     <div id="app"></div>
     <script src="node_modules/react/dist/react.js"></script>
     <script src="node_modules/react-dom/dist/react-dom.js"></script>
-    <script>
-
-		const ce = React.createElement
-
-
-		var MyTitle = function (props) {
-		  return (
-		    ce('div', null,
-				ce('h1', {style: {color: props.color}}, props.title)
-		    )
-		  );
-		};
-
-		var MyFirstComponent = function () {
-		  return (
-		    ce('div', null,
-				ce(MyTitle, {color: 'rebeccapurple', title: 'House of Cards'}),
-				ce(MyTitle, {color: 'peru', title: 'Orange is the New Black'}),
-				ce(MyTitle, {color: 'burlywood', title: 'Stranger Things'})
-		    )
-		  );
-		};
-
-		ReactDOM.render(
-		  ce(MyFirstComponent),
-		  document.getElementById("app")
-		);
-    </script>
+    <script></script>
 </body>
 </html>
