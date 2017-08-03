@@ -9554,7 +9554,7 @@ var MyTitle = function MyTitle(props) {
 };
 
 var MyFirstComponent = function MyFirstComponent() {
-	return ce('div', { id: 'my-first-component' }, ce(MyTitle, { color: 'rebeccapurple', title: 'House of Cards' }), ce(MyTitle, { color: 'peru', title: 'Orange is the New Black' }), ce(MyTitle, { color: 'burlywood', title: 'Stranger Things' }));
+	return ce('div', { id: 'my-first-component' }, ce(MyTitle, { color: 'rebeccapurple', title: 'House of Cards' }), ce(MyTitle, { color: 'peru', title: 'Orange is the New Black' }), ce(MyTitle, { color: 'burlywood', title: 'Stranger Things' }), ce(MyTitle, { color: 'lime', title: 'Silicon Valley' }));
 };
 
 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(ce(MyFirstComponent), document.getElementById('app'));
