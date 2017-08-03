@@ -1,11 +1,25 @@
 {
   "scripts": {
     "api": "node ratingsAPI.js",
-    "format": "prettier --write --single-quote --print-width=120 --parser=flow --tab-width=2 \"js/**/*.{js,jsx}\""
+    "build": "webpack",
+    "dev": "webpack-dev-server",
+    "format": "prettier --write --single-quote --print-width=120 --parser=flow --tab-width=2 \"js/**/*.{js,jsx}\"",
+    "lint": "eslint **/*.{js,jsx} --quiet",
+    "watch": "webpack --watch",
+    "test": "jest",
+    "test:update": "jest -u",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "jest": {
+    "snapshotSerializers": [
+      "jest-serializer-enzyme"
+    ]
   },
   "dependencies": {
     "axios": "0.16.1",
     "babel-plugin-dynamic-import-webpack": "1.0.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-decorators-legacy": "1.3.4",
     "babel-register": "6.24.1",
     "compression": "1.6.2",
@@ -33,7 +47,6 @@
     "babel-loader": "7.0.0",
     "babel-plugin-dynamic-import-node": "1.0.2",
     "babel-plugin-syntax-dynamic-import": "6.18.0",
-    "babel-plugin-transform-class-properties": "6.24.1",
     "babel-plugin-transform-es2015-modules-commonjs": "6.24.1",
     "babel-preset-env": "1.5.1",
     "babel-preset-react": "6.24.1",
@@ -57,7 +70,8 @@
     "prettier": "1.3.1",
     "react-hot-loader": "3.0.0-beta.6",
     "react-test-renderer": "15.5.4",
-    "webpack-dev-server": "2.4.5"
+    "webpack-dev-server": "2.4.5",
+    "@storybook/react": "^3.2.0"
   },
   "name": "complete-intro-to-react",
   "version": "3.0.0",
