@@ -1,0 +1,23 @@
+{
+    "extends": [
+      "airbnb",
+      "prettier",
+      "prettier/react"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "parser": "babel-eslint",
+    "rules": {
+        "semi": 0,
+        "comma-dangle": 0,
+        "func-names": 0
+    },
+    "env": {
+      "browser": true,
+      "es6": true,
+      "node": true,
+      "jest": true
+    }
+
+}
