@@ -16,336 +16,126 @@ exports[`Search renders correctly 1`] = `
     />
   </header>
   <div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Atlanta Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/a.jpg"
-      />
-      <div>
-        <h3>
-          Atlanta
-        </h3>
-        <h4>
-          (
-          2008–2013
-          )
-        </h4>
-        <p>
-          Two cousins, with different views on art versus commerce, on their way up through the Atlanta rap scene; "Earnest 'Earn' Marks," an ambitious college drop-out and his estranged cousin, who suddenly becomes a star.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Billions Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/b.jpg"
-      />
-      <div>
-        <h3>
-          Billions
-        </h3>
-        <h4>
-          (
-          2016–
-          )
-        </h4>
-        <p>
-          U.S. Attorney Chuck Rhoades goes after hedge fund king, Bobby "Axe" Axelrod in a battle between two powerful New York figures.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Black Mirror Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/bm.jpg"
-      />
-      <div>
-        <h3>
-          Black Mirror
-        </h3>
-        <h4>
-          (
-          2011–
-          )
-        </h4>
-        <p>
-          A television anthology series that shows the dark side of life and technology.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Breaking Bad Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/bb.jpg"
-      />
-      <div>
-        <h3>
-          Breaking Bad
-        </h3>
-        <h4>
-          (
-          2008–2013
-          )
-        </h4>
-        <p>
-          A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Game of Thrones Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/got.jpg"
-      />
-      <div>
-        <h3>
-          Game of Thrones
-        </h3>
-        <h4>
-          (
-          2011–
-          )
-        </h4>
-        <p>
-          Nine noble families fight for control over the mythical lands of Westeros, while a forgotten race returns after being dormant for thousands of years.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Homeland Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/h.jpg"
-      />
-      <div>
-        <h3>
-          Homeland
-        </h3>
-        <h4>
-          (
-          2011–
-          )
-        </h4>
-        <p>
-          A bipolar CIA operative becomes convinced a prisoner of war has been turned by al-Qaeda and is planning to carry out a terrorist attack on American soil.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="House of Cards Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/hoc.jpg"
-      />
-      <div>
-        <h3>
-          House of Cards
-        </h3>
-        <h4>
-          (
-          2013–
-          )
-        </h4>
-        <p>
-          A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Master of None Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/mon.jpg"
-      />
-      <div>
-        <h3>
-          Master of None
-        </h3>
-        <h4>
-          (
-          2015–
-          )
-        </h4>
-        <p>
-          The personal and professional life of Dev, a 30-year-old actor in New York.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Narcos Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/n.jpg"
-      />
-      <div>
-        <h3>
-          Narcos
-        </h3>
-        <h4>
-          (
-          2015–
-          )
-        </h4>
-        <p>
-          A chronicled look at the criminal exploits of Colombian drug lord Pablo Escobar.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Orange Is the New Black Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/oitnb.jpg"
-      />
-      <div>
-        <h3>
-          Orange Is the New Black
-        </h3>
-        <h4>
-          (
-          2013–
-          )
-        </h4>
-        <p>
-          The story of Piper Chapman, a woman in her thirties who is sentenced to fifteen months in prison after being convicted of a decade-old crime of transporting money for her drug-dealing girlfriend.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Silicon Valley Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/sv.jpg"
-      />
-      <div>
-        <h3>
-          Silicon Valley
-        </h3>
-        <h4>
-          (
-          2014–
-          )
-        </h4>
-        <p>
-          Follows the struggle of Richard Hendricks, a silicon valley engineer trying to build his own company called Pied Piper.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Stranger Things Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/st.jpg"
-      />
-      <div>
-        <h3>
-          Stranger Things
-        </h3>
-        <h4>
-          (
-          2016–
-          )
-        </h4>
-        <p>
-          When a young boy disappears, his mother, a police chief, and his friends must confront terrifying forces in order to get him back.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="The Americans Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/ta.jpg"
-      />
-      <div>
-        <h3>
-          The Americans
-        </h3>
-        <h4>
-          (
-          2013–
-          )
-        </h4>
-        <p>
-          Two Soviet intelligence agents pose as a married couple to spy on the American government.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Veep Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/v.jpg"
-      />
-      <div>
-        <h3>
-          Veep
-        </h3>
-        <h4>
-          (
-          2012–
-          )
-        </h4>
-        <p>
-          Former Senator Selina Meyer finds that being Vice President of the United States is nothing like she hoped and everything that everyone ever warned her about.
-        </p>
-      </div>
-    </div>
-    <div
-      className="sc-bdVaJa jfzRHo"
-    >
-      <img
-        alt="Westworld Show Poster"
-        className="sc-bwzfXH cSKlVC"
-        src="/public/img/posters/ww.jpg"
-      />
-      <div>
-        <h3>
-          Westworld
-        </h3>
-        <h4>
-          (
-          2016–
-          )
-        </h4>
-        <p>
-          Set at the intersection of the near future and the reimagined past, explore a world in which every human appetite, no matter how noble or depraved, can be indulged without consequence.
-        </p>
-      </div>
-    </div>
+    <ShowCard
+      description="Two cousins, with different views on art versus commerce, on their way up through the Atlanta rap scene; \\"Earnest 'Earn' Marks,\\" an ambitious college drop-out and his estranged cousin, who suddenly becomes a star."
+      imdbID="tt4288182"
+      poster="a.jpg"
+      title="Atlanta"
+      trailer="MpEdJ-mmTlY"
+      year="2008–2013"
+    />
+    <ShowCard
+      description="U.S. Attorney Chuck Rhoades goes after hedge fund king, Bobby \\"Axe\\" Axelrod in a battle between two powerful New York figures."
+      imdbID="tt4270492"
+      poster="b.jpg"
+      title="Billions"
+      trailer="_raEUMLL-ZI"
+      year="2016–"
+    />
+    <ShowCard
+      description="A television anthology series that shows the dark side of life and technology."
+      imdbID="tt2085059"
+      poster="bm.jpg"
+      title="Black Mirror"
+      trailer="jDiYGjp5iFg"
+      year="2011–"
+    />
+    <ShowCard
+      description="A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's future."
+      imdbID="tt0903747"
+      poster="bb.jpg"
+      title="Breaking Bad"
+      trailer="XZ8daibM3AE"
+      year="2008–2013"
+    />
+    <ShowCard
+      description="Nine noble families fight for control over the mythical lands of Westeros, while a forgotten race returns after being dormant for thousands of years."
+      imdbID="tt0944947"
+      poster="got.jpg"
+      title="Game of Thrones"
+      trailer="giYeaKsXnsI"
+      year="2011–"
+    />
+    <ShowCard
+      description="A bipolar CIA operative becomes convinced a prisoner of war has been turned by al-Qaeda and is planning to carry out a terrorist attack on American soil."
+      imdbID="tt1796960"
+      poster="h.jpg"
+      title="Homeland"
+      trailer="KyFmS3wRPCQ"
+      year="2011–"
+    />
+    <ShowCard
+      description="A Congressman works with his equally conniving wife to exact revenge on the people who betrayed him."
+      imdbID="tt1856010"
+      poster="hoc.jpg"
+      title="House of Cards"
+      trailer="NTzycsqxYJ0"
+      year="2013–"
+    />
+    <ShowCard
+      description="The personal and professional life of Dev, a 30-year-old actor in New York."
+      imdbID="tt4635276"
+      poster="mon.jpg"
+      title="Master of None"
+      trailer="6bFvb3WKISk"
+      year="2015–"
+    />
+    <ShowCard
+      description="A chronicled look at the criminal exploits of Colombian drug lord Pablo Escobar."
+      imdbID="tt2707408"
+      poster="n.jpg"
+      title="Narcos"
+      trailer="U7elNhHwgBU"
+      year="2015–"
+    />
+    <ShowCard
+      description="The story of Piper Chapman, a woman in her thirties who is sentenced to fifteen months in prison after being convicted of a decade-old crime of transporting money for her drug-dealing girlfriend."
+      imdbID="tt2372162"
+      poster="oitnb.jpg"
+      title="Orange Is the New Black"
+      trailer="th8WT_pxGqg"
+      year="2013–"
+    />
+    <ShowCard
+      description="Follows the struggle of Richard Hendricks, a silicon valley engineer trying to build his own company called Pied Piper."
+      imdbID="tt2575988"
+      poster="sv.jpg"
+      title="Silicon Valley"
+      trailer="69V__a49xtw"
+      year="2014–"
+    />
+    <ShowCard
+      description="When a young boy disappears, his mother, a police chief, and his friends must confront terrifying forces in order to get him back."
+      imdbID="tt4574334"
+      poster="st.jpg"
+      title="Stranger Things"
+      trailer="9Egf5U8xLo8"
+      year="2016–"
+    />
+    <ShowCard
+      description="Two Soviet intelligence agents pose as a married couple to spy on the American government."
+      imdbID="tt2149175"
+      poster="ta.jpg"
+      title="The Americans"
+      trailer="HjuUkbhsI24"
+      year="2013–"
+    />
+    <ShowCard
+      description="Former Senator Selina Meyer finds that being Vice President of the United States is nothing like she hoped and everything that everyone ever warned her about."
+      imdbID="tt1759761"
+      poster="v.jpg"
+      title="Veep"
+      trailer="I2HoCG_iyhU"
+      year="2012–"
+    />
+    <ShowCard
+      description="Set at the intersection of the near future and the reimagined past, explore a world in which every human appetite, no matter how noble or depraved, can be indulged without consequence."
+      imdbID="tt0475784"
+      poster="ww.jpg"
+      title="Westworld"
+      trailer="eX3u0IlBBO4"
+      year="2016–"
+    />
   </div>
 </div>
 `;
