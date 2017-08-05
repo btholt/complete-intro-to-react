@@ -4,7 +4,7 @@ import preload from '../data.json';
 
 class Search extends Component {
   state = {
-    searchTerm: 'game'
+    searchTerm: ''
   };
   handleSearchTermChange = event => {
     this.setState({ searchTerm: event.target.value });
@@ -13,7 +13,7 @@ class Search extends Component {
     return (
       <div className="search">
         <header>
-          <h1>svideo</h1>
+          <h1>z-video</h1>
           <input
             onChange={this.handleSearchTermChange}
             value={this.state.searchTerm}
