@@ -7,6 +7,7 @@ import Search from './Search';
 const App = () =>
 	<BrowserRouter>
 		<div className="app">
+			{/* check out <Switch> interesting */}
 			<Route exact path="/" component={Landing} />
 			<Route path="/search" component={Search} />
 		</div>
