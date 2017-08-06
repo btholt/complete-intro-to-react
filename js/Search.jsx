@@ -1,5 +1,13 @@
 import React from 'react';
+import preload from '../data.json';
 
-const Search = () => <h1>Hi this is Search</h1>;
+const Search = () =>
+	<div className="search">
+		<pre>
+			<code>
+				{JSON.stringify(preload, null, 4)}
+			</code>
+		</pre>
+	</div>;
 
 export default Search;
