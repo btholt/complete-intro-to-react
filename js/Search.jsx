@@ -24,9 +24,13 @@ export default Search;
 // )}
 
 // you can do it also this way and then you dont need in showcard to do
-// it this way {props.show.title} you can just type props.title etc
+// it this way {props.show.title} you can just type {props.title} etc
 // and erase line 21 and 26 in showcard 	show: shape({     	}).isRequired
+// also delete shape on line 2
 
 // <div className="search">
 // 	{preload.shows.map(show => <ShowCard {...show} />)}
 // </div>;
+
+// or you can do each element like this title = {show.title} etc 
+
