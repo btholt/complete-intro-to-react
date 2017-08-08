@@ -3,6 +3,14 @@ import preload from '../data.json';
 import ShowCard from './ShowCard';
 
 class Search extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			searchTerm: 'this is a debug statement'
+		};
+	}
+
 	render() {
 		return (
 			<div className="search">
