@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import preload from '../data.json';
 import ShowCard from './ShowCard';
+import preload from '../data.json';
 
 class Search extends Component {
 	constructor(props) {
@@ -9,16 +9,25 @@ class Search extends Component {
 		this.state = {
 			searchTerm: 'this is a debug statement'
 		};
+
+		this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
+	}
+
+	handleSearchTermChange(event) {
+		this.setState({ searchTerm: event.target.value });
 	}
 
 	render() {
 		return (
 			<div className="search">
 				<header>
-					<h1>
-						{this.state.searchTerm}
-					</h1>
-					<input value={this.state.searchTerm} type="text" placeholder="Search" />
+					<h1>svideo</h1>
+					<input
+						onChange={this.handleSearchTermChange}
+						value={this.state.searchTerm}
+						type="text"
+						placeholder="Search"
+					/>
 				</header>
 				<div>
 					{preload.shows.map(show => <ShowCard key={show.imdbID} {...show} />)}
