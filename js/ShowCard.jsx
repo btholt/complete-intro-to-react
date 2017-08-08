@@ -1,5 +1,5 @@
 import React from 'react';
-import { shape, string } from 'prop-types';
+import { string } from 'prop-types';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -19,27 +19,25 @@ const Image = styled.img`
 
 const ShowCard = props =>
 	<Wrapper>
-		<Image alt={`${props.show.title} Show Poster`} src={`/public/img/posters/${props.show.poster}`} />
+		<Image alt={`${props.title} Show Poster`} src={`/public/img/posters/${props.poster}`} />
 		<div>
 			<h3>
-				{props.show.title}
+				{props.title}
 			</h3>
 			<h4>
-				({props.show.year})
+				({props.year})
 			</h4>
 			<p>
-				{props.show.description}
+				{props.description}
 			</p>
 		</div>
 	</Wrapper>;
 
 ShowCard.propTypes = {
-	show: shape({
-		poster: string.isRequired,
-		title: string.isRequired,
-		year: string.isRequired,
-		description: string.isRequired
-	}).isRequired
+	poster: string.isRequired,
+	title: string.isRequired,
+	year: string.isRequired,
+	description: string.isRequired
 };
 
 export default ShowCard;
