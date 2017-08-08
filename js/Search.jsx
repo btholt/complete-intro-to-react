@@ -4,7 +4,9 @@ import preload from '../data.json';
 
 const Search = () =>
 	<div className="search">
-		{preload.shows.map(show => <ShowCard key={show.imdbID} show={show} />)}
+		<div>
+			{preload.shows.map(show => <ShowCard key={show.imdbID} show={show} />)}
+		</div>
 	</div>;
 
 export default Search;
@@ -32,5 +34,4 @@ export default Search;
 // 	{preload.shows.map(show => <ShowCard {...show} />)}
 // </div>;
 
-// or you can do each element like this title = {show.title} etc 
-
+// or you can do each element like this title = {show.title} etc
