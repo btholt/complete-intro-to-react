@@ -1,0 +1,12 @@
+{
+  "presets": [
+    "react",
+    ["env",{
+      "targets":{
+        "browsers": "last 2 versions"
+      },
+      "loose": true, //makes bundle smaller
+      "modules": false //tells babel to NOT transpile the modules
+    }]
+  ]
+}
