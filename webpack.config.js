@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   context: __dirname, //means we're running webpack from the root directory
-  entry: '.js/ClientApp.jsx',
+  entry: './js/ClientApp.jsx',
   devtool: 'cheap-eval-source-map',
   output: {
     path: path.join(__dirname, 'public'),
