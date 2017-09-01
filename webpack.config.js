@@ -16,10 +16,14 @@ module.exports = {
     reasons: true,
     chunks: true
   },
+  devServer: {
+    publicPath: '/public/',
+    historyApiFallback: true //the client will worry about the routing, i will not
+  },
   module: {
     rules: [
       {
-        enforce: 'pre',
+        enforce: 'pre', //this will run linting in the webpack.
         test: /\.jsx?$/,
         loader: 'eslint-loader',
         exclude: '/node_modules/'

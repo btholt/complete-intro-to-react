@@ -8,5 +8,6 @@
       "loose": true, //makes bundle smaller
       "modules": false //tells babel to NOT transpile the modules
     }]
-  ]
+  ],
+  "plugins":["babel-plugin-transform-class-properties"]
 }
