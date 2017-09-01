@@ -9,5 +9,15 @@
       "modules": false //tells babel to NOT transpile the modules
     }]
   ],
-  "plugins":["babel-plugin-transform-class-properties"]
+  "plugins":[
+  "react-hot-loader/babel",
+  "babel-plugin-transform-class-properties"
+  ],
+  "env":{
+    "test": {
+    "plugins": [
+      "babel-plugin-transform-es2015-modules-commonjs"
+    ]
+    }
+  }
 }
