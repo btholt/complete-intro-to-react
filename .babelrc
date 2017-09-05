@@ -1,0 +1,23 @@
+{
+  "presets": [
+    "react",
+    ["env",{
+      "targets":{
+        "browsers": "last 2 versions"
+      },
+      "loose": true, //makes bundle smaller
+      "modules": false //tells babel to NOT transpile the modules
+    }]
+  ],
+  "plugins":[
+  "react-hot-loader/babel",
+  "babel-plugin-transform-class-properties"
+  ],
+  "env":{
+    "test": {
+    "plugins": [
+      "babel-plugin-transform-es2015-modules-commonjs"
+    ]
+    }
+  }
+}
