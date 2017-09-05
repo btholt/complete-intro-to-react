@@ -1,5 +1,6 @@
+// @flow
+
 import React, { Component } from 'react';
-import preload from '../data.json';
 import ShowCard from './ShowCard';
 
 class Search extends Component {
@@ -13,7 +14,11 @@ class Search extends Component {
     searchTerm: ''
   };
 
-  handleSearchTermChange = e => {
+  props: {
+    shows: Array<Show>
+  };
+
+  handleSearchTermChange = (e: SyntheticKeyboardEvent & { target: HTMLInputElement }) => {
     this.setState({
       searchTerm: e.target.value
     });
@@ -23,7 +28,7 @@ class Search extends Component {
     return (
       <div className="search">
         <header>
-          <h1>React Vide</h1>
+          <h1>Svideo</h1>
           <input
             onChange={this.handleSearchTermChange}
             value={this.state.searchTerm}
@@ -32,12 +37,12 @@ class Search extends Component {
           />
         </header>
         <div>
-          {preload.shows
+          {this.props.shows
             .filter(
               show =>
                 `${show.title} ${show.description}`.toUpperCase().indexOf(this.state.searchTerm.toUpperCase()) >= 0
             )
-            .map(show => <ShowCard key={show.imdbID} show={show} />)}
+            .map(show => <ShowCard {...show} key={show.imdbID} />)}
         </div>
       </div>
     );
