@@ -38,7 +38,7 @@ This is all fun, but it's very manual. Let's go make this run automatically on s
 {
 	"prettier_cli_path": "/Users/brholt/.nvm/versions/node/v6.9.5/bin/prettier",
 	"node_path": "/Users/brholt/.nvm/versions/node/v6.9.5/bin/node",
-	"auto_format_on_save": true
+	"auto_format_on_save": true,
 	"prettier_options": {
 		"parser": "babylon",
 		"singleQuote": true,
