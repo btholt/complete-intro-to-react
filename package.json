@@ -1,6 +1,11 @@
 {
   "scripts": {
-    "api": "node ratingsAPI.js"
+    "api": "node ratingsAPI.js",
+    "build": "webpack --watch"
+  },
+  "prettier": {
+    "parser": "flow",
+    "singleQuote": true
   },
   "dependencies": {
     "axios": "0.16.1",
