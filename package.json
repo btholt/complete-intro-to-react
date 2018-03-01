@@ -1,7 +1,8 @@
 {
   "scripts": {
     "api": "node ratingsAPI.js",
-    "start": "webpack -d --watch"
+    "start": "webpack -d --watch",
+    "dev": "./node_modules/.bin/webpack-dev-server"
   },
   "dependencies": {
     "axios": "0.16.1",
