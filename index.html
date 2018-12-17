@@ -34,13 +34,12 @@
 
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="intro/">Intro</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
-    <p>Welcome to <em>A Complete Intro to React</em>. The goal of this workshop is to get you full up to speed on modern development and give you an idea what it is like to develop an app in the React ecosystem.</p>
+    <h1>🔥 This Course Has Been Updated to v4! 🔥 Go to <a href="https://frontendmasters.com/courses/complete-react-v4/">Complete Introduction to React v4</a> and the Brand New <a href="https://frontendmasters.com/courses/intermediate-react/">Intermediate React</a>!</h1>
+<h2>The <a href="https://btholt.github.io/complete-intro-to-react-v4/">code, website and materials</a> for the new updated courses are always free and open source.</h2>
+<h3></h3>
+<p>Welcome to <em>A Complete Intro to React</em> (v3 archived site).</p>
+<p>The goal of this workshop is to get you full up to speed on modern development and give you an idea what it is like to develop an app in the React ecosystem.</p>
 <h1>Make sure sure you are on the right version of this workshop, v3. If you are unsure as to which version you need, <a href="page/landing/">go here</a>.</h1>
 <h2>The creation of this course is sponsored by <a href="https://frontendmasters.com/">Frontend Masters</a>. There are videos that go along with it and I encourage you to check them out.</h2>
 <p>When talking about React, you cannot simply <em>just</em> use React. It is an incomplete picture; it is a cog in the machine. React does well to introduce some useful primitives into your toolbox and allows you to build your app without introducing too many opinions. As such, we need to learn some other tools to round the whole story of our app. However, keep in mind that these are modules we are choosing to plug together; you are free to go home and swap in your own parts to suit your own needs. While React fits many/most needs, this complete stack won't; it has opinions and you need to make sure each piece contributes to your story and try not to shoehorn any piece in that you don't need.</p>
@@ -56,11 +55,6 @@
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="setup/">Setup</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>In order to be able to complete this entire workshop, we need to go ahead and get some tools downloaded.</p>
 <h2>Clone the git repo</h2>
@@ -94,11 +88,6 @@ yarn global add eslint@v3.18.0
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="react/">React</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Welcome to the wonderful world of React. We are going to start with the most absolutely barebone version of React. No JSX. No ES6. No transpilation. Just pure component-oriented pleasure of coding.</p>
 <p>So let's talk about what React is. I imagine most of those who take this class will come from another framework or library, be it jQuery, Angular, Backbone, Ember, Knockout, or something else. I will draw comparisons and contrasts to these other frameworks (despite not being the same, I'll be using the word library and framework interchangeably for brevity's sake) to help illuminate some of the differences but you needn't have programmed in these other frameworks to understand this workshop.</p>
@@ -232,11 +221,6 @@ ce(MyTitle, {<span class="hljs-attr">color</span>: <span class="hljs-string">'bu
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="tooling-prettier-and-npm/">Tooling – Prettier and npm</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Before we can introduce JSX to React, we are going to have to send it through a compilation step. So we are going to take a brief repose from React here to start working on our tooling a bit.</p>
 <h2>Prettier</h2>
@@ -312,11 +296,6 @@ ce(MyTitle, {<span class="hljs-attr">color</span>: <span class="hljs-string">'bu
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="tooling-webpack-and-babel/">Tooling - Webpack and Babel</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Now that we have clean code via a linter and can run our scripts courtesy of npm, let's work on the compilation / build of our code. In order to achieve this we are going to use two tools: Webpack and Babel.</p>
 <h2>Webpack</h2>
@@ -412,11 +391,6 @@ render(React.createElement(MyFirstComponent), <span class="hljs-built_in">docume
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="jsx/">JSX</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>We have been writing our React with vanilla JavaScript up until now which frankly few people do. Most people take advantage of JSX which essentially adds HTML/XML-like syntax as a &quot;primitive&quot; type to JavaScript. In reality, what it does it takes the HTML you write for your components and translate them into the same calls we writing just using vanilla JavaScript.</p>
 <p>So why JSX? People usually get pretty grossed out by the HTML in the JavaScript and say it looks like 1998 when we were still writing JavaScript in our HTML. However, I assert that markup in JS is a good thing while JS in markup is a bad thing! Here, we're keeping all the concerns of a component in one place: the markup structure, the event listeners, the state, the state mutators, everything. If the component breaks, we know it broke there. That's really valuable.</p>
@@ -489,11 +463,6 @@ const ValidComponent = () =&gt; (
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="more-react/">More React</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So let's actually discuss what we're going to build today: a basic Netflix experience. This is going to afford us several fun experiences and use cases to explore with our new-found stack. Our app is going to have a home page, a browse/search page, and a video page. Over the next few chapters we are going to be talking about Redux and react-router and their rather-central roles to the React eco-system. But first let's keep diving into React.</p>
 <p>Rather our toys we've made so far to demonstrate how to make React components, let's actually start building our web app. We are going to make our home page. The home page is going to have a sweet background image, our logo, a text input to search for a specific show, and another button to just browse all videos.</p>
@@ -555,11 +524,6 @@ devServer: {
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="react-router/">React Router</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So now we have a basic landing page and we want to be able to transition to another page. Because we making this as a single page app, we are going to use the marvelous <a href="https://reacttraining.com/react-router/">react-router</a>. react-router is a robust piece of technology and we are just going to be scratching the surface of it now. If you intend on making a single page app, I suggest you deep dive into it to uncover all of its potential. It also now works for React Native.</p>
 <p>We're going to be using React Router version 4 here. This is significant because React Router has gone through several thrashes of API, from 0 to 1, from 1 to 2/3, and now from 2/3 to 4. The authors have assured us that this is the last major thrash but it quite a departure, but thankfully the thrash is worth it. It got a lot easier to use.</p>
@@ -639,11 +603,6 @@ import { Link } from 'react-router-dom';
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="react-props/">React: Props</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Let's start making our search page. We're going to start with some dummy data and work our way from there. Again, follow the same HTML structure and CSS naming as me and you'll get all the styling for free. Feel free to take a glance at ./data.json to see what's there. As you may have guessed, it's a bunch of Netflix shows. This whole workshop is actually just an elaborate advertisement for Netflix (just kidding; I promise.)</p>
 <p>Webpack allows you to require in json files just like you would another JavaScript file so we'll take advantage of that when we start coding our new search page.</p>
@@ -792,11 +751,6 @@ export default ShowCard;
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="styled-components/">styled-components 💅</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>You can do normal CSS (as we have doing so far) but there's been a recent interest in CSS-in-JS. There are several great approaches to this but we're going to use styled-components. The advantage of this is similar to what we see of doing JSX/React over separated templates and controllers: we get to mush together concerns for single components. If we do use CSS-in-JS, it means everything for a single component lives in a single place: we don't have to worry about including the right style sheets for the right components. It means if you include a component on a page, you get the markup, behavior, and style, guaranteed.</p>
 <p>Let's talk about why this may be less than ideal. We have decades of browsers optimizing how to download, parse, and apply external style sheets. This way has been well thought out. I'm not saying we can't figure out how to optimize this path too; we just haven't yet. It's slower. This might be important to the performance of your app; it might not. You're also doubling your parse cost: we have to parse it as JS first, and then as CSS the second time. I think there's more around the tooling here: we can have our cake and eat it too. This is a relatively nascent idea: we'll figure it out if it pans out to be a good idea.</p>
@@ -852,11 +806,6 @@ export default ShowCard;
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="react-state/">React: State</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>We've discussed props which all you to have immutable state passed from parents to children. However, as any seasoned UI developer will point out, user interfaces are inherently stateful. You app at some level must contain some level of mutability. React gives you a very controlled window to introduce this mutability to be able to reason easily about this mutability aptly called state.</p>
 <p>While props are passed down from parents and are immutable, state is created, read, and mutated all <em>inside of</em> a component. In other words, if a component has state, that state cannot be mutated by a parent, child, or any other external influence; only that same component has access to the setState method which is the only way to mutate state. That component has the ability to expose methods to children that the child can call to let the parent know it should mutate its state, but again, it is totally up to the parent to respect that call and mutate the state; the child can only call methods exposed to it via passed-down props.</p>
@@ -984,11 +933,6 @@ state = {
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="testing-react-with-jest-snapshots-and-enzyme/">Testing React with Jest, Snapshots, and Enzyme</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p><strong>Note</strong>: This is using Jest. If you want to see how to test React components using <a href="https://mochajs.org/">Mocha</a>, Chai, Sinon, and Enzyme, see the <a href="https://btholt.github.io/complete-intro-to-react-v1/">v1 version</a> of this workshop.</p>
 <p>Now that we have something worth testing, let's test it. We're going to be using Facebook's Jest (v19.0.2) to do it since it has some neat features. Go ahead and add the following to your npm scripts: <code>&quot;test&quot;: &quot;jest&quot;</code>. Then go to your JS directory, create a folder called <code>__tests__</code> inside of js, and create a file called Search.spec.jsx. I like to make my tests live right along side the files they test but I'm okay putting them in another directory: up to you. In either case Jest is smart enough to autodiscover them if you make the extension *.spec.jsx (or *.test.jsx if you prefer that. Also .js is fine too, just not with Airbnb.) The <code>__tests__</code> convention is one Facebook uses and works well. Feel free to use your own sensibilities as nothing is really set in stone here.</p>
@@ -1082,11 +1026,6 @@ test(<span class="hljs-string">'Search should render correct amount of shows bas
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="istanbul/">istanbul</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>A good-but-not-great metric of how well you're testing your is code coverage. Basically it's how much of your code gets covered by your tests. There exist many tools to do this but we're going to use the most common in the JavaScript world: <a href="https://github.com/gotwarlost/istanbul">istanbul</a>.</p>
 <p>What istanbul is going to do? Istanbul instruments your code to see what code gets run and then lets you when your tests are covering and/or not covering other parts. Run <code>npm test -- --coverage</code>.</p>
@@ -1105,11 +1044,6 @@ test(<span class="hljs-string">'Search should render correct amount of shows bas
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="a-note-on-hot-module-reload/">A Note on Hot Module Reload</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So webpack has a nifty ability to do what's called hot module reload (HMR.) If you've ever used LiveReload's CSS injection, this will sound familiar. HMR will take your code, compile it on the fly, and then inject it into your live-running code. Pretty cool tech.</p>
 <p>If you're working a dropdown that requires three different clicks to get there, it's pretty neat to be able to change the code and watch the UI change without having to reload and get the UI back into a state where you can see the effects of your change.</p>
@@ -1229,11 +1163,6 @@ if (module.hot) {
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="flow-types-in-javascript/">Flow: Types in JavaScript</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Welcome to the wild and mystical world of types in JavaScript. Types seem intimidating to many people but with a few basic concepts under our belt we can take advantage of 80% of the benefits. In other words, most of the beneftis of a type checker come from doing the most basic things. You can next-level crazy with types (see <a href="https://www.haskell.org/">Haskell</a> and <a href="https://www.idris-lang.org/">Idris</a>) but here we're just, you know, going with the flow.</p>
 <p>So what is a type? JavaScript has a few basic types that it uses: Number, String, Object, Array, Function, and a few others. Because an item is a String, there's certain things you know about it: you can always call <code>substr</code> on a String and it won't cause an error. However, if you try to call <code>substr</code> on a Number, you're going to get an error. At the most basic level, that's what a type checker like Flow is going to get for you. It's going to prevent those sorts of errors by informing you that you have a type mismatch.</p>
@@ -1297,11 +1226,6 @@ declare <span class="hljs-keyword">var</span> <span class="hljs-built_in">module
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="data-in-react/">Data in React</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So now we want to add a third page: a page where we can watch the trailer. This is going to be an application of what we know already.</p>
 <p>Create a new file in js/ called Details.jsx. In Details put:</p>
@@ -1601,11 +1525,6 @@ component.find(Header).dive().find(<span class="hljs-string">'input'</span>).sim
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="react-lifecycle-methods-and-ajax-with-react/">React Lifecycle Methods and AJAX with React</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Due to the structuring of our app, we haven't had to use React lifecycle methods despite the fact they're fairly common to use and thus important to know. One of the most compelling reasons to use lifecycle methods is to do AJAX. Once a component gets mounted to the page then we want to be able request data from the server. First let's discuss the lifecycle of a React component.</p>
 <ol>
@@ -1683,11 +1602,6 @@ componentDidMount() {
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="react-tools/">React Tools</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So far we've been using pretty old school debugging technology: console.logs and just dumping stuff out to the DOM. There is an easier way! <a href="https://github.com/facebook/react-devtools">React Dev Tools</a>! Grab it here for <a href="https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi">Chrome</a> and <a href="https://addons.mozilla.org/en-US/firefox/addon/react-devtools/">Firefox</a>. In <em>theory</em> you can get the Chrome version working on Microsoft Edge, but good luck. If you're not using Chrome or Firefox, you're out of luck for now. They're talking about doing a standalone app but we'll see when that finally surfaces. I'll be talking about the Firefox version because that's the one I know the best but this should apply to Chrome just as well.</p>
 <p>Dev Tools allow you to explore the virtual DOM of React as if it was just a normal DOM tree. You can see what props and states are in each component and even modify the state of components. The virtual DOM explorer is by-far the most useful part of it.</p>
@@ -1710,11 +1624,6 @@ componentDidMount() {
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="react-perf-tools/">React Perf Tools</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>As you app continues to grow, sometimes slow code paths can start to emerge. React is pretty good about being performant under normal loads but even React has its limits. One of the ways this can manifest itself is how often components are running through the re-render process without actually changing anything. These are called wasted renders. Normally you don't have to actually to worry about this: React handles a lot of wasted re-renders without slowing down the app at all and you can spend your time building features instead. It's helpful to glance at your performance data every once in a while but don't dwell too much on it.</p>
 <p>So, as it stands, our code actually does have a code path that we can optimize. So let's go explore how we discover the problem and ultimately fix it.</p>
@@ -1771,11 +1680,6 @@ Perf.start();
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="redux/">Redux</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>The next thing we want to do with our app is make the front page's search work so that when you type in a search query and hit enter it will automatically have searched for that on the Search page. Right now you have all the necessary tools to do that via state. You could just push the query term up to the ClientApp level and then pass that down to the Search and you'd be done. And that's the way you <em>should</em> do it given how small our app is.</p>
 <p>But when these demo apps all the fun is in over engineering it and that's precisely what we're going to do: we're going to add Redux. Redux is a <em>fantastic</em> tool and a cool blending of the ideas of Facebook's <a href="https://facebook.github.io/flux/">Flux</a> and the <a href="http://elm-lang.org/">Elm</a> architecture.</p>
@@ -2077,11 +1981,6 @@ declare type ActionT&lt;A: ActionType, P&gt; = {|
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="redux-devtools/">redux Devtools</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>One of the most compelling reason to use redux is its amazing debugging experience. redux has the <em>fantastic</em> ability to do time-traveling debugging, meaning you can step forwards and backwards through actions you've dispatched. It's really powerful for debugging.</p>
 <p>There are several ways to get it working but I'm going to show you the bare minimum to get up and running. Unlike React, there is some code you have to put in to get it working. Luckily, it's like two or three lines.</p>
@@ -2114,11 +2013,6 @@ declare type ActionT&lt;A: ActionType, P&gt; = {|
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="async-redux/">Async Redux</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Redux by default has no mechanism for handling asynchronous actions. This means you either need handle everything async in your React (gross) or we have to augment Redux to handle async code. The former is really a non-starter: the point of Redux is centralize state manipulation and not having the ability to do async is just silly. We're building interfaces and interfaces are inherently asynchronous.</p>
 <p>Okay, so we've decided to augment Redux. How do we do that? Well, luckily, Redux has the ability to have middlewares, just like your server can. What we can do is add a middleware that can handle more than just action objects. There are a myriad of popular ones but we're going with the most popular, the simplest, and the easiest: redux-thunk. I'll venture to say that if you build any Redux app, rarely are you not going to include redux-thunk, even if you include one of the other async Redux middlewares. It's frequently useful, even beyond it's async applications.</p>
@@ -2265,11 +2159,6 @@ componentDidMount() {
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="fixing-our-tests-and-testing-redux/">Fixing Our Tests and Testing Redux</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So we broke all of our tests. They all fail now. High five! This is a big reason why I'm hesitant to test UI code: I find my tests break all the time just because I'm rewriting markup or other code. Nonetheless, let's refix our tests and add two for Redux. As opposed to testing React which I don't do much of, I test the hell out of my Redux code. Redux code is very testable by design and you should cover all or nearly-all of your reducers with tests.</p>
 <p>At the end of Search.jsx add:</p>
@@ -2451,11 +2340,6 @@ test(<span class="hljs-string">'getAPIDetails'</span>, (done: <span class="hljs-
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="universal-rendering/">Universal Rendering</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>Universal rendering, or the artist formerly known as isomorphic rendering. The idea here is that you server-side prerender your code so that when it gets down to the client, your browser can <strong>instantly</strong> show the markup while your app bootstraps in the background. It makes everything feel very instantaneous.</p>
 <p>With just vanilla React, universal rendering is a cinch. Check out the <a href="https://github.com/btholt/es6-react-pres/blob/master/completed/app.js">whole node file from another one of my workshops</a>. It does server-side rendering in just a few lines.</p>
@@ -2607,11 +2491,6 @@ server.use(webpackHotMiddleware(compiler));
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="webpack-code-splitting-and-async-routing/">Webpack Code-Splitting and Async Routing</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So far all of our routing with react-router has synchronous which makes sense. When we detect that a user has requested a route, we already have that route in our bundle.js and we render and serve that to them. The logic follows.</p>
 <p>However, as our app grows and grows, our bundle.js is going to get bigger and bigger in file size. Wouldn't it be better if you were on Search that it served you <em>just</em> the JavaScript you need for that page and none of the JS for Landing or Details? For example, Search doesn't need the axios client we brought in: that client can safely just be loaded on the Details page.</p>
@@ -2778,11 +2657,6 @@ server.use(compression());
 </article>
 
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="preact/">Preact</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     <p>So this is a React work, why the 💩 are we talking about <a href="https://preactjs.com/">Preact</a>? Let me tell you why! Preact is amazing! Preact is an <em>almost</em> drop in replacement for React that is  <strong>much</strong> smaller in file size while maintaing nearly all the features and actually being faster (or so my limited, flawed benchmarking leads me to believe.) One thing is for sure though, it's much smaller!</p>
 <p>It sounds just better, right? Well, it's certainly something you and your company should discuss. Preact is just 3KB gzipped; that's really small! React for comparison's sake is around 45KB, give or take 5KB. That's a huge difference! The way Preact is able to achieve a lot of the size difference is by cutting out some of the legacy bits of React, letting the browser do more heavy lifting, and focusing on a smaller API.</p>
