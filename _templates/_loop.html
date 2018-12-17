@@ -1,10 +1,5 @@
 {% for file in pagination.files %}
 <article class="post">
-  <header class="post-header">
-    <h2 class="post-title">
-      <a href="{{file.url.substr(1)}}">{{file.title}}</a>
-    </h2>
-  </header>
   <section class="post-excerpt">
     {{file.content | safe}}
   </section>
