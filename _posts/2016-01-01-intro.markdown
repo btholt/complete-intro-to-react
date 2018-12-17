@@ -2,19 +2,19 @@
 title:  "Intro"
 ---
 
-# 🔥 This Course Has Been Updated to v4! 🔥 Go to [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) and the Brand New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)!
+## 🔥 Complete Introduction to React Has Been Updated! 🔥 
+
+# → Go to the updated, [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) & Brand New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)!
 
 ## The [code, website and materials](https://btholt.github.io/complete-intro-to-react-v4/) for the new updated courses are always free and open source.
 
-###
-
-Welcome to _A Complete Intro to React_ (v3 archived site).
+### Welcome to _A Complete Intro to React_ (v3 archived site).
 
 The goal of this workshop is to get you full up to speed on modern development and give you an idea what it is like to develop an app in the React ecosystem.
 
-# Make sure sure you are on the right version of this workshop, v3. If you are unsure as to which version you need, [go here][landing].
+### Make sure sure you are on the right version of this workshop. If you are unsure as to which version you need, [go here][landing].
 
-## The creation of this course is sponsored by [Frontend Masters][fem]. There are videos that go along with it and I encourage you to check them out.
+### The creation of this course is sponsored by [Frontend Masters][fem]. There are videos that go along with it and I encourage you to check them out.
 
 When talking about React, you cannot simply _just_ use React. It is an incomplete picture; it is a cog in the machine. React does well to introduce some useful primitives into your toolbox and allows you to build your app without introducing too many opinions. As such, we need to learn some other tools to round the whole story of our app. However, keep in mind that these are modules we are choosing to plug together; you are free to go home and swap in your own parts to suit your own needs. While React fits many/most needs, this complete stack won't; it has opinions and you need to make sure each piece contributes to your story and try not to shoehorn any piece in that you don't need.
 

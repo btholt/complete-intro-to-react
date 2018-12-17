@@ -2,11 +2,11 @@
 title: "Landing"
 ---
 
-# 🔥 This Course Has Been Updated to v4! 🔥 Go to [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) and the Brand New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)!
+## 🔥 Complete Introduction to React Has Been Updated! 🔥 
+
+# → Go to the updated, [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) & Brand New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)!
 
 ## The [code, website and materials](https://btholt.github.io/complete-intro-to-react-v4/) for the new updated courses are always free and open source.
-
-###
 
 This is a Complete Intro to React! This is the third version of the workshop. It's important we get you on to the right track. If you're just visiting, chances are you want the third, most-recent version of the workshop. Version 3 is an expanded version of Version 2, whereas Version 1 did cover some different material. Check below to see the table of the differences.
 
