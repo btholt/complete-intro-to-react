@@ -2,7 +2,7 @@
 
 ## The [code, website and materials](https://btholt.github.io/complete-intro-to-react-v4/) for the new updated courses are always free and open source.
 
-Welcome to a complete intro to React! We've still left the archived v3 version of the [course website up][gh-page] if you'd still like to follow along with one of the earlier versions.
+Welcome to a complete intro to React! We've still left the archived v3 version of the [course website][gh-page] up if you'd still like to follow along with one of the earlier versions.
 
 ## Contributing
 
