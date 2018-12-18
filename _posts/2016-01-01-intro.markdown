@@ -2,17 +2,15 @@
 title:  "Intro"
 ---
 
-## 🔥 Complete Introduction to React Has Been Updated! 🔥 
-
-# → Go to the updated, [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) & Brand New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)!
+# This Course Has Been Updated: [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) & the New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)
 
 ## The [code, website and materials](https://btholt.github.io/complete-intro-to-react-v4/) for the new updated courses are always free and open source.
 
-### Welcome to _A Complete Intro to React_ (v3 archived site).
+## Welcome to _A Complete Intro to React_ (v3 archived site).
 
 The goal of this workshop is to get you full up to speed on modern development and give you an idea what it is like to develop an app in the React ecosystem.
 
-### Make sure sure you are on the right version of this workshop. If you are unsure as to which version you need, [go here][landing].
+## Make sure sure you are on the right version of this workshop. If you are unsure as to which version you need, [go here][landing].
 
 ### The creation of this course is sponsored by [Frontend Masters][fem]. There are videos that go along with it and I encourage you to check them out.
 

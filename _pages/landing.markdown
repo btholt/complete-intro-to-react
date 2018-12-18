@@ -2,9 +2,7 @@
 title: "Landing"
 ---
 
-## 🔥 Complete Introduction to React Has Been Updated! 🔥 
-
-# → Go to the updated, [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) & Brand New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)!
+# This Course Has Been Updated: [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) & the New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)
 
 ## The [code, website and materials](https://btholt.github.io/complete-intro-to-react-v4/) for the new updated courses are always free and open source.
 
