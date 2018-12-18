@@ -1,4 +1,4 @@
-# 🔥 This Course Has Been Updated to v4! 🔥 Go to [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) and the Brand New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/)!
+# 🔥 This Course Has Been Updated to v4! Check out the [Complete Introduction to React v4](https://frontendmasters.com/courses/complete-react-v4/) and the New [Intermediate React](https://frontendmasters.com/courses/intermediate-react/) Courses
 
 ## The [code, website and materials](https://btholt.github.io/complete-intro-to-react-v4/) for the new updated courses are always free and open source.
 
